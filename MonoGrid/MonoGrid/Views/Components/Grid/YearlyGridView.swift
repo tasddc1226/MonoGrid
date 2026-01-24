@@ -184,7 +184,6 @@ struct YearlyGridView: View {
         let isCompleted = completionData[normalizedDate]
         let isToday = normalizedDate == today
         let isFuture = normalizedDate > today
-        let isEditable = normalizedDate.isWithin(days: Constants.editableDaysRange)
 
         return BaseGridCell(
             isCompleted: isCompleted,
@@ -194,14 +193,14 @@ struct YearlyGridView: View {
             isFuture: isFuture
         )
         .onTapGesture {
-            if !isFuture && isEditable {
+            if !isFuture {
                 onCellTap?(normalizedDate)
             }
         }
         .accessibilityElement()
         .accessibilityLabel(cellAccessibilityLabel(date: date, isCompleted: isCompleted, isToday: isToday))
-        .accessibilityHint(cellAccessibilityHint(isFuture: isFuture, isEditable: isEditable))
-        .accessibilityAddTraits(isFuture || !isEditable ? [] : .isButton)
+        .accessibilityHint(cellAccessibilityHint(isFuture: isFuture))
+        .accessibilityAddTraits(isFuture ? [] : .isButton)
     }
 
     // MARK: - Accessibility Helpers
@@ -224,12 +223,9 @@ struct YearlyGridView: View {
         return "\(dateStr), \(status)"
     }
 
-    private func cellAccessibilityHint(isFuture: Bool, isEditable: Bool) -> String {
+    private func cellAccessibilityHint(isFuture: Bool) -> String {
         if isFuture {
             return String(localized: "미래 날짜는 수정할 수 없습니다")
-        }
-        if !isEditable {
-            return String(localized: "7일 이전 기록은 수정할 수 없습니다")
         }
         return String(localized: "두 번 탭하여 완료 상태 전환")
     }

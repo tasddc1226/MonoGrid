@@ -27,7 +27,7 @@ struct WeeklyGridView: View {
 
     // MARK: - Constants
 
-    private let cellSpacing: CGFloat = 8
+    private let cellSpacing: CGFloat = 4
 
     // MARK: - Computed Properties
 
@@ -67,69 +67,19 @@ struct WeeklyGridView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 16) {
-            // Week header with navigation
-            weekHeader
-
-            // Week grid
-            weekGrid
-        }
+        // Week grid only (navigation handled by parent HabitDetailGridView)
+        weekGrid
     }
 
     // MARK: - Subviews
 
-    /// Week header with navigation arrows
-    private var weekHeader: some View {
-        HStack {
-            Button {
-                navigateWeek(by: -1)
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.title3)
-                    .foregroundColor(.primary)
-            }
-
-            Spacer()
-
-            Text(weekTitle)
-                .font(.headline)
-
-            Spacer()
-
-            Button {
-                navigateWeek(by: 1)
-            } label: {
-                Image(systemName: "chevron.right")
-                    .font(.title3)
-                    .foregroundColor(canNavigateForward ? .primary : .secondary.opacity(0.3))
-            }
-            .disabled(!canNavigateForward)
-        }
-        .padding(.horizontal, 8)
-    }
-
-    /// Main week grid (4 columns x 2 rows layout)
+    /// Main week grid (7 columns x 1 row layout)
     private var weekGrid: some View {
-        VStack(spacing: cellSpacing) {
-            // First row: Mon-Thu (4 days)
-            HStack(spacing: cellSpacing) {
-                ForEach(0..<4, id: \.self) { index in
-                    if index < weekDates.count {
-                        dayCellView(for: weekDates[index])
-                    }
+        HStack(spacing: cellSpacing) {
+            ForEach(0..<7, id: \.self) { index in
+                if index < weekDates.count {
+                    dayCellView(for: weekDates[index])
                 }
-            }
-
-            // Second row: Fri-Sun (3 days)
-            HStack(spacing: cellSpacing) {
-                ForEach(4..<7, id: \.self) { index in
-                    if index < weekDates.count {
-                        dayCellView(for: weekDates[index])
-                    }
-                }
-                // Empty space for 4th column
-                Color.clear
-                    .frame(maxWidth: .infinity)
             }
         }
         .gesture(swipeGesture)
@@ -141,25 +91,24 @@ struct WeeklyGridView: View {
         let isCompleted = completionData[normalizedDate]
         let isToday = normalizedDate == today
         let isFuture = normalizedDate > today
-        let isEditable = normalizedDate.isWithin(days: Constants.editableDaysRange)
 
         return Button {
-            if isEditable && !isFuture {
+            if !isFuture {
                 HapticManager.shared.lightImpact()
                 onDayTap?(normalizedDate)
             }
         } label: {
-            VStack(spacing: 8) {
+            VStack(spacing: 6) {
                 // Day name
                 Text(dayName(for: date))
-                    .font(.caption)
-                    .fontWeight(.medium)
+                    .font(.system(size: 11, weight: .semibold))
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
                     .foregroundColor(isToday ? adaptedHabitColor : .secondary)
 
                 // Day number
                 Text("\(calendar.component(.day, from: date))")
-                    .font(.title2)
-                    .fontWeight(isToday ? .bold : .regular)
+                    .font(.system(size: 20, weight: isToday ? .bold : .medium))
                     .foregroundColor(dayNumberColor(isFuture: isFuture))
 
                 // Today label
@@ -176,21 +125,22 @@ struct WeeklyGridView: View {
 
                 // Completion indicator
                 completionIndicator(isCompleted: isCompleted, isFuture: isFuture)
-                    .padding(.bottom, 12)
+                    .padding(.bottom, 10)
             }
+            .padding(.horizontal, 4)
             .frame(maxWidth: .infinity)
-            .frame(height: 140)
+            .frame(height: 130)
             .background(cellBackground(isCompleted: isCompleted, isToday: isToday, isFuture: isFuture))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 10)
                     .strokeBorder(isToday ? adaptedHabitColor : Color.clear, lineWidth: 2)
             )
         }
         .buttonStyle(.plain)
-        .disabled(isFuture || !isEditable)
+        .disabled(isFuture)
         .contextMenu {
-            if !isFuture && isEditable {
+            if !isFuture {
                 Button {
                     HapticManager.shared.lightImpact()
                     onDayTap?(normalizedDate)
@@ -210,7 +160,7 @@ struct WeeklyGridView: View {
             .disabled(true)
         }
         .accessibilityLabel(accessibilityLabel(for: date, isCompleted: isCompleted))
-        .accessibilityHint(isEditable && !isFuture ? String(localized: "두 번 탭하여 전환") : "")
+        .accessibilityHint(!isFuture ? String(localized: "두 번 탭하여 전환") : "")
     }
 
     private func dateInfoText(for date: Date) -> String {
@@ -225,21 +175,21 @@ struct WeeklyGridView: View {
         if isFuture {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.secondary.opacity(0.1))
-                .frame(width: 48, height: 48)
+                .frame(width: 44, height: 44)
         } else if let completed = isCompleted, completed {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(adaptedHabitColor)
-                    .frame(width: 48, height: 48)
+                    .frame(width: 44, height: 44)
 
                 Image(systemName: "checkmark")
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.white)
             }
         } else {
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(Color.secondary.opacity(0.3), lineWidth: 2)
-                .frame(width: 48, height: 48)
+                .frame(width: 44, height: 44)
         }
     }
 
@@ -252,7 +202,7 @@ struct WeeklyGridView: View {
     }
 
     private func dayNumberColor(isFuture: Bool) -> Color {
-        isFuture ? .secondary.opacity(0.5) : .primary
+        isFuture ? .secondary.opacity(0.4) : .primary
     }
 
     private func cellBackground(isCompleted: Bool?, isToday: Bool, isFuture: Bool) -> Color {

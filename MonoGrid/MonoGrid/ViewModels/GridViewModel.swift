@@ -215,13 +215,6 @@ final class GridViewModel {
     func toggleCompletion(on date: Date) async {
         let normalizedDate = Calendar.current.startOfDay(for: date)
 
-        // Check if date is editable
-        guard normalizedDate.isWithin(days: Constants.editableDaysRange) else {
-            errorMessage = String(localized: "7일 이전 기록은 수정할 수 없습니다")
-            showError = true
-            return
-        }
-
         // Optimistic update
         let previousValue = completionData[normalizedDate]
         completionData[normalizedDate] = !(previousValue ?? false)

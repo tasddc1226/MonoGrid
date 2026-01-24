@@ -95,9 +95,11 @@ struct HabitDetailGridView: View {
                         gridContent(viewModel: viewModel)
                     }
 
-                    // Legend
-                    GridLegendView(habitColorHex: habit.colorHex)
-                        .padding(.top, 8)
+                    // Legend (only for yearly view)
+                    if viewModel.viewMode == .yearly {
+                        GridLegendView(habitColorHex: habit.colorHex)
+                            .padding(.top, 8)
+                    }
 
                     // Statistics section
                     statisticsSection(viewModel: viewModel)
@@ -213,7 +215,7 @@ struct HabitDetailGridView: View {
             .transition(gridTransition)
 
         case .weekly:
-            WeeklyGridView(
+            WeeklyListView(
                 habitId: habit.id,
                 habitColorHex: habit.colorHex,
                 currentWeekStart: Binding(

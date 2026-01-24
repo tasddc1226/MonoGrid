@@ -11,6 +11,7 @@
 		01B0003D4A53C6716D33D448 /* MediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124B62875D5AAED3874562 /* MediumWidgetView.swift */; };
 		03CD34569C25A6FA26ECDAE6 /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A229D9BDA227221112ADB2A /* SmallWidgetView.swift */; };
 		03E6BDB12E87EB03B4E31353 /* WeeklyGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */; };
+		ABCD1234EF5678901234ABCD /* WeeklyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1234ABCDEF5678901234ABCD /* WeeklyListView.swift */; };
 		058CB2FBE8AF848E40DC9F74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 844E5BBBE83166639FFC3566 /* Assets.xcassets */; };
 		08320F6722352E6124C6C159 /* HabitEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */; };
 		0C9834E1E451AFD74FD195B7 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F95257B945BEAEA2C4DA7DE /* Color+Extensions.swift */; };
@@ -188,6 +189,7 @@
 		FB94A9AE0D0BA2B798057654 /* GridViewMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewMode.swift; sourceTree = "<group>"; };
 		FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsCalculator.swift; sourceTree = "<group>"; };
 		FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyGridView.swift; sourceTree = "<group>"; };
+		1234ABCDEF5678901234ABCD /* WeeklyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -242,6 +244,7 @@
 				35E26221D6D28179757AC430 /* MonthlyGridView.swift */,
 				9B2552B312FD88C437E9AD38 /* StatisticsSummaryView.swift */,
 				FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */,
+				1234ABCDEF5678901234ABCD /* WeeklyListView.swift */,
 				83B69661083EA1190899122D /* YearlyGridView.swift */,
 			);
 			path = Grid;
@@ -654,6 +657,7 @@
 				A26A54D132CF60E989FF8715 /* SyncStatusMonitor.swift in Sources */,
 				84241E818A6A3F2DF4A2386E /* ToggleHabitIntent.swift in Sources */,
 				03E6BDB12E87EB03B4E31353 /* WeeklyGridView.swift in Sources */,
+				ABCD1234EF5678901234ABCD /* WeeklyListView.swift in Sources */,
 				A163750802F348675AFAFDA8 /* YearlyGridView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

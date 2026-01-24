@@ -87,10 +87,7 @@ struct MonthlyGridView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Month header with navigation
-            monthHeader
-
-            // Weekday headers
+            // Weekday headers (navigation handled by parent HabitDetailGridView)
             weekdayHeader
 
             // Calendar grid
@@ -99,36 +96,6 @@ struct MonthlyGridView: View {
     }
 
     // MARK: - Subviews
-
-    /// Month header with navigation arrows
-    private var monthHeader: some View {
-        HStack {
-            Button {
-                navigateMonth(by: -1)
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.title3)
-                    .foregroundColor(.primary)
-            }
-
-            Spacer()
-
-            Text(monthTitle)
-                .font(.headline)
-
-            Spacer()
-
-            Button {
-                navigateMonth(by: 1)
-            } label: {
-                Image(systemName: "chevron.right")
-                    .font(.title3)
-                    .foregroundColor(canNavigateForward ? .primary : .secondary.opacity(0.3))
-            }
-            .disabled(!canNavigateForward)
-        }
-        .padding(.horizontal, 8)
-    }
 
     /// Weekday labels row
     private var weekdayHeader: some View {
@@ -166,10 +133,9 @@ struct MonthlyGridView: View {
         let isCompleted = completionData[normalizedDate]
         let isToday = normalizedDate == today
         let isFuture = normalizedDate > today
-        let isEditable = normalizedDate.isWithin(days: Constants.editableDaysRange)
 
         return Button {
-            if isEditable && !isFuture {
+            if !isFuture {
                 HapticManager.shared.lightImpact()
                 onCellTap?(normalizedDate)
             }
@@ -207,8 +173,9 @@ struct MonthlyGridView: View {
             }
         }
         .buttonStyle(.plain)
+        .disabled(isFuture)
         .contextMenu {
-            if !isFuture && isEditable {
+            if !isFuture {
                 Button {
                     HapticManager.shared.lightImpact()
                     onCellTap?(normalizedDate)
@@ -250,7 +217,7 @@ struct MonthlyGridView: View {
 
     private func dayNumberColor(isCompleted: Bool?, isFuture: Bool, isToday: Bool) -> Color {
         if isFuture {
-            return .secondary.opacity(0.5)
+            return .secondary.opacity(0.4)
         }
         if isToday {
             return .primary

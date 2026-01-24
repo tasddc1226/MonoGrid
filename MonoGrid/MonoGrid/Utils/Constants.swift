@@ -21,8 +21,8 @@ enum Constants {
     /// Maximum number of habits allowed
     static let maxHabitCount = 3
 
-    /// Number of days that can be edited (including today)
-    static let editableDaysRange = 7
+    /// Number of days that can be edited (unlimited - all past dates are editable)
+    static let editableDaysRange = Int.max
 
     /// Number of days to display in the full grid
     static let gridDaysCount = 365

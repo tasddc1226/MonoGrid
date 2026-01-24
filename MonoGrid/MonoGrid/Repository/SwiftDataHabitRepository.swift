@@ -82,11 +82,6 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
     func toggleLog(for habitId: UUID, on date: Date) async throws -> HabitLog {
         let targetDate = Calendar.current.startOfDay(for: date)
 
-        // Validate date is within editable range
-        guard targetDate.isWithin(days: Constants.editableDaysRange) else {
-            throw HabitError.dateOutOfRange
-        }
-
         // Find the habit
         let habitDescriptor = FetchDescriptor<Habit>(
             predicate: #Predicate { $0.id == habitId }
