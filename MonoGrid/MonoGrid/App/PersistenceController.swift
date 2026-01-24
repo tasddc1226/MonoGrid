@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import CloudKit
 
 /// Singleton controller for managing SwiftData persistence with App Groups and CloudKit
 @MainActor
@@ -25,6 +26,15 @@ final class PersistenceController {
         container.mainContext
     }
 
+    /// CloudKit sync enabled status
+    private(set) var isCloudKitEnabled: Bool = false
+
+    /// CloudKit account status
+    private(set) var cloudKitAccountStatus: CKAccountStatus = .couldNotDetermine
+
+    /// CloudKit initialization error (for debugging)
+    private(set) var cloudKitInitError: Error?
+
     // MARK: - Initialization
 
     private init() {
@@ -34,55 +44,207 @@ final class PersistenceController {
             HabitLog.self
         ])
 
-        // Configure for CloudKit sync via App Groups
-        let modelConfiguration: ModelConfiguration
+        // Log diagnostic info
+        Self.logDiagnosticInfo()
 
         #if DEBUG
         // Use in-memory store for previews/testing if needed
         if ProcessInfo.processInfo.arguments.contains("--uitesting") {
-            modelConfiguration = ModelConfiguration(
+            let inMemoryConfig = ModelConfiguration(
                 schema: schema,
                 isStoredInMemoryOnly: true
             )
-        } else {
-            modelConfiguration = Self.createConfiguration(schema: schema)
+            do {
+                container = try ModelContainer(for: schema, configurations: [inMemoryConfig])
+                isCloudKitEnabled = false
+                print("✅ [PersistenceController] In-memory container created (UI testing)")
+                return
+            } catch {
+                fatalError("Failed to create in-memory container: \(error)")
+            }
         }
-        #else
-        modelConfiguration = Self.createConfiguration(schema: schema)
+
+        if ProcessInfo.processInfo.arguments.contains("--no-cloudkit") {
+            let localConfig = Self.createLocalConfiguration(schema: schema)
+            do {
+                container = try ModelContainer(for: schema, configurations: [localConfig])
+                isCloudKitEnabled = false
+                print("✅ [PersistenceController] Local container created (--no-cloudkit)")
+                return
+            } catch {
+                fatalError("Failed to create local container: \(error)")
+            }
+        }
         #endif
 
+        // Check if CloudKit should be attempted
+        guard Constants.isCloudKitSyncEnabled else {
+            print("ℹ️ [PersistenceController] CloudKit disabled by Constants")
+            let localConfig = Self.createLocalConfiguration(schema: schema)
+            do {
+                container = try ModelContainer(for: schema, configurations: [localConfig])
+                isCloudKitEnabled = false
+                print("✅ [PersistenceController] Local container created")
+            } catch {
+                fatalError("Failed to create local container: \(error)")
+            }
+            return
+        }
+
+        // Try CloudKit with detailed error handling
         do {
-            container = try ModelContainer(
-                for: schema,
-                configurations: [modelConfiguration]
-            )
+            let cloudKitConfig = Self.createCloudKitConfiguration(schema: schema)
+            print("🔄 [PersistenceController] Attempting CloudKit container...")
+            container = try ModelContainer(for: schema, configurations: [cloudKitConfig])
+            isCloudKitEnabled = true
+            print("✅ [PersistenceController] CloudKit container created successfully")
         } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
+            // Detailed error logging
+            cloudKitInitError = error
+            Self.logDetailedError(error)
+
+            // Fallback to local-only
+            print("⚠️ [PersistenceController] Falling back to local-only storage")
+            do {
+                let localConfig = Self.createLocalConfiguration(schema: schema)
+                container = try ModelContainer(for: schema, configurations: [localConfig])
+                isCloudKitEnabled = false
+                print("✅ [PersistenceController] Local fallback container created")
+            } catch let localError {
+                Self.logDetailedError(localError)
+                fatalError("Failed to create ModelContainer even with local storage: \(localError)")
+            }
+        }
+
+        // Check CloudKit account status asynchronously
+        Task {
+            await checkCloudKitAccountStatus()
         }
     }
 
-    // MARK: - Configuration
+    // MARK: - Diagnostic Methods
 
-    private static func createConfiguration(schema: Schema) -> ModelConfiguration {
-        // Get App Group container URL
+    private static func logDiagnosticInfo() {
+        print("📊 [PersistenceController] Diagnostic Info:")
+        print("   - CloudKit enabled in Constants: \(Constants.isCloudKitSyncEnabled)")
+        print("   - Container ID: \(Constants.cloudKitContainerIdentifier)")
+        print("   - App Group: \(Constants.appGroupIdentifier)")
+
         if let containerURL = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier
         ) {
+            print("   - App Group URL: \(containerURL.path)")
             let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
-
-            // CloudKit disabled for simulator compatibility
-            // Enable for production: cloudKitDatabase: .private(Constants.cloudKitContainerIdentifier)
-            return ModelConfiguration(
-                schema: schema,
-                url: storeURL,
-                cloudKitDatabase: .none
-            )
+            let exists = FileManager.default.fileExists(atPath: storeURL.path)
+            print("   - SQLite exists: \(exists)")
         } else {
-            // Fallback to default location (development/testing)
+            print("   - ⚠️ App Group URL: NOT AVAILABLE")
+        }
+
+        #if targetEnvironment(simulator)
+        print("   - Environment: Simulator")
+        #else
+        print("   - Environment: Device")
+        #endif
+    }
+
+    private static func logDetailedError(_ error: Error) {
+        print("❌ [PersistenceController] Error Details:")
+        print("   - Type: \(type(of: error))")
+        print("   - Description: \(error.localizedDescription)")
+
+        let nsError = error as NSError
+        print("   - Domain: \(nsError.domain)")
+        print("   - Code: \(nsError.code)")
+
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error {
+            print("   - Underlying: \(underlying)")
+        }
+
+        // Check for specific SwiftData/CloudKit errors
+        if nsError.domain == "SwiftDataError" {
+            print("   - ⚠️ SwiftData error - possible schema mismatch or CloudKit sync issue")
+        }
+
+        if nsError.domain == "CKErrorDomain" {
+            print("   - ⚠️ CloudKit error - check iCloud account and container setup")
+        }
+    }
+
+    // MARK: - Configuration Methods
+
+    /// Create CloudKit-enabled configuration
+    private static func createCloudKitConfiguration(schema: Schema) -> ModelConfiguration {
+        let cloudKitDB: ModelConfiguration.CloudKitDatabase = .private(Constants.cloudKitContainerIdentifier)
+
+        guard let containerURL = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier
+        ) else {
+            print("⚠️ [PersistenceController] No App Group, using default location with CloudKit")
             return ModelConfiguration(
                 schema: schema,
+                allowsSave: true,
+                cloudKitDatabase: cloudKitDB
+            )
+        }
+
+        let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
+        print("📁 [PersistenceController] Store URL: \(storeURL.path)")
+
+        return ModelConfiguration(
+            schema: schema,
+            url: storeURL,
+            allowsSave: true,
+            cloudKitDatabase: cloudKitDB
+        )
+    }
+
+    /// Create local-only configuration (simulator/testing/fallback)
+    private static func createLocalConfiguration(schema: Schema) -> ModelConfiguration {
+        guard let containerURL = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier
+        ) else {
+            print("⚠️ [PersistenceController] No App Group, using default location (local)")
+            return ModelConfiguration(
+                schema: schema,
+                allowsSave: true,
                 cloudKitDatabase: .none
             )
+        }
+
+        let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
+        return ModelConfiguration(
+            schema: schema,
+            url: storeURL,
+            allowsSave: true,
+            cloudKitDatabase: .none
+        )
+    }
+
+    // MARK: - CloudKit Account Management
+
+    /// Check CloudKit account status
+    func checkCloudKitAccountStatus() async {
+        guard Constants.isCloudKitSyncEnabled else {
+            isCloudKitEnabled = false
+            cloudKitAccountStatus = .couldNotDetermine
+            return
+        }
+
+        do {
+            let status = try await CKContainer(
+                identifier: Constants.cloudKitContainerIdentifier
+            ).accountStatus()
+
+            await MainActor.run {
+                self.cloudKitAccountStatus = status
+                self.isCloudKitEnabled = (status == .available)
+            }
+        } catch {
+            await MainActor.run {
+                self.cloudKitAccountStatus = .couldNotDetermine
+                self.isCloudKitEnabled = false
+            }
         }
     }
 

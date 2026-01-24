@@ -59,6 +59,9 @@ struct SettingsView: View {
                     }
                 }
 
+                // iCloud Sync Section
+                iCloudSyncSection
+
                 // General Section
                 Section(header: Text("일반")) {
                     // Language (follows system)
@@ -66,14 +69,6 @@ struct SettingsView: View {
                         Label("언어", systemImage: "globe")
                         Spacer()
                         Text("시스템 설정")
-                            .foregroundColor(.secondary)
-                    }
-
-                    // iCloud Sync status
-                    HStack {
-                        Label("iCloud 동기화", systemImage: "icloud")
-                        Spacer()
-                        Text("켜짐")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -136,6 +131,89 @@ struct SettingsView: View {
                 Button("취소", role: .cancel) {}
             } message: {
                 Text("모든 습관과 기록이 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.")
+            }
+        }
+    }
+
+    // MARK: - Sync Monitor
+
+    private var syncMonitor: SyncStatusMonitor { SyncStatusMonitor.shared }
+
+    // MARK: - iCloud Sync Section
+
+    @ViewBuilder
+    private var iCloudSyncSection: some View {
+        Section(header: Text("iCloud 동기화")) {
+            // Sync status row
+            HStack {
+                SyncStatusView(showText: true)
+                Spacer()
+            }
+
+            // Last sync time
+            if syncMonitor.syncStatus != .unavailable {
+                HStack {
+                    Label("마지막 동기화", systemImage: "clock")
+                    Spacer()
+                    Text(syncMonitor.lastSyncDescription)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            // Manual sync button
+            if syncMonitor.syncStatus.canTriggerSync || syncMonitor.syncStatus == .synced {
+                Button {
+                    syncMonitor.triggerSync()
+                    HapticManager.shared.lightImpact()
+                } label: {
+                    HStack {
+                        Label("지금 동기화", systemImage: "arrow.clockwise")
+                        Spacer()
+                        if syncMonitor.syncStatus == .syncing {
+                            ProgressView()
+                                .controlSize(.small)
+                        }
+                    }
+                }
+                .disabled(syncMonitor.syncStatus == .syncing || !syncMonitor.isConnected)
+            }
+
+            // Error message
+            if syncMonitor.syncStatus == .error, let errorMessage = syncMonitor.lastErrorMessage {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            // iCloud unavailable warning
+            if syncMonitor.syncStatus == .unavailable {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("iCloud를 사용할 수 없습니다")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Text("설정 > Apple ID > iCloud에서 iCloud Drive가 켜져 있는지 확인하세요.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
+            // Offline warning
+            if syncMonitor.syncStatus == .offline {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "wifi.slash")
+                        .foregroundColor(.gray)
+                    Text("오프라인 상태입니다. 인터넷에 연결되면 자동으로 동기화됩니다.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
         }
     }

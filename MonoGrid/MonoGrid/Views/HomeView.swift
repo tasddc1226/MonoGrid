@@ -44,6 +44,10 @@ struct HomeView: View {
                 )
             }
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    CompactSyncStatusView()
+                }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showSettings = true

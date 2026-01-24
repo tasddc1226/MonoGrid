@@ -15,19 +15,19 @@ final class HabitLog {
     // MARK: - Properties
 
     /// Unique identifier for the log
-    @Attribute(.unique) var id: UUID
+    var id: UUID = UUID()
 
     /// Date of the log (normalized to start of day)
-    var date: Date
+    var date: Date = Date()
 
     /// Whether the habit was completed on this date
-    var isCompleted: Bool
+    var isCompleted: Bool = false
 
     /// Last update timestamp for sync conflict resolution
-    var updatedAt: Date
+    var updatedAt: Date = Date()
 
     /// Habit ID for predicate queries (denormalized for SwiftData compatibility)
-    var habitId: UUID?
+    var habitId: UUID? = nil
 
     // MARK: - Relationships
 

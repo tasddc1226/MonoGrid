@@ -15,8 +15,18 @@ enum Constants {
     /// App Group identifier for sharing data between app and extensions
     static let appGroupIdentifier = "group.com.suyoung.monogrid"
 
-    /// CloudKit container identifier (disabled for now)
+    /// CloudKit container identifier
     static let cloudKitContainerIdentifier = "iCloud.com.suyoung.monogrid"
+
+    /// CloudKit sync enabled flag
+    /// Returns false on simulator where CloudKit has limitations
+    static var isCloudKitSyncEnabled: Bool {
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        return true
+        #endif
+    }
 
     /// Maximum number of habits allowed
     static let maxHabitCount = 3

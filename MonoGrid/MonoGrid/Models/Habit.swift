@@ -15,25 +15,26 @@ final class Habit {
     // MARK: - Properties
 
     /// Unique identifier for the habit
-    @Attribute(.unique) var id: UUID
+    var id: UUID = UUID()
 
     /// Title/name of the habit (e.g., "Reading", "Exercise")
-    var title: String
+    /// Indexed for CloudKit query optimization and Spotlight search
+    @Attribute(.spotlight) var title: String = ""
 
     /// Color in hex format (e.g., "#FF6B6B")
-    var colorHex: String
+    var colorHex: String = "#4D96FF"
 
     /// SF Symbol name for the icon (e.g., "book.fill")
-    var iconSymbol: String
+    var iconSymbol: String = "star.fill"
 
     /// Display order index (0, 1, or 2)
-    var orderIndex: Int
+    var orderIndex: Int = 0
 
     /// Creation timestamp
-    var createdAt: Date
+    var createdAt: Date = Date()
 
     /// Last update timestamp
-    var updatedAt: Date
+    var updatedAt: Date = Date()
 
     // MARK: - Relationships
 

@@ -67,19 +67,12 @@ struct HabitTimelineProvider: AppIntentTimelineProvider {
     }
 
     private func fetchHabitsFromSharedContainer() async throws -> [HabitData] {
-        // Access shared App Group container
-        guard let containerURL = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: "group.com.suyoung.monogrid"
-        ) else {
+        // Use SharedModelContainer for consistent CloudKit-enabled configuration
+        guard let context = await MainActor.run(body: {
+            SharedModelContainer.getSharedContext()
+        }) else {
             return []
         }
-
-        let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
-
-        let schema = Schema([Habit.self, HabitLog.self])
-        let configuration = ModelConfiguration(schema: schema, url: storeURL)
-        let container = try ModelContainer(for: schema, configurations: [configuration])
-        let context = ModelContext(container)
 
         // Fetch habits
         let habitDescriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.orderIndex)])
@@ -142,19 +135,14 @@ struct SimpleLockScreenProvider: TimelineProvider {
     }
 
     private func fetchEntry() async -> HabitEntry {
-        // Simplified fetch - same logic as main provider
-        do {
-            guard let containerURL = FileManager.default.containerURL(
-                forSecurityApplicationGroupIdentifier: "group.com.suyoung.monogrid"
-            ) else {
-                return HabitEntry.empty
-            }
+        // Use SharedModelContainer for consistent CloudKit-enabled configuration
+        guard let context = await MainActor.run(body: {
+            SharedModelContainer.getSharedContext()
+        }) else {
+            return HabitEntry.empty
+        }
 
-            let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
-            let schema = Schema([Habit.self, HabitLog.self])
-            let configuration = ModelConfiguration(schema: schema, url: storeURL)
-            let container = try ModelContainer(for: schema, configurations: [configuration])
-            let context = ModelContext(container)
+        do {
 
             let habitDescriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.orderIndex)])
             let habits = try context.fetch(habitDescriptor)

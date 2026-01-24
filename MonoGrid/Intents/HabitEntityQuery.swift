@@ -31,18 +31,12 @@ struct HabitEntityQuery: EntityQuery {
     // MARK: - Private Methods
 
     private func fetchAllHabits() async throws -> [HabitEntity] {
-        guard let containerURL = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier
-        ) else {
+        // Use SharedModelContainer for consistent CloudKit-enabled configuration
+        guard let context = await MainActor.run(body: {
+            SharedModelContainer.getSharedContext()
+        }) else {
             return []
         }
-
-        let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
-        let schema = Schema([Habit.self, HabitLog.self])
-        let configuration = ModelConfiguration(schema: schema, url: storeURL)
-
-        let container = try ModelContainer(for: schema, configurations: [configuration])
-        let context = ModelContext(container)
 
         let descriptor = FetchDescriptor<Habit>(
             sortBy: [SortDescriptor(\.orderIndex)]

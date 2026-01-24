@@ -50,20 +50,14 @@ struct ToggleHabitIntent: AppIntent {
             throw IntentError.habitNotSpecified
         }
 
-        // Access shared container
-        guard let containerURL = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: Constants.appGroupIdentifier
-        ) else {
+        // Use SharedModelContainer for consistent CloudKit-enabled configuration
+        guard let context = await MainActor.run(body: {
+            SharedModelContainer.getSharedContext()
+        }) else {
             throw IntentError.containerNotFound
         }
 
-        let storeURL = containerURL.appendingPathComponent("MonoGrid.sqlite")
-        let schema = Schema([Habit.self, HabitLog.self])
-        let configuration = ModelConfiguration(schema: schema, url: storeURL)
-
         do {
-            let container = try ModelContainer(for: schema, configurations: [configuration])
-            let context = ModelContext(container)
 
             // Find the habit
             guard let habitUUID = UUID(uuidString: targetId) else {
@@ -90,17 +84,35 @@ struct ToggleHabitIntent: AppIntent {
             let existingLog = try context.fetch(logDescriptor).first
 
             let newState: Bool
+            let logId: UUID
+            let isUpdate: Bool
+
             if let log = existingLog {
                 log.isCompleted.toggle()
                 log.updatedAt = Date()
                 newState = log.isCompleted
+                logId = log.id
+                isUpdate = true
             } else {
                 let newLog = HabitLog(date: today, isCompleted: true, habit: habitModel)
                 context.insert(newLog)
                 newState = true
+                logId = newLog.id
+                isUpdate = false
             }
 
             try context.save()
+
+            // Enqueue sync change for CloudKit
+            let pendingChange = SyncQueue.PendingChange(
+                id: UUID(),
+                entityType: .habitLog,
+                entityId: logId,
+                changeType: isUpdate ? .update : .insert,
+                timestamp: Date(),
+                retryCount: 0
+            )
+            await SyncQueue.shared.enqueue(pendingChange)
 
             // Refresh widgets
             WidgetCenter.shared.reloadAllTimelines()
