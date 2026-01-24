@@ -21,6 +21,7 @@ struct SettingsView: View {
     @State private var selectedHabit: Habit?
     @State private var showResetConfirmation = false
     @State private var showAbout = false
+    @State private var showOnboarding = false
     @State private var selectedTheme: ThemeMode = ThemeManager.shared.currentTheme
 
     // MARK: - Body
@@ -76,6 +77,12 @@ struct SettingsView: View {
                 // Info Section
                 Section(header: Text("정보")) {
                     Button {
+                        showOnboarding = true
+                    } label: {
+                        Label("사용법 안내", systemImage: "play.rectangle")
+                    }
+
+                    Button {
                         showAbout = true
                     } label: {
                         Label("앱 정보", systemImage: "info.circle")
@@ -119,6 +126,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showAbout) {
                 AboutView()
+            }
+            .fullScreenCover(isPresented: $showOnboarding) {
+                OnboardingContainerView()
             }
             .confirmationDialog(
                 "모든 데이터를 삭제하시겠어요?",
@@ -311,6 +321,37 @@ struct AboutView: View {
                         dismiss()
                     }
                 }
+            }
+        }
+    }
+}
+
+// MARK: - Onboarding Container View
+
+/// Container for viewing onboarding from settings
+struct OnboardingContainerView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var onboardingViewModel = OnboardingViewModel()
+
+    var body: some View {
+        NavigationStack {
+            OnboardingView()
+                .environment(onboardingViewModel)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+        }
+        .onChange(of: onboardingViewModel.hasCompletedOnboarding) { _, completed in
+            if completed {
+                dismiss()
             }
         }
     }

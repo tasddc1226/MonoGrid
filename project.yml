@@ -20,13 +20,7 @@ targets:
     platform: iOS
     sources:
       - path: MonoGrid/MonoGrid
-        excludes:
-          - "**/*.xcassets"
       - path: MonoGrid/Intents
-    resources:
-      - path: MonoGrid/MonoGrid/Resources/Assets.xcassets
-      - path: MonoGrid/MonoGrid/Resources/Localizable.xcstrings
-        optional: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.suyoung.monogrid

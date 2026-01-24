@@ -19,7 +19,7 @@ final class OnboardingViewModel {
     var currentPage: Int = 0
 
     /// Total number of onboarding pages
-    let totalPages: Int = 2
+    let totalPages: Int = 3
 
     /// Whether onboarding has been completed (stored property for @Observable detection)
     private(set) var hasCompletedOnboarding: Bool = false

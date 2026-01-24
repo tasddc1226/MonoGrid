@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVKit
 
 /// Onboarding flow for first-time users
 struct OnboardingView: View {
@@ -26,6 +27,9 @@ struct OnboardingView: View {
 
                 OnboardingPage2()
                     .tag(1)
+
+                OnboardingPage3()
+                    .tag(2)
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -159,6 +163,94 @@ struct OnboardingPage2: View {
     }
 }
 
+// MARK: - Page 3: Tutorial Video
+
+struct OnboardingPage3: View {
+    @State private var player: AVPlayer?
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            // Title
+            Text("사용법 안내")
+                .font(.title)
+                .fontWeight(.bold)
+
+            // Video Player
+            videoPlayerContent
+                .frame(height: 280)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 4)
+                .padding(.horizontal, 24)
+
+            // Description
+            Text("탭하여 습관을 기록하고\n그리드로 성장을 확인하세요")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+
+            Spacer()
+            Spacer()
+        }
+        .onAppear {
+            setupPlayer()
+        }
+        .onDisappear {
+            player?.pause()
+        }
+    }
+
+    @ViewBuilder
+    private var videoPlayerContent: some View {
+        if let player = player {
+            VideoPlayer(player: player)
+                .disabled(true)
+        } else {
+            // Placeholder when video is not available
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.secondary.opacity(0.1))
+
+                VStack(spacing: 16) {
+                    Image(systemName: "play.rectangle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(.secondary.opacity(0.5))
+
+                    Text("튜토리얼 영상")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+
+    private func setupPlayer() {
+        guard let url = Bundle.main.url(
+            forResource: "onboarding_tutorial",
+            withExtension: "mp4"
+        ) else {
+            return
+        }
+
+        let playerItem = AVPlayerItem(url: url)
+        player = AVPlayer(playerItem: playerItem)
+        player?.isMuted = true
+        player?.play()
+
+        // Loop video
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player?.currentItem,
+            queue: .main
+        ) { _ in
+            player?.seek(to: .zero)
+            player?.play()
+        }
+    }
+}
+
 // MARK: - Preview
 
 #Preview {
@@ -172,4 +264,8 @@ struct OnboardingPage2: View {
 
 #Preview("Page 2") {
     OnboardingPage2()
+}
+
+#Preview("Page 3") {
+    OnboardingPage3()
 }
