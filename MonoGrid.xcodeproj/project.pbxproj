@@ -1,0 +1,976 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00CFCD18D024866F867BE82B /* GridStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1309458C039AD7C89882F327 /* GridStatistics.swift */; };
+		01B0003D4A53C6716D33D448 /* MediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84124B62875D5AAED3874562 /* MediumWidgetView.swift */; };
+		03CD34569C25A6FA26ECDAE6 /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A229D9BDA227221112ADB2A /* SmallWidgetView.swift */; };
+		03E6BDB12E87EB03B4E31353 /* WeeklyGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */; };
+		058CB2FBE8AF848E40DC9F74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 844E5BBBE83166639FFC3566 /* Assets.xcassets */; };
+		08320F6722352E6124C6C159 /* HabitEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */; };
+		0C9834E1E451AFD74FD195B7 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F95257B945BEAEA2C4DA7DE /* Color+Extensions.swift */; };
+		0ED1CB9BB0DAFB547A00C8E6 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C19424C3577C4767A40E1B /* HomeView.swift */; };
+		0FAA51948FDBA3FB0ADC7E60 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDED9D4C00B456A4500DE08 /* SettingsView.swift */; };
+		107CC8253D21D83B00F6F67D /* GridDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311D5FCF5FD125DD02AE7EA3 /* GridDataCache.swift */; };
+		1346A332CF592842DA31C23D /* GitHubGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22D3815B75E424D89DD7AB7 /* GitHubGridView.swift */; };
+		1475BF3C4783704FBC07F57F /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6115BB6465D22BA644A99004 /* IconPickerView.swift */; };
+		152AB8D4CD8783D4E8833911 /* IntentErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8741AC32B86A2B820466DB /* IntentErrors.swift */; };
+		180F3EE896C17EF635872D3D /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A9B09114A1F710645ECC62 /* HapticManager.swift */; };
+		18C6AF2093C997393C8B6C08 /* GridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E8A9BCBADEEFA872B2087C /* GridViewModel.swift */; };
+		18F84009C9A5137B4964CB69 /* HabitEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */; };
+		1C6544847E1FA60881FB00AE /* HabitViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35AECD27EF49390DD099321 /* HabitViewModelTests.swift */; };
+		21A4695B9BE8A49D9072E416 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B9546657A40E76C3646E7 /* OnboardingView.swift */; };
+		23D2C2A2EB40BDB725C0E7A5 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D289CFD21BAD7114A018D9E4 /* EmptyStateView.swift */; };
+		2675273B2FF38DBA58D96BFE /* HabitWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D322539667DE94A0EB35439 /* HabitWidgetIntent.swift */; };
+		2764817D445EAF3CF1521445 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A9B09114A1F710645ECC62 /* HapticManager.swift */; };
+		2B308434972F80E2E2BC8352 /* HabitCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCF2B5F99DB145EDEBD9982 /* HabitCardView.swift */; };
+		2EAFB71002B4620EEDDB5A1D /* HabitEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFC928049A969A9C39B8731 /* HabitEditView.swift */; };
+		2F46644131E864EAE3A832A5 /* MonoGridApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66680DE6326BB03413AC9E /* MonoGridApp.swift */; };
+		340F7B0951F82878D8261ECA /* StatisticsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */; };
+		3711578FB538617EE36ECDBD /* SyncStatusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA56B2FA40094386CBEEB93E /* SyncStatusMonitor.swift */; };
+		39ED9F399D2ECE27278413A1 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06DCB6301FE8ADC130D8B39 /* AppTheme.swift */; };
+		3D07CB8E2F1E4AA0CC0C7007 /* MiniGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60ABEF63B770369939C6F06 /* MiniGridView.swift */; };
+		3E98FA0FD03AF8C874647E9D /* HabitRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF06B8D1F19ACF965396751 /* HabitRepository.swift */; };
+		3EB3600A7CEA5B324A5EF1E2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93651267B6E2C73B29658EA1 /* Constants.swift */; };
+		41ECC540CDEC362EACA0C8EE /* HabitLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0F635A1B0D3874FB972BD9 /* HabitLog.swift */; };
+		43AB2D10261AA36BF423AFEB /* CircularLockWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B843E2AFE2B860E752CB8121 /* CircularLockWidgetView.swift */; };
+		4671679E16754826F3BB9BBC /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D6D9E1208232EEA7080F0 /* OnboardingViewModel.swift */; };
+		4CB59090924C9BC7A1D472A2 /* HabitTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D9E00DD3D443BEEBEEE886 /* HabitTimelineProvider.swift */; };
+		51E890339C19B4719EEE131E /* GridDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C75368742AD22C25F9E419F /* GridDataProvider.swift */; };
+		520F85C0730FD354740C6B4C /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06DCB6301FE8ADC130D8B39 /* AppTheme.swift */; };
+		5E1E7BF8C3FAD1C09824CC63 /* DateRangeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1559DA6E33893497FF312639 /* DateRangeCalculator.swift */; };
+		5E4E8DDCE5D2E01D8507CE52 /* InlineLockWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AF37B3969C04443F2A5A76 /* InlineLockWidgetView.swift */; };
+		5FE29C548AB1F5B0F3EBDAF8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DD1BF5C324A88C683CD19E5B /* Localizable.xcstrings */; };
+		6706B42910F8E1EDC01A11CD /* StatisticsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */; };
+		67B50AC50D51C7AC2610729F /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B916EA1574974E4F4EC1AD4 /* HabitViewModel.swift */; };
+		6C3827A8A275C1B137B8F8DF /* GridDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C75368742AD22C25F9E419F /* GridDataProvider.swift */; };
+		6C3A97113C3FBC25EA706277 /* DateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4076C3DADBD82CE19CFED592 /* DateExtensionTests.swift */; };
+		71EBFE145D22B418460F80BB /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159EA7E30BB2CE79ABBB8813 /* Habit.swift */; };
+		76B3C61B0D9BB08A780FF5EF /* MonthlyGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E26221D6D28179757AC430 /* MonthlyGridView.swift */; };
+		7E26287B0750E79115617416 /* ToggleHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B58C5A9E0C28385AA71CC74 /* ToggleHabitIntent.swift */; };
+		7ECC4A31BE8B5DB8A8A97902 /* GridStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1309458C039AD7C89882F327 /* GridStatistics.swift */; };
+		8067793E01AD51AECB07576B /* HabitEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCAEBEE783CE755928BA2B1 /* HabitEntity.swift */; };
+		8256CFA9ED75D5B88E2352A1 /* GridViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB94A9AE0D0BA2B798057654 /* GridViewMode.swift */; };
+		82DD3D46352BC141DECB2716 /* GridDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311D5FCF5FD125DD02AE7EA3 /* GridDataCache.swift */; };
+		84241E818A6A3F2DF4A2386E /* ToggleHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B58C5A9E0C28385AA71CC74 /* ToggleHabitIntent.swift */; };
+		96BFE3471624B9E6A3B5A75F /* SwiftDataHabitRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CCEFB20C2173372F310D28 /* SwiftDataHabitRepository.swift */; };
+		9F9D49D625A109DDB4F5A6CD /* MonoGridWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9377866F4D6C50AE2D4D76DD /* MonoGridWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A042D319BEF67CFD72EAC0FD /* MonoGridWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378561B5328C69F25CAA59CD /* MonoGridWidgetBundle.swift */; };
+		A163750802F348675AFAFDA8 /* YearlyGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B69661083EA1190899122D /* YearlyGridView.swift */; };
+		A26A54D132CF60E989FF8715 /* SyncStatusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA56B2FA40094386CBEEB93E /* SyncStatusMonitor.swift */; };
+		A49CA10B540C98725C2B60A2 /* LargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27791EE188DC6F17DC627696 /* LargeWidgetView.swift */; };
+		A979E3C3FAE606225CC6054F /* HabitEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2748484134EF2DB26FE7D2 /* HabitEntry.swift */; };
+		AC407D52308C25026B02DCD3 /* GridViewModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AFE7CA9F52B46A6DFB5BBE /* GridViewModePicker.swift */; };
+		B3B8E039DCF899755B5A6FB1 /* IntentErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8741AC32B86A2B820466DB /* IntentErrors.swift */; };
+		B8CCB988B58D77DC8DBD8EF6 /* HabitDetailGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55102684328616FC4A1EFDD /* HabitDetailGridView.swift */; };
+		B92ABDA7E177E2D16759DE89 /* GridViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB94A9AE0D0BA2B798057654 /* GridViewMode.swift */; };
+		C8C35F27C3CEDC275440A217 /* HabitFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CC3F1E8814BD40F25CEC42 /* HabitFlowUITests.swift */; };
+		CBADDFA0C17E68E1400655C6 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4177257CD0B702099FCAE904 /* PersistenceController.swift */; };
+		CDEE90FA321810221B55CC21 /* StatisticsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2552B312FD88C437E9AD38 /* StatisticsSummaryView.swift */; };
+		CEC6600690D1F93340AE7215 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784959810015D0754B672A1B /* AppShortcuts.swift */; };
+		CFFE625D7F2C03CFF10FDBBB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93651267B6E2C73B29658EA1 /* Constants.swift */; };
+		D0D8D0A702B5922295A8FBB9 /* HabitEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCAEBEE783CE755928BA2B1 /* HabitEntity.swift */; };
+		D887A505EDC41C285BAA4BC1 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784959810015D0754B672A1B /* AppShortcuts.swift */; };
+		DCFD7CD296FDD20630A73721 /* SwiftDataHabitRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CCEFB20C2173372F310D28 /* SwiftDataHabitRepository.swift */; };
+		DD27CCA3531311DE547E23DA /* HabitRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF06B8D1F19ACF965396751 /* HabitRepository.swift */; };
+		DE630F969025B6924B08F723 /* DateRangeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1559DA6E33893497FF312639 /* DateRangeCalculator.swift */; };
+		DE82C652DFD2DEA893328CD2 /* HabitLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0F635A1B0D3874FB972BD9 /* HabitLog.swift */; };
+		EC720EDC39D77C6E9CD47C0A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4177257CD0B702099FCAE904 /* PersistenceController.swift */; };
+		ECF7D8592CEBE21706A82EE8 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F395EB878CDBE06DA9F65F5F /* CheckboxButton.swift */; };
+		EE1F23C8D1396B9911429359 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0AA0FC7505FD6F31FE3EA9 /* ColorPickerView.swift */; };
+		EFF22C879DB4B66E42F98CCF /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159EA7E30BB2CE79ABBB8813 /* Habit.swift */; };
+		F03FCA897D87E3A21D1D7384 /* BaseGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C1A08E8FAED2EBA5A188C /* BaseGridCell.swift */; };
+		F2D98F8963801641248DB929 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE02CF11BD05AF0B0607336 /* Date+Extensions.swift */; };
+		F60E44A80A0E16A0E691FB31 /* GridLegendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17355A1A02586997F90EEFDE /* GridLegendView.swift */; };
+		F72300D3C51D62923294829F /* ColorExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B509F0E9E683AF307D38CF3B /* ColorExtensionTests.swift */; };
+		FB6B098B125C7F2AF666189C /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F95257B945BEAEA2C4DA7DE /* Color+Extensions.swift */; };
+		FE52A41C4195B5D62E86D97D /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE02CF11BD05AF0B0607336 /* Date+Extensions.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2746CF36A39294F1A854A16A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B728F9EFC4EC35EFABA4E3B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB916B02777E16ADE9A6225F;
+			remoteInfo = MonoGridWidgetExtension;
+		};
+		D814056CF45A93C60A790324 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B728F9EFC4EC35EFABA4E3B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE36702233AB83A3C0B891B2;
+			remoteInfo = MonoGrid;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		849DAEE908481CD431EA9396 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9F9D49D625A109DDB4F5A6CD /* MonoGridWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		02CCEFB20C2173372F310D28 /* SwiftDataHabitRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataHabitRepository.swift; sourceTree = "<group>"; };
+		0F129107A8F7BF2E77208294 /* MonoGridTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MonoGridTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1309458C039AD7C89882F327 /* GridStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridStatistics.swift; sourceTree = "<group>"; };
+		1559DA6E33893497FF312639 /* DateRangeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRangeCalculator.swift; sourceTree = "<group>"; };
+		159EA7E30BB2CE79ABBB8813 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
+		17355A1A02586997F90EEFDE /* GridLegendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLegendView.swift; sourceTree = "<group>"; };
+		1B58C5A9E0C28385AA71CC74 /* ToggleHabitIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHabitIntent.swift; sourceTree = "<group>"; };
+		1B916EA1574974E4F4EC1AD4 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
+		27791EE188DC6F17DC627696 /* LargeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetView.swift; sourceTree = "<group>"; };
+		2F95257B945BEAEA2C4DA7DE /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
+		311D5FCF5FD125DD02AE7EA3 /* GridDataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridDataCache.swift; sourceTree = "<group>"; };
+		35E26221D6D28179757AC430 /* MonthlyGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGridView.swift; sourceTree = "<group>"; };
+		378561B5328C69F25CAA59CD /* MonoGridWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonoGridWidgetBundle.swift; sourceTree = "<group>"; };
+		37CC3F1E8814BD40F25CEC42 /* HabitFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitFlowUITests.swift; sourceTree = "<group>"; };
+		3A8741AC32B86A2B820466DB /* IntentErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentErrors.swift; sourceTree = "<group>"; };
+		3B0AA0FC7505FD6F31FE3EA9 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
+		3BCAEBEE783CE755928BA2B1 /* HabitEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEntity.swift; sourceTree = "<group>"; };
+		4076C3DADBD82CE19CFED592 /* DateExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionTests.swift; sourceTree = "<group>"; };
+		4177257CD0B702099FCAE904 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		4C75368742AD22C25F9E419F /* GridDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridDataProvider.swift; sourceTree = "<group>"; };
+		540C1A08E8FAED2EBA5A188C /* BaseGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseGridCell.swift; sourceTree = "<group>"; };
+		6115BB6465D22BA644A99004 /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
+		63C19424C3577C4767A40E1B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		6A229D9BDA227221112ADB2A /* SmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetView.swift; sourceTree = "<group>"; };
+		6FF06B8D1F19ACF965396751 /* HabitRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitRepository.swift; sourceTree = "<group>"; };
+		75AFE7CA9F52B46A6DFB5BBE /* GridViewModePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewModePicker.swift; sourceTree = "<group>"; };
+		784959810015D0754B672A1B /* AppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcuts.swift; sourceTree = "<group>"; };
+		83B69661083EA1190899122D /* YearlyGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyGridView.swift; sourceTree = "<group>"; };
+		84124B62875D5AAED3874562 /* MediumWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumWidgetView.swift; sourceTree = "<group>"; };
+		844E5BBBE83166639FFC3566 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEntityQuery.swift; sourceTree = "<group>"; };
+		8BCF2B5F99DB145EDEBD9982 /* HabitCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCardView.swift; sourceTree = "<group>"; };
+		8D322539667DE94A0EB35439 /* HabitWidgetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWidgetIntent.swift; sourceTree = "<group>"; };
+		8DFC928049A969A9C39B8731 /* HabitEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEditView.swift; sourceTree = "<group>"; };
+		8F8CEB89044E4BCFA5A941BF /* MonoGrid.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MonoGrid.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93651267B6E2C73B29658EA1 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		9377866F4D6C50AE2D4D76DD /* MonoGridWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = MonoGridWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B2552B312FD88C437E9AD38 /* StatisticsSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsSummaryView.swift; sourceTree = "<group>"; };
+		A0A9B09114A1F710645ECC62 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		A35AECD27EF49390DD099321 /* HabitViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModelTests.swift; sourceTree = "<group>"; };
+		A55102684328616FC4A1EFDD /* HabitDetailGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailGridView.swift; sourceTree = "<group>"; };
+		A5AF37B3969C04443F2A5A76 /* InlineLockWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineLockWidgetView.swift; sourceTree = "<group>"; };
+		AA3D6D9E1208232EEA7080F0 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		AC2748484134EF2DB26FE7D2 /* HabitEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEntry.swift; sourceTree = "<group>"; };
+		AEDED9D4C00B456A4500DE08 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B509F0E9E683AF307D38CF3B /* ColorExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensionTests.swift; sourceTree = "<group>"; };
+		B843E2AFE2B860E752CB8121 /* CircularLockWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularLockWidgetView.swift; sourceTree = "<group>"; };
+		B8D9E00DD3D443BEEBEEE886 /* HabitTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTimelineProvider.swift; sourceTree = "<group>"; };
+		C57B9546657A40E76C3646E7 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		C60ABEF63B770369939C6F06 /* MiniGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniGridView.swift; sourceTree = "<group>"; };
+		C7350D7F520CC84344A989A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CA56B2FA40094386CBEEB93E /* SyncStatusMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusMonitor.swift; sourceTree = "<group>"; };
+		D06DCB6301FE8ADC130D8B39 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		D1E8A9BCBADEEFA872B2087C /* GridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewModel.swift; sourceTree = "<group>"; };
+		D289CFD21BAD7114A018D9E4 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		DD1BF5C324A88C683CD19E5B /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		E22D3815B75E424D89DD7AB7 /* GitHubGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubGridView.swift; sourceTree = "<group>"; };
+		EEE02CF11BD05AF0B0607336 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		F395EB878CDBE06DA9F65F5F /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
+		FA66680DE6326BB03413AC9E /* MonoGridApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonoGridApp.swift; sourceTree = "<group>"; };
+		FB0F635A1B0D3874FB972BD9 /* HabitLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLog.swift; sourceTree = "<group>"; };
+		FB94A9AE0D0BA2B798057654 /* GridViewMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewMode.swift; sourceTree = "<group>"; };
+		FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsCalculator.swift; sourceTree = "<group>"; };
+		FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyGridView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0D9E81C2E7B1CD1F1D3DFF3B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FA66680DE6326BB03413AC9E /* MonoGridApp.swift */,
+				4177257CD0B702099FCAE904 /* PersistenceController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		10FB0B6C4920172214BDF6DE /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				AC2748484134EF2DB26FE7D2 /* HabitEntry.swift */,
+				B8D9E00DD3D443BEEBEEE886 /* HabitTimelineProvider.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		199354DF7A7BBBDDB63AE876 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1309458C039AD7C89882F327 /* GridStatistics.swift */,
+				FB94A9AE0D0BA2B798057654 /* GridViewMode.swift */,
+				159EA7E30BB2CE79ABBB8813 /* Habit.swift */,
+				FB0F635A1B0D3874FB972BD9 /* HabitLog.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1C70C837C3AEDD4A1A0A244C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				280F549B3C81CFE28A898B2C /* Components */,
+				A55102684328616FC4A1EFDD /* HabitDetailGridView.swift */,
+				8DFC928049A969A9C39B8731 /* HabitEditView.swift */,
+				63C19424C3577C4767A40E1B /* HomeView.swift */,
+				C57B9546657A40E76C3646E7 /* OnboardingView.swift */,
+				AEDED9D4C00B456A4500DE08 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		26A885064923C2C9616E27B0 /* Grid */ = {
+			isa = PBXGroup;
+			children = (
+				540C1A08E8FAED2EBA5A188C /* BaseGridCell.swift */,
+				17355A1A02586997F90EEFDE /* GridLegendView.swift */,
+				75AFE7CA9F52B46A6DFB5BBE /* GridViewModePicker.swift */,
+				35E26221D6D28179757AC430 /* MonthlyGridView.swift */,
+				9B2552B312FD88C437E9AD38 /* StatisticsSummaryView.swift */,
+				FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */,
+				83B69661083EA1190899122D /* YearlyGridView.swift */,
+			);
+			path = Grid;
+			sourceTree = "<group>";
+		};
+		280F549B3C81CFE28A898B2C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				26A885064923C2C9616E27B0 /* Grid */,
+				F395EB878CDBE06DA9F65F5F /* CheckboxButton.swift */,
+				3B0AA0FC7505FD6F31FE3EA9 /* ColorPickerView.swift */,
+				D289CFD21BAD7114A018D9E4 /* EmptyStateView.swift */,
+				E22D3815B75E424D89DD7AB7 /* GitHubGridView.swift */,
+				8BCF2B5F99DB145EDEBD9982 /* HabitCardView.swift */,
+				6115BB6465D22BA644A99004 /* IconPickerView.swift */,
+				C60ABEF63B770369939C6F06 /* MiniGridView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		4C6E8293BAF88052DF8260D9 /* MonoGrid */ = {
+			isa = PBXGroup;
+			children = (
+				0D9E81C2E7B1CD1F1D3DFF3B /* App */,
+				C9B07A461FF3248082FB9507 /* Extensions */,
+				199354DF7A7BBBDDB63AE876 /* Models */,
+				6371AE87D8E66EB9107A3F0F /* Repository */,
+				C33968404E0C4CC66B43E8B7 /* Resources */,
+				515375182DBF0B82CBCBD730 /* Theme */,
+				5D9128D0ECFB42A7714E2A40 /* Utils */,
+				BFA1C1024A9FB8AB0D486996 /* ViewModels */,
+				1C70C837C3AEDD4A1A0A244C /* Views */,
+			);
+			name = MonoGrid;
+			path = MonoGrid/MonoGrid;
+			sourceTree = "<group>";
+		};
+		515375182DBF0B82CBCBD730 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				D06DCB6301FE8ADC130D8B39 /* AppTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		5D9128D0ECFB42A7714E2A40 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				93651267B6E2C73B29658EA1 /* Constants.swift */,
+				1559DA6E33893497FF312639 /* DateRangeCalculator.swift */,
+				311D5FCF5FD125DD02AE7EA3 /* GridDataCache.swift */,
+				A0A9B09114A1F710645ECC62 /* HapticManager.swift */,
+				FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */,
+				CA56B2FA40094386CBEEB93E /* SyncStatusMonitor.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		6371AE87D8E66EB9107A3F0F /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				4C75368742AD22C25F9E419F /* GridDataProvider.swift */,
+				6FF06B8D1F19ACF965396751 /* HabitRepository.swift */,
+				02CCEFB20C2173372F310D28 /* SwiftDataHabitRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		71110AD6C5BF4B844A7B44E2 /* MonoGridWidget */ = {
+			isa = PBXGroup;
+			children = (
+				98901D9BF7002B8C67518486 /* Intents */,
+				10FB0B6C4920172214BDF6DE /* Providers */,
+				8762ACF63CA40CA565D0643C /* Views */,
+				844E5BBBE83166639FFC3566 /* Assets.xcassets */,
+				C7350D7F520CC84344A989A1 /* Info.plist */,
+				378561B5328C69F25CAA59CD /* MonoGridWidgetBundle.swift */,
+			);
+			name = MonoGridWidget;
+			path = MonoGrid/MonoGridWidget;
+			sourceTree = "<group>";
+		};
+		8762ACF63CA40CA565D0643C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B843E2AFE2B860E752CB8121 /* CircularLockWidgetView.swift */,
+				A5AF37B3969C04443F2A5A76 /* InlineLockWidgetView.swift */,
+				27791EE188DC6F17DC627696 /* LargeWidgetView.swift */,
+				84124B62875D5AAED3874562 /* MediumWidgetView.swift */,
+				6A229D9BDA227221112ADB2A /* SmallWidgetView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		98901D9BF7002B8C67518486 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				8D322539667DE94A0EB35439 /* HabitWidgetIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		A84F9943193EDD85EA3F84F9 /* MonoGridUITests */ = {
+			isa = PBXGroup;
+			children = (
+				37CC3F1E8814BD40F25CEC42 /* HabitFlowUITests.swift */,
+			);
+			path = MonoGridUITests;
+			sourceTree = "<group>";
+		};
+		B1E985D0F7B64D7514CD7301 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				784959810015D0754B672A1B /* AppShortcuts.swift */,
+				3BCAEBEE783CE755928BA2B1 /* HabitEntity.swift */,
+				848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */,
+				3A8741AC32B86A2B820466DB /* IntentErrors.swift */,
+				1B58C5A9E0C28385AA71CC74 /* ToggleHabitIntent.swift */,
+			);
+			name = Intents;
+			path = MonoGrid/Intents;
+			sourceTree = "<group>";
+		};
+		BFA1C1024A9FB8AB0D486996 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				D1E8A9BCBADEEFA872B2087C /* GridViewModel.swift */,
+				1B916EA1574974E4F4EC1AD4 /* HabitViewModel.swift */,
+				AA3D6D9E1208232EEA7080F0 /* OnboardingViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C33968404E0C4CC66B43E8B7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DD1BF5C324A88C683CD19E5B /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C9B07A461FF3248082FB9507 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2F95257B945BEAEA2C4DA7DE /* Color+Extensions.swift */,
+				EEE02CF11BD05AF0B0607336 /* Date+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		DDD8196367DDC839944CC9E0 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F0D6268264AB124F2D0C468F /* MonoGridTests */,
+				A84F9943193EDD85EA3F84F9 /* MonoGridUITests */,
+			);
+			name = Tests;
+			path = MonoGrid/Tests;
+			sourceTree = "<group>";
+		};
+		E5BA48EE7F0ED5227032AB77 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8F8CEB89044E4BCFA5A941BF /* MonoGrid.app */,
+				0F129107A8F7BF2E77208294 /* MonoGridTests.xctest */,
+				9377866F4D6C50AE2D4D76DD /* MonoGridWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E9FD37BA8AA0AEC846B2E3AD = {
+			isa = PBXGroup;
+			children = (
+				B1E985D0F7B64D7514CD7301 /* Intents */,
+				4C6E8293BAF88052DF8260D9 /* MonoGrid */,
+				71110AD6C5BF4B844A7B44E2 /* MonoGridWidget */,
+				DDD8196367DDC839944CC9E0 /* Tests */,
+				E5BA48EE7F0ED5227032AB77 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F0D6268264AB124F2D0C468F /* MonoGridTests */ = {
+			isa = PBXGroup;
+			children = (
+				B509F0E9E683AF307D38CF3B /* ColorExtensionTests.swift */,
+				4076C3DADBD82CE19CFED592 /* DateExtensionTests.swift */,
+				A35AECD27EF49390DD099321 /* HabitViewModelTests.swift */,
+			);
+			path = MonoGridTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		66DFFE73537B545B6295DAC7 /* MonoGridTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9549F6D1101070E96EED6651 /* Build configuration list for PBXNativeTarget "MonoGridTests" */;
+			buildPhases = (
+				B0AB62AD158091C7A0729FB3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				982B148368E756FB04C5D4EC /* PBXTargetDependency */,
+			);
+			name = MonoGridTests;
+			packageProductDependencies = (
+			);
+			productName = MonoGridTests;
+			productReference = 0F129107A8F7BF2E77208294 /* MonoGridTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CE36702233AB83A3C0B891B2 /* MonoGrid */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5F0EFA67D1A7ED88E0973D0 /* Build configuration list for PBXNativeTarget "MonoGrid" */;
+			buildPhases = (
+				DCB3A7DFA6EB74850CCDF263 /* Sources */,
+				E30F660880FE878F1E859A79 /* Resources */,
+				849DAEE908481CD431EA9396 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DDE2FACEBCEF358441CDE8CD /* PBXTargetDependency */,
+			);
+			name = MonoGrid;
+			packageProductDependencies = (
+			);
+			productName = MonoGrid;
+			productReference = 8F8CEB89044E4BCFA5A941BF /* MonoGrid.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FB916B02777E16ADE9A6225F /* MonoGridWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA99A0EE3D226F503CD04797 /* Build configuration list for PBXNativeTarget "MonoGridWidgetExtension" */;
+			buildPhases = (
+				6F9E46DC2A5D2A459E3BF89A /* Sources */,
+				962B89B9BD7E0277DA8E8446 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MonoGridWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = MonoGridWidgetExtension;
+			productReference = 9377866F4D6C50AE2D4D76DD /* MonoGridWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B728F9EFC4EC35EFABA4E3B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					66DFFE73537B545B6295DAC7 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					CE36702233AB83A3C0B891B2 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					FB916B02777E16ADE9A6225F = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 8011787CC7E97A25CD6EFB10 /* Build configuration list for PBXProject "MonoGrid" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				ko,
+			);
+			mainGroup = E9FD37BA8AA0AEC846B2E3AD;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE36702233AB83A3C0B891B2 /* MonoGrid */,
+				66DFFE73537B545B6295DAC7 /* MonoGridTests */,
+				FB916B02777E16ADE9A6225F /* MonoGridWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		962B89B9BD7E0277DA8E8446 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				058CB2FBE8AF848E40DC9F74 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E30F660880FE878F1E859A79 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FE29C548AB1F5B0F3EBDAF8 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6F9E46DC2A5D2A459E3BF89A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D887A505EDC41C285BAA4BC1 /* AppShortcuts.swift in Sources */,
+				39ED9F399D2ECE27278413A1 /* AppTheme.swift in Sources */,
+				43AB2D10261AA36BF423AFEB /* CircularLockWidgetView.swift in Sources */,
+				FB6B098B125C7F2AF666189C /* Color+Extensions.swift in Sources */,
+				3EB3600A7CEA5B324A5EF1E2 /* Constants.swift in Sources */,
+				F2D98F8963801641248DB929 /* Date+Extensions.swift in Sources */,
+				5E1E7BF8C3FAD1C09824CC63 /* DateRangeCalculator.swift in Sources */,
+				107CC8253D21D83B00F6F67D /* GridDataCache.swift in Sources */,
+				6C3827A8A275C1B137B8F8DF /* GridDataProvider.swift in Sources */,
+				00CFCD18D024866F867BE82B /* GridStatistics.swift in Sources */,
+				8256CFA9ED75D5B88E2352A1 /* GridViewMode.swift in Sources */,
+				EFF22C879DB4B66E42F98CCF /* Habit.swift in Sources */,
+				8067793E01AD51AECB07576B /* HabitEntity.swift in Sources */,
+				18F84009C9A5137B4964CB69 /* HabitEntityQuery.swift in Sources */,
+				A979E3C3FAE606225CC6054F /* HabitEntry.swift in Sources */,
+				DE82C652DFD2DEA893328CD2 /* HabitLog.swift in Sources */,
+				DD27CCA3531311DE547E23DA /* HabitRepository.swift in Sources */,
+				4CB59090924C9BC7A1D472A2 /* HabitTimelineProvider.swift in Sources */,
+				2675273B2FF38DBA58D96BFE /* HabitWidgetIntent.swift in Sources */,
+				180F3EE896C17EF635872D3D /* HapticManager.swift in Sources */,
+				5E4E8DDCE5D2E01D8507CE52 /* InlineLockWidgetView.swift in Sources */,
+				152AB8D4CD8783D4E8833911 /* IntentErrors.swift in Sources */,
+				A49CA10B540C98725C2B60A2 /* LargeWidgetView.swift in Sources */,
+				01B0003D4A53C6716D33D448 /* MediumWidgetView.swift in Sources */,
+				A042D319BEF67CFD72EAC0FD /* MonoGridWidgetBundle.swift in Sources */,
+				CBADDFA0C17E68E1400655C6 /* PersistenceController.swift in Sources */,
+				03CD34569C25A6FA26ECDAE6 /* SmallWidgetView.swift in Sources */,
+				6706B42910F8E1EDC01A11CD /* StatisticsCalculator.swift in Sources */,
+				96BFE3471624B9E6A3B5A75F /* SwiftDataHabitRepository.swift in Sources */,
+				3711578FB538617EE36ECDBD /* SyncStatusMonitor.swift in Sources */,
+				7E26287B0750E79115617416 /* ToggleHabitIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0AB62AD158091C7A0729FB3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F72300D3C51D62923294829F /* ColorExtensionTests.swift in Sources */,
+				6C3A97113C3FBC25EA706277 /* DateExtensionTests.swift in Sources */,
+				C8C35F27C3CEDC275440A217 /* HabitFlowUITests.swift in Sources */,
+				1C6544847E1FA60881FB00AE /* HabitViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCB3A7DFA6EB74850CCDF263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEC6600690D1F93340AE7215 /* AppShortcuts.swift in Sources */,
+				520F85C0730FD354740C6B4C /* AppTheme.swift in Sources */,
+				F03FCA897D87E3A21D1D7384 /* BaseGridCell.swift in Sources */,
+				ECF7D8592CEBE21706A82EE8 /* CheckboxButton.swift in Sources */,
+				0C9834E1E451AFD74FD195B7 /* Color+Extensions.swift in Sources */,
+				EE1F23C8D1396B9911429359 /* ColorPickerView.swift in Sources */,
+				CFFE625D7F2C03CFF10FDBBB /* Constants.swift in Sources */,
+				FE52A41C4195B5D62E86D97D /* Date+Extensions.swift in Sources */,
+				DE630F969025B6924B08F723 /* DateRangeCalculator.swift in Sources */,
+				23D2C2A2EB40BDB725C0E7A5 /* EmptyStateView.swift in Sources */,
+				1346A332CF592842DA31C23D /* GitHubGridView.swift in Sources */,
+				82DD3D46352BC141DECB2716 /* GridDataCache.swift in Sources */,
+				51E890339C19B4719EEE131E /* GridDataProvider.swift in Sources */,
+				F60E44A80A0E16A0E691FB31 /* GridLegendView.swift in Sources */,
+				7ECC4A31BE8B5DB8A8A97902 /* GridStatistics.swift in Sources */,
+				B92ABDA7E177E2D16759DE89 /* GridViewMode.swift in Sources */,
+				AC407D52308C25026B02DCD3 /* GridViewModePicker.swift in Sources */,
+				18C6AF2093C997393C8B6C08 /* GridViewModel.swift in Sources */,
+				71EBFE145D22B418460F80BB /* Habit.swift in Sources */,
+				2B308434972F80E2E2BC8352 /* HabitCardView.swift in Sources */,
+				B8CCB988B58D77DC8DBD8EF6 /* HabitDetailGridView.swift in Sources */,
+				2EAFB71002B4620EEDDB5A1D /* HabitEditView.swift in Sources */,
+				D0D8D0A702B5922295A8FBB9 /* HabitEntity.swift in Sources */,
+				08320F6722352E6124C6C159 /* HabitEntityQuery.swift in Sources */,
+				41ECC540CDEC362EACA0C8EE /* HabitLog.swift in Sources */,
+				3E98FA0FD03AF8C874647E9D /* HabitRepository.swift in Sources */,
+				67B50AC50D51C7AC2610729F /* HabitViewModel.swift in Sources */,
+				2764817D445EAF3CF1521445 /* HapticManager.swift in Sources */,
+				0ED1CB9BB0DAFB547A00C8E6 /* HomeView.swift in Sources */,
+				1475BF3C4783704FBC07F57F /* IconPickerView.swift in Sources */,
+				B3B8E039DCF899755B5A6FB1 /* IntentErrors.swift in Sources */,
+				3D07CB8E2F1E4AA0CC0C7007 /* MiniGridView.swift in Sources */,
+				2F46644131E864EAE3A832A5 /* MonoGridApp.swift in Sources */,
+				76B3C61B0D9BB08A780FF5EF /* MonthlyGridView.swift in Sources */,
+				21A4695B9BE8A49D9072E416 /* OnboardingView.swift in Sources */,
+				4671679E16754826F3BB9BBC /* OnboardingViewModel.swift in Sources */,
+				EC720EDC39D77C6E9CD47C0A /* PersistenceController.swift in Sources */,
+				0FAA51948FDBA3FB0ADC7E60 /* SettingsView.swift in Sources */,
+				340F7B0951F82878D8261ECA /* StatisticsCalculator.swift in Sources */,
+				CDEE90FA321810221B55CC21 /* StatisticsSummaryView.swift in Sources */,
+				DCFD7CD296FDD20630A73721 /* SwiftDataHabitRepository.swift in Sources */,
+				A26A54D132CF60E989FF8715 /* SyncStatusMonitor.swift in Sources */,
+				84241E818A6A3F2DF4A2386E /* ToggleHabitIntent.swift in Sources */,
+				03E6BDB12E87EB03B4E31353 /* WeeklyGridView.swift in Sources */,
+				A163750802F348675AFAFDA8 /* YearlyGridView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		982B148368E756FB04C5D4EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE36702233AB83A3C0B891B2 /* MonoGrid */;
+			targetProxy = D814056CF45A93C60A790324 /* PBXContainerItemProxy */;
+		};
+		DDE2FACEBCEF358441CDE8CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB916B02777E16ADE9A6225F /* MonoGridWidgetExtension */;
+			targetProxy = 2746CF36A39294F1A854A16A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1552CDE9E6BD7CADC94CB355 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MonoGrid/MonoGridWidgetExtension.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MonoGrid/MonoGridWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "MonoGrid Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyoung.monogrid.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		464C5B2DB12AD5C41CB9852C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		5CCC210DB17A7A47C7C904B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyoung.monogrid.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MonoGrid.app/MonoGrid";
+			};
+			name = Debug;
+		};
+		742591B3A24B96B74F6F9EDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyoung.monogrid.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MonoGrid.app/MonoGrid";
+			};
+			name = Release;
+		};
+		98B6841E379D8E57C035BEB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		C45694F1FE62F3AC9CD8AAD3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MonoGrid/MonoGridWidgetExtension.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MonoGrid/MonoGridWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "MonoGrid Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyoung.monogrid.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D0690343E7F2697CB5EA4BF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MonoGrid/MonoGrid.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MonoGrid;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyoung.monogrid;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E4AD945E165DBCF8DDCF3E57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MonoGrid/MonoGrid.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = MonoGrid;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.suyoung.monogrid;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8011787CC7E97A25CD6EFB10 /* Build configuration list for PBXProject "MonoGrid" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98B6841E379D8E57C035BEB2 /* Debug */,
+				464C5B2DB12AD5C41CB9852C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9549F6D1101070E96EED6651 /* Build configuration list for PBXNativeTarget "MonoGridTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CCC210DB17A7A47C7C904B9 /* Debug */,
+				742591B3A24B96B74F6F9EDA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DA99A0EE3D226F503CD04797 /* Build configuration list for PBXNativeTarget "MonoGridWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C45694F1FE62F3AC9CD8AAD3 /* Debug */,
+				1552CDE9E6BD7CADC94CB355 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F5F0EFA67D1A7ED88E0973D0 /* Build configuration list for PBXNativeTarget "MonoGrid" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0690343E7F2697CB5EA4BF4 /* Debug */,
+				E4AD945E165DBCF8DDCF3E57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B728F9EFC4EC35EFABA4E3B7 /* Project object */;
+}
