@@ -18,23 +18,34 @@ struct MonoGridApp: App {
     @State private var onboardingViewModel = OnboardingViewModel()
     @State private var themeManager = ThemeManager.shared
     @State private var navigationState = AppNavigationState()
+    @State private var reviewViewModel = ReviewRequestViewModel()
+    @StateObject private var reviewManager = AppReviewManager.shared
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     // MARK: - Body
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(onboardingViewModel)
-                .environment(navigationState)
-                .preferredColorScheme(themeManager.currentTheme.colorScheme)
-                .onReceive(appDelegate.notificationResponsePublisher) { response in
-                    navigationState.handleNotificationResponse(response)
+            ZStack {
+                ContentView()
+                    .environment(onboardingViewModel)
+                    .environment(navigationState)
+                    .environment(reviewViewModel)
+                    .preferredColorScheme(themeManager.currentTheme.colorScheme)
+                    .onReceive(appDelegate.notificationResponsePublisher) { response in
+                        navigationState.handleNotificationResponse(response)
+                    }
+                    .task {
+                        // Clear badge on app launch
+                        await NotificationManager.shared.clearBadge()
+                    }
+
+                // Review request dialog overlay
+                if reviewManager.showingPreConfirmation || reviewManager.showingTransition {
+                    ReviewRequestDialogView(viewModel: reviewViewModel)
+                        .zIndex(100)
                 }
-                .task {
-                    // Clear badge on app launch
-                    await NotificationManager.shared.clearBadge()
-                }
+            }
         }
         .modelContainer(PersistenceController.shared.container)
     }

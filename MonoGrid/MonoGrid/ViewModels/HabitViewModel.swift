@@ -151,6 +151,11 @@ final class HabitViewModel {
         do {
             try await repository.toggleLog(for: habit.id, on: date)
             await loadHabits()
+
+            // Check for review milestone after successful toggle (only for today)
+            if Calendar.current.isDateInToday(date) {
+                await onHabitCheckCompleted(habit, repository: repository)
+            }
         } catch {
             handleError(error)
         }

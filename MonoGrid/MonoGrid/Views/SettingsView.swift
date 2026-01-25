@@ -102,6 +102,9 @@ struct SettingsView: View {
                         Label("앱 정보", systemImage: "info.circle")
                     }
 
+                    // App Store review button
+                    SettingsReviewButtonView()
+
                     Button(role: .destructive) {
                         showResetConfirmation = true
                     } label: {
