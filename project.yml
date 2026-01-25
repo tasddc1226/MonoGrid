@@ -30,12 +30,18 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_CFBundleDisplayName: "MonoGrid"
+        INFOPLIST_KEY_UIBackgroundModes: "remote-notification"
         GENERATE_INFOPLIST_FILE: YES
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: 1.0.0
     entitlements:
       path: MonoGrid/MonoGrid.entitlements
       properties:
+        aps-environment: development
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.suyoung.monogrid
+        com.apple.developer.icloud-services:
+          - CloudKit
         com.apple.security.application-groups:
           - group.com.suyoung.monogrid
     dependencies:
@@ -75,6 +81,10 @@ targets:
     entitlements:
       path: MonoGrid/MonoGridWidgetExtension.entitlements
       properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.suyoung.monogrid
+        com.apple.developer.icloud-services:
+          - CloudKit
         com.apple.security.application-groups:
           - group.com.suyoung.monogrid
 
