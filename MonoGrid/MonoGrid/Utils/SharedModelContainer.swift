@@ -156,4 +156,12 @@ extension SharedModelContainer {
         guard let container = getSharedContainer() else { return nil }
         return ModelContext(container)
     }
+
+    /// Background context for widget timeline provider
+    /// Creates a new ModelContext that can be used outside MainActor
+    /// Note: ModelContext is not Sendable, but we create a new one for each background operation
+    static func getBackgroundContext() -> ModelContext? {
+        guard let container = getSharedContainer() else { return nil }
+        return ModelContext(container)
+    }
 }
