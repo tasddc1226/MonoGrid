@@ -8,6 +8,7 @@
 import SwiftUI
 
 /// Full 365-day GitHub-style contribution graph
+/// Performance optimized with memoized computed properties
 struct YearlyGridView: View {
     // MARK: - Properties
 
@@ -22,6 +23,12 @@ struct YearlyGridView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    // MARK: - Memoized State
+    // 매 렌더링마다 재계산 방지: 53주 × 7일 = 371회 → 연도 변경 시 1회
+    @State private var cachedWeekColumns: [[Date]] = []
+    @State private var cachedMonthLabels: [(name: String, weekIndex: Int)] = []
+    @State private var cachedYear: Int = 0
+
     // MARK: - Constants
 
     private let cellSize: CGFloat = 10
@@ -30,16 +37,41 @@ struct YearlyGridView: View {
     private let dayLabelWidth: CGFloat = 24
     private let monthLabelHeight: CGFloat = 16
 
-    // MARK: - Computed Properties
+    // MARK: - Computed Properties (memoized access)
 
-    /// Generates week columns for the year
+    /// Generates week columns for the year (uses cached value)
     private var weekColumns: [[Date]] {
+        cachedWeekColumns
+    }
+
+    /// Month labels with their starting positions (uses cached value)
+    private var monthLabels: [(name: String, weekIndex: Int)] {
+        cachedMonthLabels
+    }
+
+    /// Today's date for highlighting (uses shared instance)
+    private var today: Date {
+        SharedInstances.today
+    }
+
+    // MARK: - Memoization Logic
+
+    /// 연도가 변경될 때만 재계산
+    private func computeGridDataIfNeeded() {
+        guard cachedYear != year else { return }
+        cachedYear = year
+        cachedWeekColumns = computeWeekColumns()
+        cachedMonthLabels = computeMonthLabels(from: cachedWeekColumns)
+    }
+
+    private func computeWeekColumns() -> [[Date]] {
+        let calendar = SharedInstances.calendar
         let dates = DateRangeCalculator.datesInYear(year)
         var weeks: [[Date]] = []
         var currentWeek: [Date] = []
 
         for date in dates {
-            let weekday = Calendar.current.component(.weekday, from: date)
+            let weekday = calendar.component(.weekday, from: date)
             // Start new week on Monday (weekday 2)
             if weekday == 2 && !currentWeek.isEmpty {
                 weeks.append(currentWeek)
@@ -56,16 +88,15 @@ struct YearlyGridView: View {
         return weeks
     }
 
-    /// Month labels with their starting positions
-    private var monthLabels: [(name: String, weekIndex: Int)] {
+    private func computeMonthLabels(from weeks: [[Date]]) -> [(name: String, weekIndex: Int)] {
+        let calendar = SharedInstances.calendar
+        let formatter = SharedInstances.monthLabelFormatter
         var labels: [(String, Int)] = []
         var currentMonth = 0
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM"
 
-        for (weekIndex, week) in weekColumns.enumerated() {
+        for (weekIndex, week) in weeks.enumerated() {
             if let firstDay = week.first {
-                let month = Calendar.current.component(.month, from: firstDay)
+                let month = calendar.component(.month, from: firstDay)
                 if month != currentMonth {
                     currentMonth = month
                     labels.append((formatter.string(from: firstDay), weekIndex))
@@ -74,11 +105,6 @@ struct YearlyGridView: View {
         }
 
         return labels
-    }
-
-    /// Today's date for highlighting
-    private var today: Date {
-        Calendar.current.startOfDay(for: Date())
     }
 
     // MARK: - Body
@@ -96,6 +122,12 @@ struct YearlyGridView: View {
                 // Main grid
                 gridView
             }
+        }
+        .onAppear {
+            computeGridDataIfNeeded()
+        }
+        .onChange(of: year) { _, _ in
+            computeGridDataIfNeeded()
         }
     }
 
@@ -153,7 +185,7 @@ struct YearlyGridView: View {
     private func weekColumn(for dates: [Date]) -> some View {
         VStack(spacing: cellGap) {
             // Fill empty slots at the start of the year
-            let firstWeekday = Calendar.current.component(.weekday, from: dates.first ?? Date())
+            let firstWeekday = SharedInstances.calendar.component(.weekday, from: dates.first ?? Date())
             let mondayBasedWeekday = (firstWeekday + 5) % 7  // Convert to Monday=0
 
             ForEach(0..<rowCount, id: \.self) { dayIndex in
@@ -179,7 +211,7 @@ struct YearlyGridView: View {
 
     /// Individual cell view
     private func cellView(for date: Date) -> some View {
-        let calendar = Calendar.current
+        let calendar = SharedInstances.calendar
         let normalizedDate = calendar.startOfDay(for: date)
         let isCompleted = completionData[normalizedDate]
         let isToday = normalizedDate == today
@@ -206,9 +238,7 @@ struct YearlyGridView: View {
     // MARK: - Accessibility Helpers
 
     private func cellAccessibilityLabel(date: Date, isCompleted: Bool?, isToday: Bool) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월 d일"
-        let dateStr = formatter.string(from: date)
+        let dateStr = SharedInstances.accessibilityDateFormatter.string(from: date)
 
         var status: String
         if let completed = isCompleted {

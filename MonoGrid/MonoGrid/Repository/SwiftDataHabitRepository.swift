@@ -80,7 +80,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
 
     @discardableResult
     func toggleLog(for habitId: UUID, on date: Date) async throws -> HabitLog {
-        let targetDate = Calendar.current.startOfDay(for: date)
+        let targetDate = SharedInstances.calendar.startOfDay(for: date)
 
         // Find the habit
         let habitDescriptor = FetchDescriptor<Habit>(
@@ -107,8 +107,8 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
     }
 
     func fetchLogs(for habitId: UUID, from startDate: Date, to endDate: Date) async throws -> [HabitLog] {
-        let start = Calendar.current.startOfDay(for: startDate)
-        let end = Calendar.current.startOfDay(for: endDate)
+        let start = SharedInstances.calendar.startOfDay(for: startDate)
+        let end = SharedInstances.calendar.startOfDay(for: endDate)
 
         let descriptor = FetchDescriptor<HabitLog>(
             predicate: #Predicate { log in
@@ -122,7 +122,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
     }
 
     func fetchLog(for habitId: UUID, on date: Date) async throws -> HabitLog? {
-        let targetDate = Calendar.current.startOfDay(for: date)
+        let targetDate = SharedInstances.calendar.startOfDay(for: date)
 
         let descriptor = FetchDescriptor<HabitLog>(
             predicate: #Predicate { log in
@@ -147,6 +147,81 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
     func habitCount() async throws -> Int {
         let habits = try await fetchHabits()
         return habits.count
+    }
+
+    // MARK: - Batch Query Methods (N+1 쿼리 패턴 해결)
+
+    /// 모든 습관과 지정 기간의 로그를 한 번에 조회
+    /// N*2 queries → 2 queries로 최적화
+    func fetchAllHabitsWithLogs(
+        from startDate: Date,
+        to endDate: Date
+    ) async throws -> [(habit: Habit, logs: [Date: Bool])] {
+        let calendar = SharedInstances.calendar
+        let start = calendar.startOfDay(for: startDate)
+        let end = calendar.startOfDay(for: endDate)
+
+        // 1. 모든 습관 조회 (1 query)
+        let habitDescriptor = FetchDescriptor<Habit>(
+            sortBy: [SortDescriptor(\.orderIndex)]
+        )
+        let habits = try modelContext.fetch(habitDescriptor)
+
+        guard !habits.isEmpty else { return [] }
+
+        // 2. 해당 기간의 모든 로그 조회 (1 query)
+        let logDescriptor = FetchDescriptor<HabitLog>(
+            predicate: #Predicate { log in
+                log.date >= start && log.date <= end
+            },
+            sortBy: [SortDescriptor(\.date)]
+        )
+        let allLogs = try modelContext.fetch(logDescriptor)
+
+        // 3. 습관별로 로그 그룹화 (메모리 내 처리)
+        var logsByHabit: [UUID: [Date: Bool]] = [:]
+        for log in allLogs {
+            guard let habitId = log.habit?.id else { continue }
+            let logDate = calendar.startOfDay(for: log.date)
+            logsByHabit[habitId, default: [:]][logDate] = log.isCompleted
+        }
+
+        // 4. 결과 조합
+        return habits.map { habit in
+            (habit: habit, logs: logsByHabit[habit.id] ?? [:])
+        }
+    }
+
+    /// 특정 습관들의 로그를 배치로 조회
+    func fetchLogsForHabits(
+        _ habitIds: [UUID],
+        from startDate: Date,
+        to endDate: Date
+    ) async throws -> [UUID: [Date: Bool]] {
+        let calendar = SharedInstances.calendar
+        let start = calendar.startOfDay(for: startDate)
+        let end = calendar.startOfDay(for: endDate)
+
+        // 단일 쿼리로 모든 로그 조회
+        let logDescriptor = FetchDescriptor<HabitLog>(
+            predicate: #Predicate { log in
+                log.date >= start && log.date <= end
+            }
+        )
+        let allLogs = try modelContext.fetch(logDescriptor)
+
+        // 필터링 및 그룹화
+        var result: [UUID: [Date: Bool]] = [:]
+        let habitIdSet = Set(habitIds)
+
+        for log in allLogs {
+            guard let habitId = log.habit?.id,
+                  habitIdSet.contains(habitId) else { continue }
+            let logDate = calendar.startOfDay(for: log.date)
+            result[habitId, default: [:]][logDate] = log.isCompleted
+        }
+
+        return result
     }
 
     // MARK: - Private Methods
@@ -179,7 +254,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
     }
 
     func fetchRangeData(habitId: UUID, from startDate: Date, to endDate: Date) async throws -> [Date: Bool] {
-        let calendar = Calendar.current
+        let calendar = SharedInstances.calendar
         let start = calendar.startOfDay(for: startDate)
         let end = calendar.startOfDay(for: endDate)
 

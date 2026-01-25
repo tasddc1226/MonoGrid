@@ -51,22 +51,25 @@ final class GridViewModel {
     /// Cache for grid data
     private let cache = GridDataCache.shared
 
+    /// Prefetch task for adjacent periods
+    private var prefetchTask: Task<Void, Never>?
+
     // MARK: - Computed Properties
 
     /// Today's date (start of day)
+    /// Uses SharedInstances for consistency
     var today: Date {
-        Calendar.current.startOfDay(for: Date())
+        SharedInstances.today
     }
 
     /// Title for the current period based on view mode
+    /// Uses SharedInstances for performance
     var periodTitle: String {
         switch viewMode {
         case .yearly:
             return "\(currentYear)년"
         case .monthly:
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy년 M월"
-            return formatter.string(from: currentMonthDate)
+            return SharedInstances.periodTitleFormatter.string(from: currentMonthDate)
         case .weekly:
             return weekTitle
         }
@@ -76,9 +79,7 @@ final class GridViewModel {
         let dates = DateRangeCalculator.datesInWeek(containing: currentWeekStart)
         guard let first = dates.first, let last = dates.last else { return "" }
 
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M/d"
-
+        let formatter = SharedInstances.weekRangeFormatter
         return "\(formatter.string(from: first)) - \(formatter.string(from: last))"
     }
 
@@ -242,35 +243,137 @@ final class GridViewModel {
 
     /// Navigates to the previous period
     func navigatePrevious() {
+        cancelPrefetch()
+
         switch viewMode {
         case .yearly:
             currentYear = DateRangeCalculator.previousYear(from: currentYear)
+            Task {
+                await loadData()
+                prefetchAdjacentYears()
+            }
         case .monthly:
             currentMonthDate = DateRangeCalculator.previousMonth(from: currentMonthDate)
+            Task {
+                await loadData()
+                prefetchAdjacentMonths()
+            }
         case .weekly:
             currentWeekStart = DateRangeCalculator.previousWeek(from: currentWeekStart)
-        }
-
-        Task {
-            await loadData()
+            Task {
+                await loadData()
+                prefetchAdjacentWeeks()
+            }
         }
     }
 
     /// Navigates to the next period
     func navigateNext() {
         guard canNavigateForward else { return }
+        cancelPrefetch()
 
         switch viewMode {
         case .yearly:
             currentYear = DateRangeCalculator.nextYear(from: currentYear)
+            Task {
+                await loadData()
+                prefetchAdjacentYears()
+            }
         case .monthly:
             currentMonthDate = DateRangeCalculator.nextMonth(from: currentMonthDate)
+            Task {
+                await loadData()
+                prefetchAdjacentMonths()
+            }
         case .weekly:
             currentWeekStart = DateRangeCalculator.nextWeek(from: currentWeekStart)
+            Task {
+                await loadData()
+                prefetchAdjacentWeeks()
+            }
         }
+    }
 
-        Task {
-            await loadData()
+    // MARK: - Prefetch Implementation
+
+    /// 빠른 네비게이션 중 프리페치 취소
+    private func cancelPrefetch() {
+        prefetchTask?.cancel()
+        prefetchTask = nil
+    }
+
+    /// 이전/다음 연도 미리 로드
+    private func prefetchAdjacentYears() {
+        guard PerformanceFlags.enablePrefetching else { return }
+
+        prefetchTask = Task(priority: .utility) {
+            let prevYear = DateRangeCalculator.previousYear(from: currentYear)
+            let nextYear = DateRangeCalculator.nextYear(from: currentYear)
+
+            async let _ = loadYearlyDataSilently(year: prevYear)
+            async let _ = loadYearlyDataSilently(year: nextYear)
+        }
+    }
+
+    /// 이전/다음 월 미리 로드
+    private func prefetchAdjacentMonths() {
+        guard PerformanceFlags.enablePrefetching else { return }
+
+        prefetchTask = Task(priority: .utility) {
+            let prevMonth = DateRangeCalculator.previousMonth(from: currentMonthDate)
+            let nextMonth = DateRangeCalculator.nextMonth(from: currentMonthDate)
+
+            async let _ = loadMonthlyDataSilently(date: prevMonth)
+            async let _ = loadMonthlyDataSilently(date: nextMonth)
+        }
+    }
+
+    /// 이전/다음 주 미리 로드
+    private func prefetchAdjacentWeeks() {
+        guard PerformanceFlags.enablePrefetching else { return }
+
+        prefetchTask = Task(priority: .utility) {
+            let prevWeek = DateRangeCalculator.previousWeek(from: currentWeekStart)
+            let nextWeek = DateRangeCalculator.nextWeek(from: currentWeekStart)
+
+            async let _ = loadWeeklyDataSilently(weekStart: prevWeek)
+            async let _ = loadWeeklyDataSilently(weekStart: nextWeek)
+        }
+    }
+
+    // MARK: - Silent Loading (캐시에만 저장, UI 업데이트 없음)
+
+    private func loadYearlyDataSilently(year: Int) async {
+        let key = GridDataCache.CacheKey.yearly(habitId: habit.id, year: year)
+        guard await cache.get(for: key) == nil else { return }
+
+        if let provider = repository as? GridDataProvider {
+            if let data = try? await provider.fetchYearlyData(habitId: habit.id, year: year) {
+                await cache.set(data, for: key)
+            }
+        }
+    }
+
+    private func loadMonthlyDataSilently(date: Date) async {
+        let ym = DateRangeCalculator.yearMonth(from: date)
+        let key = GridDataCache.CacheKey.monthly(habitId: habit.id, year: ym.year, month: ym.month)
+        guard await cache.get(for: key) == nil else { return }
+
+        if let provider = repository as? GridDataProvider {
+            if let data = try? await provider.fetchMonthlyData(habitId: habit.id, year: ym.year, month: ym.month) {
+                await cache.set(data, for: key)
+            }
+        }
+    }
+
+    private func loadWeeklyDataSilently(weekStart: Date) async {
+        let key = GridDataCache.CacheKey.weekly(habitId: habit.id, weekStart: weekStart)
+        guard await cache.get(for: key) == nil else { return }
+
+        if let provider = repository as? GridDataProvider {
+            if let data = try? await provider.fetchWeeklyData(habitId: habit.id, weekOf: weekStart) {
+                await cache.set(data, for: key)
+            }
         }
     }
 

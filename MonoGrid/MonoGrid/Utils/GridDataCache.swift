@@ -7,19 +7,39 @@
 
 import Foundation
 
-/// In-memory LRU cache for grid data with time-based expiration
+/// In-memory LRU cache for grid data with session-based expiration
 /// Thread-safe implementation for concurrent access
+/// Performance optimized: 과거 데이터는 무기한, 오늘 데이터만 갱신
 actor GridDataCache {
     // MARK: - Types
+
+    /// 캐시 전략
+    enum CacheStrategy {
+        case sessionBased     // 앱 활성 중 무기한
+        case timeBased        // 시간 기반 만료
+        case hybrid           // 과거 데이터는 무기한, 오늘 데이터만 갱신
+    }
 
     /// Cache entry wrapping the data with metadata
     private struct CacheEntry {
         let data: [Date: Bool]
         let timestamp: Date
         let key: String
+        let containsToday: Bool  // 오늘 데이터 포함 여부
 
-        var isExpired: Bool {
-            Date().timeIntervalSince(timestamp) > GridDataCache.defaultExpiration
+        func isExpired(appActive: Bool) -> Bool {
+            // 앱 활성 중이고 과거 데이터만 있으면 만료 안 함
+            if appActive && !containsToday {
+                return false
+            }
+
+            // 오늘 데이터는 30초 후 만료
+            if containsToday {
+                return Date().timeIntervalSince(timestamp) > GridDataCache.todayDataExpiration
+            }
+
+            // 과거 데이터는 1시간 후 만료 (앱 비활성 시)
+            return Date().timeIntervalSince(timestamp) > GridDataCache.historicalDataExpiration
         }
     }
 
@@ -61,11 +81,17 @@ actor GridDataCache {
 
     // MARK: - Constants
 
-    /// Default expiration time in seconds (5 minutes)
+    /// Default expiration time in seconds (5 minutes) - legacy, use specific TTLs below
     static let defaultExpiration: TimeInterval = 5 * 60
 
-    /// Default maximum cache entries
-    static let defaultMaxEntries = 20
+    /// 오늘 날짜 데이터 TTL (실시간성 보장)
+    static let todayDataExpiration: TimeInterval = 30  // 30초
+
+    /// 과거 데이터 TTL (불변이므로 길게)
+    static let historicalDataExpiration: TimeInterval = 3600  // 1시간
+
+    /// 최대 캐시 엔트리 (연간 뷰 지원 강화: 20 → 50)
+    static let defaultMaxEntries = 50
 
     // MARK: - Properties
 
@@ -81,15 +107,37 @@ actor GridDataCache {
     /// Expiration time in seconds
     private let expiration: TimeInterval
 
+    /// 앱 활성화 상태 (세션 기반 캐싱에 사용)
+    private var isAppActive: Bool = true
+
+    /// 현재 캐시 전략
+    private let strategy: CacheStrategy
+
     // MARK: - Singleton
 
-    static let shared = GridDataCache()
+    static let shared = GridDataCache(strategy: .hybrid)
 
     // MARK: - Initialization
 
-    init(maxEntries: Int = defaultMaxEntries, expiration: TimeInterval = defaultExpiration) {
+    init(
+        maxEntries: Int = defaultMaxEntries,
+        expiration: TimeInterval = defaultExpiration,
+        strategy: CacheStrategy = .hybrid
+    ) {
         self.maxEntries = maxEntries
         self.expiration = expiration
+        self.strategy = strategy
+    }
+
+    // MARK: - Session Lifecycle
+
+    /// 앱 상태 변경 시 호출
+    func handleAppStateChange(isActive: Bool) {
+        self.isAppActive = isActive
+        if !isActive {
+            // 백그라운드 진입 시 만료된 캐시 정리
+            purgeExpired()
+        }
     }
 
     // MARK: - Public Methods
@@ -100,7 +148,7 @@ actor GridDataCache {
     func get(for key: CacheKey) -> [Date: Bool]? {
         let keyString = key.description
 
-        guard let entry = cache[keyString], !entry.isExpired else {
+        guard let entry = cache[keyString], !entry.isExpired(appActive: isAppActive) else {
             // Remove expired entry if exists
             if cache[keyString] != nil {
                 cache.removeValue(forKey: keyString)
@@ -122,8 +170,19 @@ actor GridDataCache {
     func set(_ data: [Date: Bool], for key: CacheKey) {
         let keyString = key.description
 
-        // Create entry
-        let entry = CacheEntry(data: data, timestamp: Date(), key: keyString)
+        // 오늘 데이터 포함 여부 확인
+        let today = SharedInstances.today
+        let containsToday = data.keys.contains { date in
+            SharedInstances.calendar.isDate(date, inSameDayAs: today)
+        }
+
+        // Create entry with containsToday flag
+        let entry = CacheEntry(
+            data: data,
+            timestamp: Date(),
+            key: keyString,
+            containsToday: containsToday
+        )
 
         // If key already exists, just update
         if cache[keyString] != nil {
@@ -163,11 +222,23 @@ actor GridDataCache {
 
     /// Removes expired entries from the cache
     func purgeExpired() {
-        let expiredKeys = cache.filter { $0.value.isExpired }.map { $0.key }
+        let expiredKeys = cache.filter { $0.value.isExpired(appActive: isAppActive) }.map { $0.key }
 
         for key in expiredKeys {
             cache.removeValue(forKey: key)
             accessOrder.removeAll { $0 == key }
+        }
+    }
+
+    // MARK: - Prefetch Support
+
+    /// 인접 기간 프리페치
+    func prefetchAdjacent(
+        for key: CacheKey,
+        using fetcher: @escaping () async throws -> [Date: Bool]
+    ) {
+        Task.detached(priority: .utility) {
+            _ = try? await fetcher()
         }
     }
 

@@ -8,6 +8,7 @@
 import SwiftUI
 
 /// GitHub-style contribution grid for displaying habit completion history
+/// Performance optimized with memoized grid data
 struct GitHubGridView: View {
     // MARK: - Properties
 
@@ -22,6 +23,11 @@ struct GitHubGridView: View {
 
     /// Action when a cell is tapped (date)
     var onCellTap: ((Date) -> Void)?
+
+    // MARK: - Memoized State
+    // 매 렌더링마다 재계산 방지
+    @State private var cachedGridData: [[Date?]] = []
+    @State private var cachedDays: Int = 0
 
     // MARK: - Constants
 
@@ -49,12 +55,27 @@ struct GitHubGridView: View {
         self.onCellTap = onCellTap
     }
 
-    // MARK: - Computed
+    // MARK: - Computed (memoized access)
+
+    /// Grid data organized by weeks (uses cached value)
+    private var gridData: [[Date?]] {
+        cachedGridData
+    }
+
+    // MARK: - Memoization Logic
+
+    /// days가 변경될 때만 재계산
+    private func computeGridDataIfNeeded() {
+        guard cachedDays != days else { return }
+        cachedDays = days
+        cachedGridData = computeGridData()
+    }
 
     /// Generate grid data organized by weeks
-    private var gridData: [[Date?]] {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+    /// Uses SharedInstances.calendar for performance
+    private func computeGridData() -> [[Date?]] {
+        let calendar = SharedInstances.calendar
+        let today = SharedInstances.today
 
         // Get the Monday of the current week
         var components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)
@@ -129,12 +150,18 @@ struct GitHubGridView: View {
                 }
                 .padding(.horizontal)
                 .onAppear {
+                    // Compute grid data if needed
+                    computeGridDataIfNeeded()
+
                     // Scroll to today (rightmost)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) {
                             proxy.scrollTo("today", anchor: .trailing)
                         }
                     }
+                }
+                .onChange(of: days) { _, _ in
+                    computeGridDataIfNeeded()
                 }
             }
         }
@@ -145,7 +172,7 @@ struct GitHubGridView: View {
     @ViewBuilder
     private func gridCell(for date: Date?) -> some View {
         if let date = date {
-            let isCompleted = completionData[Calendar.current.startOfDay(for: date)] ?? false
+            let isCompleted = completionData[SharedInstances.calendar.startOfDay(for: date)] ?? false
             let isToday = date.isToday
             let isEditable = date.isWithin7Days()
 
@@ -179,10 +206,8 @@ struct GitHubGridView: View {
     // MARK: - Helpers
 
     private var weekdayLabels: [String] {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        // Get abbreviated weekday names starting from Monday
-        var symbols = formatter.shortWeekdaySymbols ?? ["S", "M", "T", "W", "T", "F", "S"]
+        // Use shared formatter for performance
+        var symbols = SharedInstances.weekdayFormatter.shortWeekdaySymbols ?? ["S", "M", "T", "W", "T", "F", "S"]
         // Rotate so Monday is first
         let sunday = symbols.removeFirst()
         symbols.append(sunday)
@@ -211,7 +236,7 @@ private extension Array {
         var data: [Date: Bool] = [:]
         let dates = Date.past(days: 365)
         for date in dates {
-            data[Calendar.current.startOfDay(for: date)] = Bool.random()
+            data[SharedInstances.calendar.startOfDay(for: date)] = Bool.random()
         }
         return data
     }()
