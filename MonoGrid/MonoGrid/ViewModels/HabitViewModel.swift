@@ -27,6 +27,9 @@ final class HabitViewModel {
     /// Show error alert
     var showError: Bool = false
 
+    /// Show notification permission sheet (triggered on first habit creation)
+    var showNotificationPermission: Bool = false
+
     /// Repository for data operations
     private let repository: HabitRepository
 
@@ -78,6 +81,9 @@ final class HabitViewModel {
             throw HabitError.maxLimitReached
         }
 
+        // Check if this is the first habit (for notification permission trigger)
+        let isFirstHabit = habits.isEmpty
+
         let habit = Habit(
             title: title.trimmingCharacters(in: .whitespacesAndNewlines),
             colorHex: colorHex,
@@ -87,6 +93,11 @@ final class HabitViewModel {
 
         try await repository.saveHabit(habit)
         await loadHabits()
+
+        // Trigger notification permission sheet on first habit creation
+        if isFirstHabit && !NotificationSettingsStorage.shared.hasRequestedPermission {
+            showNotificationPermission = true
+        }
 
         return habit
     }

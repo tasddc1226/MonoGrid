@@ -224,6 +224,69 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
         return result
     }
 
+    // MARK: - Statistics (for Notifications)
+
+    func getCurrentStreak() async throws -> Int {
+        let calendar = SharedInstances.calendar
+        let habits = try await fetchHabits()
+
+        guard !habits.isEmpty else { return 0 }
+
+        var streak = 0
+        var checkDate = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -1, to: Date())!)
+
+        while true {
+            var allCompleted = true
+            for habit in habits {
+                if !habit.isCompleted(on: checkDate) {
+                    allCompleted = false
+                    break
+                }
+            }
+
+            if allCompleted {
+                streak += 1
+                checkDate = calendar.date(byAdding: .day, value: -1, to: checkDate)!
+            } else {
+                break
+            }
+
+            // Limit to 365 days to prevent infinite loop
+            if streak >= 365 { break }
+        }
+
+        return streak
+    }
+
+    func getWeeklyCompletionRate() async throws -> Double {
+        let calendar = SharedInstances.calendar
+        let today = calendar.startOfDay(for: Date())
+        let habits = try await fetchHabits()
+
+        guard !habits.isEmpty else { return 0.0 }
+
+        let weekStart = calendar.date(byAdding: .day, value: -6, to: today)!
+        var totalExpected = 0
+        var totalCompleted = 0
+
+        for dayOffset in 0..<7 {
+            guard let checkDay = calendar.date(byAdding: .day, value: dayOffset, to: weekStart) else { continue }
+            for habit in habits {
+                totalExpected += 1
+                if habit.isCompleted(on: checkDay) {
+                    totalCompleted += 1
+                }
+            }
+        }
+
+        return totalExpected > 0 ? Double(totalCompleted) / Double(totalExpected) : 0.0
+    }
+
+    func fetchIncompleteHabitsCount(for date: Date) async throws -> Int {
+        let habits = try await fetchHabits()
+        return habits.filter { !$0.isCompleted(on: date) }.count
+    }
+
     // MARK: - Private Methods
 
     private func reloadWidgets() {

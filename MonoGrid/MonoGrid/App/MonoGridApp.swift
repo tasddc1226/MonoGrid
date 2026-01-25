@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import UserNotifications
+import Combine
 
 /// Main entry point for the MonoGrid app
 @main
@@ -15,6 +17,8 @@ struct MonoGridApp: App {
 
     @State private var onboardingViewModel = OnboardingViewModel()
     @State private var themeManager = ThemeManager.shared
+    @State private var navigationState = AppNavigationState()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     // MARK: - Body
 
@@ -22,15 +26,79 @@ struct MonoGridApp: App {
         WindowGroup {
             ContentView()
                 .environment(onboardingViewModel)
+                .environment(navigationState)
                 .preferredColorScheme(themeManager.currentTheme.colorScheme)
+                .onReceive(appDelegate.notificationResponsePublisher) { response in
+                    navigationState.handleNotificationResponse(response)
+                }
+                .task {
+                    // Clear badge on app launch
+                    await NotificationManager.shared.clearBadge()
+                }
         }
         .modelContainer(PersistenceController.shared.container)
     }
 }
 
+// MARK: - App Delegate
+
+/// App delegate for handling notification delegate setup
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    let notificationResponsePublisher = PassthroughSubject<UNNotificationResponse, Never>()
+    private var notificationDelegate: NotificationDelegate?
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        // Set up notification delegate
+        notificationDelegate = NotificationDelegate(publisher: notificationResponsePublisher)
+        UNUserNotificationCenter.current().delegate = notificationDelegate
+        return true
+    }
+}
+
+// MARK: - Notification Delegate
+
+/// Handles notification presentation and response
+/// Uses completion handler pattern for reliable main thread execution
+final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    private let responsePublisher: PassthroughSubject<UNNotificationResponse, Never>
+
+    init(publisher: PassthroughSubject<UNNotificationResponse, Never>) {
+        self.responsePublisher = publisher
+        super.init()
+    }
+
+    /// Handle notification when app is in foreground
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .badge, .sound])
+    }
+
+    /// Handle notification tap - uses completion handler for main thread safety
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        // Ensure UI update happens on main thread
+        DispatchQueue.main.async { [weak self] in
+            self?.responsePublisher.send(response)
+            completionHandler()
+        }
+    }
+}
+
+// MARK: - Root Content View
+
 /// Root content view that handles onboarding vs main app flow
 struct ContentView: View {
     @Environment(OnboardingViewModel.self) private var onboardingViewModel
+    @Environment(AppNavigationState.self) private var navigationState
     @Environment(\.modelContext) private var modelContext
 
     var body: some View {
@@ -41,12 +109,35 @@ struct ContentView: View {
                 OnboardingView()
             }
         }
+        .onChange(of: navigationState.pendingDeepLink) { _, deepLink in
+            handleDeepLink(deepLink)
+        }
+    }
+
+    private func handleDeepLink(_ deepLink: AppNavigationState.DeepLink?) {
+        guard let deepLink = deepLink else { return }
+
+        // Handle deep link navigation
+        switch deepLink {
+        case .today:
+            // Navigate to today's habits view (default home view)
+            break
+        case .settings, .notificationSettings:
+            // These are handled at a lower level in the navigation stack
+            break
+        }
+
+        // Clear the deep link after handling
+        navigationState.clearDeepLink()
     }
 }
+
+// MARK: - Main Tab View
 
 /// Main tab view containing the primary app content
 struct MainTabView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppNavigationState.self) private var navigationState
     @State private var habitViewModel: HabitViewModel?
 
     var body: some View {
@@ -54,6 +145,20 @@ struct MainTabView: View {
             if let viewModel = habitViewModel {
                 HomeView()
                     .environment(viewModel)
+                    .sheet(isPresented: Binding(
+                        get: { viewModel.showNotificationPermission },
+                        set: { viewModel.showNotificationPermission = $0 }
+                    )) {
+                        NotificationPermissionSheet(
+                            onAllow: {
+                                await NotificationManager.shared.requestPermission()
+                            },
+                            onLater: {
+                                // Just dismiss, user can enable later in settings
+                            }
+                        )
+                        .presentationDetents([.medium])
+                    }
             } else {
                 ProgressView()
                     .onAppear {

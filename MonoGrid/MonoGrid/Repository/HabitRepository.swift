@@ -43,6 +43,17 @@ protocol HabitRepository {
 
     /// Returns the current habit count
     func habitCount() async throws -> Int
+
+    // MARK: - Statistics (for Notifications)
+
+    /// Fetches the current streak (consecutive days with all habits completed)
+    func getCurrentStreak() async throws -> Int
+
+    /// Fetches the weekly completion rate (0.0-1.0)
+    func getWeeklyCompletionRate() async throws -> Double
+
+    /// Fetches the count of incomplete habits for a specific date
+    func fetchIncompleteHabitsCount(for date: Date) async throws -> Int
 }
 
 // MARK: - Habit Errors

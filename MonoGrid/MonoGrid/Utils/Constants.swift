@@ -47,6 +47,31 @@ enum Constants {
         static let lastSyncDate = "lastSyncDate"
         static let preferredLanguage = "preferredLanguage"
         static let appTheme = "appTheme"
+
+        // Notification Settings
+        static let notificationIsEnabled = "notification.isEnabled"
+        static let notificationScheduledHour = "notification.scheduledHour"
+        static let notificationScheduledMinute = "notification.scheduledMinute"
+        static let notificationHasRequestedPermission = "notification.hasRequestedPermission"
+    }
+
+    // MARK: - Notification
+
+    enum Notification {
+        /// Default notification hour (8:00 PM)
+        static let defaultHour = 20
+
+        /// Default notification minute
+        static let defaultMinute = 0
+
+        /// Notification identifier for daily reminder
+        static let dailyReminderId = "com.monogrid.dailyReminder"
+
+        /// Deep link URL scheme
+        static let deepLinkScheme = "monogrid"
+
+        /// Deep link for today's habits
+        static let deepLinkToday = "monogrid://today"
     }
 
     // MARK: - Color Presets

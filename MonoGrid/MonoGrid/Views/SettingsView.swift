@@ -63,6 +63,20 @@ struct SettingsView: View {
                 // iCloud Sync Section
                 iCloudSyncSection
 
+                // Notification Section
+                Section(header: Text("알림")) {
+                    NavigationLink {
+                        NotificationSettingsView()
+                    } label: {
+                        Label {
+                            Text("알림 설정")
+                        } icon: {
+                            Image(systemName: "bell.fill")
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                }
+
                 // General Section
                 Section(header: Text("일반")) {
                     // Language (follows system)

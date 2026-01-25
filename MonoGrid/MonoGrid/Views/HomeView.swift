@@ -207,4 +207,7 @@ class PreviewHabitRepository: HabitRepository {
     func fetchLog(for habitId: UUID, on date: Date) async throws -> HabitLog? { nil }
     func fetchAllLogs(for habitId: UUID) async throws -> [HabitLog] { [] }
     func habitCount() async throws -> Int { habits.count }
+    func getCurrentStreak() async throws -> Int { 7 }
+    func getWeeklyCompletionRate() async throws -> Double { 0.85 }
+    func fetchIncompleteHabitsCount(for date: Date) async throws -> Int { 1 }
 }
