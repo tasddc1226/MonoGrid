@@ -128,7 +128,7 @@ habit,tracker,minimal,routine,grid,widget,goals,daily,streak,simple
 
 ### 연락처 정보
 - **이름**: [Your Name]
-- **이메일**: suyoung@example.com
+- **이메일**: tasddc@naver.com
 - **전화번호**: [Your Phone]
 
 ### 심사 노트 (Review Notes)
