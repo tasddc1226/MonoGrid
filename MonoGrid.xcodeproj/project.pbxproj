@@ -70,6 +70,7 @@
 		84241E818A6A3F2DF4A2386E /* ToggleHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B58C5A9E0C28385AA71CC74 /* ToggleHabitIntent.swift */; };
 		86C4311F6DE511705E756E57 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F99CDF8A1FD1F179B9BB6BE /* VideoPlayerView.swift */; };
 		96BFE3471624B9E6A3B5A75F /* SwiftDataHabitRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CCEFB20C2173372F310D28 /* SwiftDataHabitRepository.swift */; };
+		9A98A81BFB438AFF342DBB96 /* onboarding_tutorial.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 5BB5217C4A8ACBB2EF80C729 /* onboarding_tutorial.mp4 */; };
 		9F9D49D625A109DDB4F5A6CD /* MonoGridWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9377866F4D6C50AE2D4D76DD /* MonoGridWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9FD362E3D3A9EE00FF89CDA9 /* FirstSyncHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1F1D9C36353C8CABDFF98E /* FirstSyncHandler.swift */; };
 		A042D319BEF67CFD72EAC0FD /* MonoGridWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378561B5328C69F25CAA59CD /* MonoGridWidgetBundle.swift */; };
@@ -164,6 +165,7 @@
 		4C75368742AD22C25F9E419F /* GridDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridDataProvider.swift; sourceTree = "<group>"; };
 		4F1F1D9C36353C8CABDFF98E /* FirstSyncHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstSyncHandler.swift; sourceTree = "<group>"; };
 		540C1A08E8FAED2EBA5A188C /* BaseGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseGridCell.swift; sourceTree = "<group>"; };
+		5BB5217C4A8ACBB2EF80C729 /* onboarding_tutorial.mp4 */ = {isa = PBXFileReference; path = onboarding_tutorial.mp4; sourceTree = "<group>"; };
 		5FADF8361AFA809BEE11465B /* CloudKitConflictResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConflictResolver.swift; sourceTree = "<group>"; };
 		6115BB6465D22BA644A99004 /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		63C19424C3577C4767A40E1B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 			children = (
 				6D10B4E2949680282A000441 /* Assets.xcassets */,
 				DD1BF5C324A88C683CD19E5B /* Localizable.xcstrings */,
+				5BB5217C4A8ACBB2EF80C729 /* onboarding_tutorial.mp4 */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -588,6 +591,7 @@
 			files = (
 				FAD8E8CD2B35945F3D75D02E /* Assets.xcassets in Resources */,
 				5FE29C548AB1F5B0F3EBDAF8 /* Localizable.xcstrings in Resources */,
+				9A98A81BFB438AFF342DBB96 /* onboarding_tutorial.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
