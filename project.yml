@@ -33,7 +33,8 @@ targets:
         INFOPLIST_KEY_UIBackgroundModes: "remote-notification"
         GENERATE_INFOPLIST_FILE: YES
         CURRENT_PROJECT_VERSION: 1
-        MARKETING_VERSION: 1.0.0
+        MARKETING_VERSION: 1.1.0
+        INFOPLIST_KEY_CFBundleURLTypes: "$(inherited)"
     entitlements:
       path: MonoGrid/MonoGrid.entitlements
       properties:
@@ -56,10 +57,24 @@ targets:
       - path: MonoGrid/MonoGridWidget
       - path: MonoGrid/Intents
       - path: MonoGrid/MonoGrid/Models
+        excludes:
+          - "**/Pro/**"
       - path: MonoGrid/MonoGrid/Extensions
+        excludes:
+          - "**/HabitViewModel+Review.swift"
       - path: MonoGrid/MonoGrid/Repository
+        excludes:
+          - "**/Pro/**"
       - path: MonoGrid/MonoGrid/Utils
+        excludes:
+          - "**/Pro/**"
+          - "**/AppReviewManager.swift"
+          - "**/NotificationManager.swift"
+          - "**/MessageGenerator.swift"
+          - "**/NotificationSettingsStorage.swift"
       - path: MonoGrid/MonoGrid/Theme
+        excludes:
+          - "**/Pro/**"
       - path: MonoGrid/MonoGrid/App/PersistenceController.swift
     settings:
       base:

@@ -14,6 +14,7 @@ struct SettingsView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(HabitViewModel.self) private var viewModel
+    @Environment(ProViewModel.self) private var proViewModel
     @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - State
@@ -29,6 +30,9 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                // Pro Section
+                proSection
+
                 // Habit Management Section
                 Section(header: Text("습관 관리")) {
                     if viewModel.habits.isEmpty {
@@ -118,9 +122,23 @@ struct SettingsView: View {
                 } footer: {
                     HStack {
                         Spacer()
-                        Text("MonoGrid v1.0")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
+                        VStack(spacing: 4) {
+                            if proViewModel.hasProAccess {
+                                HStack(spacing: 4) {
+                                    Text("MonoGrid")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                    ProBadge(style: .compact)
+                                    Text("v1.1")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                }
+                            } else {
+                                Text("MonoGrid v1.1")
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                         Spacer()
                     }
                 }
@@ -165,6 +183,68 @@ struct SettingsView: View {
     // MARK: - Sync Monitor
 
     private var syncMonitor: SyncStatusMonitor { SyncStatusMonitor.shared }
+
+    // MARK: - Pro Section (Only shown for Pro users)
+
+    @ViewBuilder
+    private var proSection: some View {
+        // Only show Pro section for users who have Pro access
+        if proViewModel.hasProAccess {
+            Section(header: Text("MonoGrid Pro")) {
+                // Pro User Status
+                HStack {
+                    Image(systemName: proViewModel.subscriptionState.iconName)
+                        .font(.title2)
+                        .foregroundStyle(ProColors.proBadgeGradient)
+                        .frame(width: 32)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: 6) {
+                            Text("Pro")
+                                .font(.headline)
+                            ProBadge(style: .compact)
+                        }
+                        Text(proViewModel.subscriptionState.statusText)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                // Subscription Management (Monthly only)
+                if proViewModel.subscriptionState.canManageSubscription {
+                    Link(destination: URL(string: "https://polar.sh/settings/subscriptions")!) {
+                        Label("구독 관리", systemImage: "creditcard")
+                    }
+                }
+
+                // Upgrade to Lifetime (Monthly only)
+                if proViewModel.subscriptionState.canUpgradeToLifetime {
+                    Button {
+                        proViewModel.showPaywall = true
+                    } label: {
+                        HStack {
+                            Label("Lifetime으로 업그레이드", systemImage: "crown.fill")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+
+                // Grace Period Banner
+                if proViewModel.showGraceBanner {
+                    GracePeriodBanner(daysRemaining: proViewModel.gracePeriodDaysRemaining) {
+                        if let url = URL(string: "https://polar.sh/settings/payment") {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                }
+            }
+        }
+        // Free users: Pro upgrade is shown on HomeView banner
+    }
 
     // MARK: - iCloud Sync Section
 

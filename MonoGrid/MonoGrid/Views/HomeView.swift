@@ -12,12 +12,14 @@ struct HomeView: View {
     // MARK: - Environment
 
     @Environment(HabitViewModel.self) private var viewModel
+    @Environment(ProViewModel.self) private var proViewModel
     @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - State
 
     @State private var showSettings = false
     @State private var showAddHabit = false
+    @State private var showPaywall = false
     @State private var selectedHabitForEdit: Habit?
     @State private var selectedHabitForDetail: Habit?
     @State private var habitGridData: [UUID: [Date: Bool]] = [:]
@@ -86,6 +88,22 @@ struct HomeView: View {
                 await viewModel.loadHabits()
                 await loadAllGridData()
             }
+            // PaywallView as navigation destination (page push)
+            .navigationDestination(isPresented: $showPaywall) {
+                PaywallView()
+            }
+            // Sync with proViewModel.showPaywall (for feature gating triggers)
+            .onChange(of: proViewModel.showPaywall) { _, shouldShow in
+                if shouldShow && !showPaywall {
+                    showPaywall = true
+                }
+            }
+            .onChange(of: showPaywall) { _, isShowing in
+                // Sync back to proViewModel when dismissed
+                if !isShowing && proViewModel.showPaywall {
+                    proViewModel.dismissPaywall()
+                }
+            }
         }
     }
 
@@ -94,6 +112,14 @@ struct HomeView: View {
     private var habitListView: some View {
         ScrollView {
             VStack(spacing: 16) {
+                // Pro Upgrade Banner (only for non-Pro users)
+                if !proViewModel.hasProAccess {
+                    ProUpgradeBanner {
+                        showPaywall = true
+                    }
+                    .padding(.horizontal)
+                }
+
                 // Date subtitle
                 Text("오늘의 습관")
                     .font(.headline)
@@ -184,6 +210,7 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .environment(HabitViewModel(repository: PreviewHabitRepository()))
+        .environment(ProViewModel())
         .modelContainer(PersistenceController.preview.container)
 }
 

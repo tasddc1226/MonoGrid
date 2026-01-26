@@ -14,9 +14,13 @@ struct ColorPickerView: View {
     /// Currently selected color hex
     @Binding var selectedColorHex: String
 
+    /// Show Pro colors (default: true)
+    var showProColors: Bool = true
+
     // MARK: - Environment
 
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(ProViewModel.self) private var proViewModel
 
     // MARK: - Constants
 
@@ -26,9 +30,31 @@ struct ColorPickerView: View {
     // MARK: - Body
 
     var body: some View {
-        HStack(spacing: 16) {
-            ForEach(Constants.colorPresets, id: \.hex) { preset in
-                colorCircle(preset)
+        VStack(alignment: .leading, spacing: 16) {
+            // Free colors
+            HStack(spacing: 16) {
+                ForEach(Constants.colorPresets, id: \.hex) { preset in
+                    colorCircle(preset, isPro: false)
+                }
+            }
+
+            // Pro colors (if enabled)
+            if showProColors {
+                HStack(spacing: 8) {
+                    Text("Pro 컬러")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    if !proViewModel.hasProAccess {
+                        ProBadge(style: .compact)
+                    }
+                }
+
+                HStack(spacing: 16) {
+                    ForEach(ProColors.proOnlyColors, id: \.self) { hex in
+                        proColorCircle(hex)
+                    }
+                }
             }
         }
         .padding(.vertical, 8)
@@ -37,8 +63,7 @@ struct ColorPickerView: View {
     // MARK: - Subviews
 
     @ViewBuilder
-    private func colorCircle(_ preset: (name: String, hex: String)) -> some View {
-        let baseColor = Color(hex: preset.hex)
+    private func colorCircle(_ preset: (name: String, hex: String), isPro: Bool) -> some View {
         let adaptedColor = AppColors.habitColor(hex: preset.hex, for: colorScheme)
         let isSelected = selectedColorHex == preset.hex
 
@@ -73,6 +98,48 @@ struct ColorPickerView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(preset.name)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    @ViewBuilder
+    private func proColorCircle(_ hex: String) -> some View {
+        let adaptedColor = Color(hex: hex)
+        let isSelected = selectedColorHex == hex
+        let isLocked = !proViewModel.hasProAccess
+
+        Button {
+            if isLocked {
+                _ = proViewModel.requestAccess(to: .signatureColors)
+            } else {
+                HapticManager.shared.selectionChanged()
+                selectedColorHex = hex
+            }
+        } label: {
+            ZStack {
+                Circle()
+                    .fill(adaptedColor)
+                    .frame(width: circleSize, height: circleSize)
+                    .opacity(isLocked ? 0.4 : 1.0)
+
+                if isLocked {
+                    // Lock overlay
+                    ColorLockOverlay()
+                        .frame(width: circleSize, height: circleSize)
+                } else if isSelected {
+                    // Selection indicator
+                    Circle()
+                        .strokeBorder(AppColors.selectionIndicator(for: colorScheme), lineWidth: 3)
+                        .frame(width: circleSize, height: circleSize)
+
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(AppColors.checkmark(for: colorScheme))
+                }
+            }
+            .shadow(color: adaptedColor.opacity(isLocked ? 0.1 : 0.4), radius: isSelected ? 4 : 0, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(ProColors.colorName(for: hex)), \(isLocked ? "Pro 전용, 잠김" : "")")
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

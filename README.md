@@ -25,6 +25,34 @@
 - **Accessibility** - Complete VoiceOver support
 - **Bilingual** - Korean and English localization
 
+## MonoGrid Pro
+
+MonoGrid Pro는 더 아름답고 개인화된 습관 추적 경험을 제공합니다.
+
+### Pro Features
+
+| Feature | Description |
+|---------|-------------|
+| **Signature Colors** | 12 premium color palettes |
+| **Grid Customization** | Corner radius & border adjustments |
+| **Pro App Icons** | 5+ exclusive app icons |
+| **Weekday Analysis** | Day-of-week completion patterns |
+| **Streak Statistics** | Current, longest, and average streaks |
+| **HD Export** | 1080x1080 Instagram-ready exports |
+
+### Pricing
+
+| Plan | Price | Description |
+|------|-------|-------------|
+| **Lifetime** | $10 | One-time purchase, forever access |
+| **Monthly** | $2.99/mo | Cancel anytime |
+
+### Offline Support
+
+All Pro features work 100% offline with local license verification via iOS Keychain.
+
+> 📚 See [Pro Documentation](docs/pro-subscription.md) for details.
+
 ## Tech Stack
 
 | Category | Technology |
@@ -35,6 +63,8 @@
 | **Architecture** | MVVM + Repository Pattern |
 | **Widgets** | WidgetKit |
 | **Shortcuts** | AppIntents |
+| **Payments** | Polar REST API |
+| **License Storage** | iOS Keychain |
 | **Minimum iOS** | iOS 17.0 |
 
 ## Getting Started
@@ -87,21 +117,40 @@ MonoGrid/
 │   │   └── PersistenceController.swift
 │   ├── Models/                  # SwiftData models
 │   │   ├── Habit.swift
-│   │   └── HabitLog.swift
+│   │   ├── HabitLog.swift
+│   │   └── Pro/                 # Pro subscription models
+│   │       ├── ProLicense.swift
+│   │       ├── ProProduct.swift
+│   │       └── SubscriptionState.swift
 │   ├── ViewModels/              # Business logic
 │   │   ├── HabitViewModel.swift
-│   │   └── OnboardingViewModel.swift
+│   │   ├── OnboardingViewModel.swift
+│   │   └── Pro/                 # Pro ViewModels
+│   │       ├── ProViewModel.swift
+│   │       └── PurchaseViewModel.swift
 │   ├── Views/                   # SwiftUI views
 │   │   ├── HomeView.swift
 │   │   ├── SettingsView.swift
 │   │   ├── HabitEditView.swift
 │   │   ├── OnboardingView.swift
-│   │   └── Components/          # Reusable UI components
+│   │   ├── Components/          # Reusable UI components
+│   │   └── Pro/                 # Pro UI components
+│   │       ├── PaywallView.swift
+│   │       └── PurchaseButton.swift
 │   ├── Repository/              # Data access layer
 │   │   ├── HabitRepository.swift
-│   │   └── SwiftDataHabitRepository.swift
+│   │   ├── SwiftDataHabitRepository.swift
+│   │   └── Pro/                 # Pro repositories
+│   │       ├── LicenseRepository.swift
+│   │       └── PolarRepository.swift
+│   ├── Services/                # Business services
+│   │   ├── LicenseManager.swift
+│   │   └── AnalyticsService.swift
 │   ├── Extensions/              # Swift extensions
 │   └── Utils/                   # Utilities & constants
+│       └── Pro/                 # Pro utilities
+│           ├── KeychainHelper.swift
+│           └── ProFeatureGate.swift
 ├── MonoGridWidget/              # Widget Extension
 │   ├── Views/                   # Widget views
 │   │   ├── SmallWidgetView.swift
@@ -171,7 +220,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Roadmap
 
-### MVP (v1.0)
+### MVP (v1.0) ✅
 - [x] 3 habits management with icons and colors
 - [x] GitHub-style 365-day grid visualization
 - [x] Interactive home screen widgets
@@ -180,11 +229,22 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [x] iCloud sync
 - [x] Korean/English localization
 
-### Future (v1.1+)
+### Pro Business Model (v1.1.0) ✅
+- [x] Polar payment integration
+- [x] Pro subscription (Lifetime $10 / Monthly $2.99)
+- [x] 12 signature color palettes
+- [x] Grid style customization
+- [x] Pro app icons
+- [x] Weekday analysis charts
+- [x] Streak statistics
+- [x] HD export (1080x1080)
+- [x] Offline license verification
+
+### Future (v1.2+)
 - [ ] HealthKit integration
-- [ ] Streak visualization
-- [ ] Statistics & analytics
+- [ ] Apple Watch app
 - [ ] iPad support
+- [ ] Habit templates
 
 ## License
 

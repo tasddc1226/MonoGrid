@@ -19,6 +19,7 @@ struct MonoGridApp: App {
     @State private var themeManager = ThemeManager.shared
     @State private var navigationState = AppNavigationState()
     @State private var reviewViewModel = ReviewRequestViewModel()
+    @State private var proViewModel = ProViewModel()
     @StateObject private var reviewManager = AppReviewManager.shared
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
@@ -31,7 +32,12 @@ struct MonoGridApp: App {
                     .environment(onboardingViewModel)
                     .environment(navigationState)
                     .environment(reviewViewModel)
+                    .environment(proViewModel)
                     .preferredColorScheme(themeManager.currentTheme.colorScheme)
+                    .task {
+                        // Verify Pro license on launch
+                        await proViewModel.verifyLicenseOnLaunch()
+                    }
                     .onReceive(appDelegate.notificationResponsePublisher) { response in
                         navigationState.handleNotificationResponse(response)
                     }
@@ -149,6 +155,7 @@ struct ContentView: View {
 struct MainTabView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(AppNavigationState.self) private var navigationState
+    @Environment(ProViewModel.self) private var proViewModel
     @State private var habitViewModel: HabitViewModel?
 
     var body: some View {
@@ -156,6 +163,7 @@ struct MainTabView: View {
             if let viewModel = habitViewModel {
                 HomeView()
                     .environment(viewModel)
+                    // PaywallView is now presented via fullScreenCover in HomeView
                     .sheet(isPresented: Binding(
                         get: { viewModel.showNotificationPermission },
                         set: { viewModel.showNotificationPermission = $0 }
