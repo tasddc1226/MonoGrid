@@ -33,8 +33,29 @@ struct GitHubGridView: View {
 
     private let cellSize: CGFloat = Constants.UI.gridCellSize
     private let cellGap: CGFloat = Constants.UI.gridCellGap
-    private let cellCornerRadius: CGFloat = Constants.UI.gridCellCornerRadius
     private let rowCount: Int = 7 // Days of week (Mon-Sun)
+
+    // MARK: - Grid Style Settings (Pro Feature)
+
+    /// Get the current grid style settings
+    /// For non-Pro users, returns default settings
+    private var gridStyle: GridStyleSettings {
+        if LicenseManager.shared.hasProAccess {
+            return GridStyleManager.shared.settings
+        }
+        return .default
+    }
+
+    /// Computed corner radius from settings, scaled for cell size
+    private var cellCornerRadius: CGFloat {
+        // Scale corner radius relative to cell size
+        min(gridStyle.cornerRadius * (cellSize / 10), cellSize / 2)
+    }
+
+    /// Computed border width from settings
+    private var cellBorderWidth: CGFloat {
+        gridStyle.borderWidth
+    }
 
     // MARK: - Environment
 
@@ -184,6 +205,16 @@ struct GitHubGridView: View {
                 RoundedRectangle(cornerRadius: cellCornerRadius)
                     .fill(isCompleted ? adaptedHabitColor : incompleteColor)
                     .frame(width: cellSize, height: cellSize)
+                    .overlay {
+                        // Border overlay (Pro feature)
+                        if cellBorderWidth > 0 {
+                            RoundedRectangle(cornerRadius: cellCornerRadius)
+                                .strokeBorder(
+                                    Color.primary.opacity(0.2),
+                                    lineWidth: cellBorderWidth
+                                )
+                        }
+                    }
                     .overlay {
                         if isToday {
                             RoundedRectangle(cornerRadius: cellCornerRadius)

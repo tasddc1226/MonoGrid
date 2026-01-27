@@ -53,6 +53,9 @@ enum Constants {
         static let notificationScheduledHour = "notification.scheduledHour"
         static let notificationScheduledMinute = "notification.scheduledMinute"
         static let notificationHasRequestedPermission = "notification.hasRequestedPermission"
+
+        // Pro Settings
+        static let gridStyleSettings = "gridStyleSettings"
     }
 
     // MARK: - Notification

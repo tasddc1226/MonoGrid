@@ -24,6 +24,7 @@ struct SettingsView: View {
     @State private var showAbout = false
     @State private var showOnboarding = false
     @State private var selectedTheme: ThemeMode = ThemeManager.shared.currentTheme
+    @State private var showGridStyleSettings = false
 
     // Promo Code State
     @State private var promoCode: String = ""
@@ -171,6 +172,9 @@ struct SettingsView: View {
             .sheet(isPresented: $showAbout) {
                 AboutView()
             }
+            .sheet(isPresented: $showGridStyleSettings) {
+                GridStyleSettingsView()
+            }
             .fullScreenCover(isPresented: $showOnboarding) {
                 OnboardingContainerView()
             }
@@ -272,6 +276,19 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
+                    }
+                }
+
+                // Grid Style Customization (Pro feature)
+                Button {
+                    showGridStyleSettings = true
+                } label: {
+                    HStack {
+                        Label("그리드 스타일", systemImage: "square.grid.3x3")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
 

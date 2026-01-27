@@ -28,7 +28,29 @@ struct MiniGridView: View {
 
     private let cellSize: CGFloat = Constants.UI.miniGridCellSize
     private let cellGap: CGFloat = Constants.UI.gridCellGap
-    private let cellCornerRadius: CGFloat = 1
+
+    // MARK: - Grid Style Settings (Pro Feature)
+
+    /// Get the current grid style settings
+    /// For non-Pro users, returns default settings
+    private var gridStyle: GridStyleSettings {
+        if LicenseManager.shared.hasProAccess {
+            return GridStyleManager.shared.settings
+        }
+        return .default
+    }
+
+    /// Computed corner radius considering the cell size
+    private var cellCornerRadius: CGFloat {
+        // Scale corner radius relative to cell size to prevent over-rounding
+        min(gridStyle.cornerRadius * (cellSize / 10), cellSize / 2)
+    }
+
+    /// Computed border width considering the cell size
+    private var cellBorderWidth: CGFloat {
+        // Scale border width for mini grid cells
+        min(gridStyle.borderWidth * 0.5, 1)
+    }
 
     // MARK: - Initialization
 
@@ -69,6 +91,17 @@ struct MiniGridView: View {
             .fill(isCompleted ? habitColor : incompleteColor)
             .frame(width: cellSize, height: cellSize)
             .overlay {
+                // Border overlay (Pro feature)
+                if cellBorderWidth > 0 {
+                    RoundedRectangle(cornerRadius: cellCornerRadius)
+                        .strokeBorder(
+                            Color.primary.opacity(0.2),
+                            lineWidth: cellBorderWidth
+                        )
+                }
+            }
+            .overlay {
+                // Today indicator (when not completed)
                 if isToday && !isCompleted {
                     RoundedRectangle(cornerRadius: cellCornerRadius)
                         .strokeBorder(habitColor.opacity(0.5), lineWidth: 1)
