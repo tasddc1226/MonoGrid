@@ -68,6 +68,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        // Initialize RevenueCat
+        RevenueCatManager.shared.configure()
+
         // Set up notification delegate
         notificationDelegate = NotificationDelegate(publisher: notificationResponsePublisher)
         UNUserNotificationCenter.current().delegate = notificationDelegate

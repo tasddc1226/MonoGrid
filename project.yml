@@ -7,6 +7,19 @@ options:
   generateEmptyDirectories: true
   groupSortPosition: top
 
+configFiles:
+  Debug:
+    - PromoConfig.xcconfig
+    - RevenueCatConfig-Debug.xcconfig
+  Release:
+    - PromoConfig.xcconfig
+    - RevenueCatConfig-Release.xcconfig
+
+packages:
+  RevenueCat:
+    url: https://github.com/RevenueCat/purchases-ios
+    from: 5.0.0
+
 settings:
   base:
     SWIFT_VERSION: "5.9"
@@ -35,6 +48,11 @@ targets:
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: 1.1.0
         INFOPLIST_KEY_CFBundleURLTypes: "$(inherited)"
+    info:
+      path: MonoGrid/MonoGrid/Info.plist
+      properties:
+        PromoCodes: "$(PROMO_CODES)"
+        RevenueCatAPIKey: "$(REVENUECAT_API_KEY)"
     entitlements:
       path: MonoGrid/MonoGrid.entitlements
       properties:
@@ -48,6 +66,8 @@ targets:
     dependencies:
       - target: MonoGridWidgetExtension
         embed: true
+      - package: RevenueCat
+        product: RevenueCat
 
   MonoGridWidgetExtension:
     type: app-extension
