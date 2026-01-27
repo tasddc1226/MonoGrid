@@ -48,12 +48,24 @@ struct StatisticsSummaryView: View {
                     color: streakColor
                 )
 
-                StatCard(
-                    title: "최장",
-                    value: statistics.formattedLongestStreak,
-                    icon: "trophy.fill",
-                    color: .orange
-                )
+                // Longest Streak - Pro Feature
+                if proViewModel.hasProAccess {
+                    StatCard(
+                        title: "최장",
+                        value: statistics.formattedLongestStreak,
+                        icon: "trophy.fill",
+                        color: .orange
+                    )
+                } else {
+                    LockedStatCard(
+                        title: "최장",
+                        icon: "trophy.fill",
+                        color: .orange
+                    ) {
+                        HapticManager.shared.lightImpact()
+                        showPaywall = true
+                    }
+                }
             }
 
             // Additional info row (for yearly/monthly views)
@@ -262,6 +274,72 @@ private struct LockedStatItem: View {
         .buttonStyle(.plain)
         .accessibilityLabel("\(label), Pro 전용 기능")
         .accessibilityHint("탭하여 Pro 구매 화면으로 이동")
+    }
+}
+
+// MARK: - Locked Stat Card (Pro Feature)
+
+/// Locked version of StatCard for Pro-only statistics
+private struct LockedStatCard: View {
+    let title: String
+    let icon: String
+    let color: Color
+    let onTap: () -> Void
+
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(spacing: 8) {
+                // Icon with lock overlay
+                ZStack {
+                    Image(systemName: icon)
+                        .font(.system(size: 16))
+                        .foregroundColor(color.opacity(0.5))
+
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(4)
+                        .background(Circle().fill(Color.accentColor))
+                        .offset(x: 8, y: -8)
+                }
+
+                // Blurred placeholder value
+                Text("??")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.secondary.opacity(0.5))
+                    .blur(radius: 3)
+
+                // Title with Pro badge
+                HStack(spacing: 4) {
+                    Text(title)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Text("Pro")
+                        .font(.system(size: 7, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1)
+                        .background(Capsule().fill(Color.accentColor))
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(backgroundColor)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(title), Pro 전용 기능")
+        .accessibilityHint("탭하여 Pro 구매 화면으로 이동")
+    }
+
+    private var backgroundColor: Color {
+        colorScheme == .dark ? Color(hex: "#3A3A3C") : Color(hex: "#F2F2F7")
     }
 }
 
