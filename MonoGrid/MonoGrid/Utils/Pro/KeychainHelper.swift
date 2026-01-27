@@ -78,64 +78,6 @@ final class KeychainHelper {
         loadLicense() != nil
     }
 
-    // MARK: - API Key Operations
-
-    /// API Key 저장 (Production용)
-    func saveAPIKey(_ key: String) throws {
-        guard let data = key.data(using: .utf8) else {
-            throw KeychainError.encodingFailed
-        }
-
-        deleteAPIKey()
-
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: ProConstants.keychainAPIKeyAccount,
-            kSecValueData as String: data,
-            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
-        ]
-
-        let status = SecItemAdd(query as CFDictionary, nil)
-
-        guard status == errSecSuccess else {
-            throw KeychainError.saveFailed(status)
-        }
-    }
-
-    /// API Key 로드
-    func loadAPIKey() -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: ProConstants.keychainAPIKeyAccount,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-
-        guard status == errSecSuccess,
-              let data = result as? Data,
-              let key = String(data: data, encoding: .utf8) else {
-            return nil
-        }
-
-        return key
-    }
-
-    /// API Key 삭제
-    private func deleteAPIKey() {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: ProConstants.keychainAPIKeyAccount
-        ]
-
-        SecItemDelete(query as CFDictionary)
-    }
-
     // MARK: - Generic Operations
 
     /// Generic data 저장

@@ -1,0 +1,12 @@
+//
+//  RevenueCatConfig.xcconfig.example
+//  MonoGrid
+//
+//  RevenueCat API Configuration Template
+//  Copy this file to RevenueCatConfig.xcconfig and add your actual API key.
+//  The actual RevenueCatConfig.xcconfig file is gitignored for security.
+//
+
+// RevenueCat API Key (from RevenueCat Dashboard > Project > API Keys)
+// Format: appl_xxxxxxxxxxxxxxxxxxxxxxxxx (for Apple App Store)
+REVENUECAT_API_KEY = YOUR_REVENUECAT_API_KEY_HERE
