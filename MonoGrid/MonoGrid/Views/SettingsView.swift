@@ -25,6 +25,7 @@ struct SettingsView: View {
     @State private var showOnboarding = false
     @State private var selectedTheme: ThemeMode = ThemeManager.shared.currentTheme
     @State private var showGridStyleSettings = false
+    @State private var showAppIconPicker = false
 
     // Promo Code State
     @State private var promoCode: String = ""
@@ -71,6 +72,19 @@ struct SettingsView: View {
                         ThemeManager.shared.currentTheme = newValue
                         // Refresh widgets to apply new theme
                         WidgetCenter.shared.reloadAllTimelines()
+                    }
+
+                    // App Icon Selection
+                    Button {
+                        showAppIconPicker = true
+                    } label: {
+                        HStack {
+                            Label("앱 아이콘", systemImage: "app.fill")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
 
@@ -174,6 +188,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showGridStyleSettings) {
                 GridStyleSettingsView()
+            }
+            .sheet(isPresented: $showAppIconPicker) {
+                AppIconPickerView()
             }
             .fullScreenCover(isPresented: $showOnboarding) {
                 OnboardingContainerView()
