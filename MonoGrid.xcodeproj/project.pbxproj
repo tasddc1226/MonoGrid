@@ -28,7 +28,6 @@
 		18F84009C9A5137B4964CB69 /* HabitEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */; };
 		1C10713DB3BBD6208F4B138B /* MessageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9149A842B1EA25B8CD72B7 /* MessageGenerator.swift */; };
 		1C6544847E1FA60881FB00AE /* HabitViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35AECD27EF49390DD099321 /* HabitViewModelTests.swift */; };
-		1FBBC7C275C520AC0C1F38D9 /* PolarAPIRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D73AF88EDD43AB6DFA10B0 /* PolarAPIRepository.swift */; };
 		21A4695B9BE8A49D9072E416 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B9546657A40E76C3646E7 /* OnboardingView.swift */; };
 		23D2C2A2EB40BDB725C0E7A5 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D289CFD21BAD7114A018D9E4 /* EmptyStateView.swift */; };
 		2675273B2FF38DBA58D96BFE /* HabitWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D322539667DE94A0EB35439 /* HabitWidgetIntent.swift */; };
@@ -53,6 +52,7 @@
 		443147DF5FCFA74E39BF9D39 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF555FD1E7D7BAAF56EA4DB /* SyncEngine.swift */; };
 		4671679E16754826F3BB9BBC /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D6D9E1208232EEA7080F0 /* OnboardingViewModel.swift */; };
 		4A99E7A8CE144625A9EEF946 /* SharedFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED907A3D53AF3B9562FF7549 /* SharedFormatters.swift */; };
+		4AF72F3ABD301E961D80CBBD /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = CB26B9497FD5785ECA9781F1 /* RevenueCat */; };
 		4CB59090924C9BC7A1D472A2 /* HabitTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D9E00DD3D443BEEBEEE886 /* HabitTimelineProvider.swift */; };
 		4E299EC019E425A49D42E1B6 /* SharedFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED907A3D53AF3B9562FF7549 /* SharedFormatters.swift */; };
 		51E890339C19B4719EEE131E /* GridDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C75368742AD22C25F9E419F /* GridDataProvider.swift */; };
@@ -77,6 +77,7 @@
 		6C3A97113C3FBC25EA706277 /* DateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4076C3DADBD82CE19CFED592 /* DateExtensionTests.swift */; };
 		6C997BEB9B15D1C8BEAB287B /* ReviewRequestDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F73476D7918A6AAAFED29A6 /* ReviewRequestDialogView.swift */; };
 		6ED418D669FBEFEFCB8C28C6 /* NotificationSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39C051E858AFAD26C557A2D /* NotificationSettingsViewModel.swift */; };
+		70C2138F24555B07E0365E92 /* PromoCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149D6BBBD2431BAD472ECF62 /* PromoCodeManager.swift */; };
 		717588DC00C4573B8D655088 /* ProIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31CC9F010041A7BA304B353 /* ProIcons.swift */; };
 		71EBFE145D22B418460F80BB /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159EA7E30BB2CE79ABBB8813 /* Habit.swift */; };
 		74BA2B0E82AEE7E33540C4C6 /* SyncQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F0D20EE2AA5A2BE051DA8C /* SyncQueue.swift */; };
@@ -105,10 +106,10 @@
 		A163750802F348675AFAFDA8 /* YearlyGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B69661083EA1190899122D /* YearlyGridView.swift */; };
 		A26A54D132CF60E989FF8715 /* SyncStatusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA56B2FA40094386CBEEB93E /* SyncStatusMonitor.swift */; };
 		A49CA10B540C98725C2B60A2 /* LargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27791EE188DC6F17DC627696 /* LargeWidgetView.swift */; };
-		A4E7BAB662AF8140F8ADCD9A /* PolarRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BD53D7467754BF68D9C737 /* PolarRepository.swift */; };
 		A979E3C3FAE606225CC6054F /* HabitEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2748484134EF2DB26FE7D2 /* HabitEntry.swift */; };
 		ABF7B195ED7FD68B8D59D51E /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF555FD1E7D7BAAF56EA4DB /* SyncEngine.swift */; };
 		AC407D52308C25026B02DCD3 /* GridViewModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AFE7CA9F52B46A6DFB5BBE /* GridViewModePicker.swift */; };
+		B3A7EEF01549FE8F789217ED /* RevenueCatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92C9A50398BB74DAF68F9E /* RevenueCatManager.swift */; };
 		B3B8E039DCF899755B5A6FB1 /* IntentErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8741AC32B86A2B820466DB /* IntentErrors.swift */; };
 		B495C16D758DA8E8A052C8FA /* NotificationPermissionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE47BE86A2250D173B20E9A /* NotificationPermissionSheet.swift */; };
 		B8CCB988B58D77DC8DBD8EF6 /* HabitDetailGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55102684328616FC4A1EFDD /* HabitDetailGridView.swift */; };
@@ -140,7 +141,6 @@
 		EC720EDC39D77C6E9CD47C0A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4177257CD0B702099FCAE904 /* PersistenceController.swift */; };
 		ECF7D8592CEBE21706A82EE8 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F395EB878CDBE06DA9F65F5F /* CheckboxButton.swift */; };
 		EE1F23C8D1396B9911429359 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0AA0FC7505FD6F31FE3EA9 /* ColorPickerView.swift */; };
-		EE98218CE469DCF398EEC091 /* PolarCheckoutCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C762F4392CFCD5D1A94FD4E2 /* PolarCheckoutCoordinator.swift */; };
 		EFF22C879DB4B66E42F98CCF /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159EA7E30BB2CE79ABBB8813 /* Habit.swift */; };
 		F03FCA897D87E3A21D1D7384 /* BaseGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540C1A08E8FAED2EBA5A188C /* BaseGridCell.swift */; };
 		F2D98F8963801641248DB929 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE02CF11BD05AF0B0607336 /* Date+Extensions.swift */; };
@@ -194,10 +194,12 @@
 		0F129107A8F7BF2E77208294 /* MonoGridTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MonoGridTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F73476D7918A6AAAFED29A6 /* ReviewRequestDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestDialogView.swift; sourceTree = "<group>"; };
 		1309458C039AD7C89882F327 /* GridStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridStatistics.swift; sourceTree = "<group>"; };
+		149D6BBBD2431BAD472ECF62 /* PromoCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoCodeManager.swift; sourceTree = "<group>"; };
 		1559DA6E33893497FF312639 /* DateRangeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRangeCalculator.swift; sourceTree = "<group>"; };
 		159EA7E30BB2CE79ABBB8813 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
 		17355A1A02586997F90EEFDE /* GridLegendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLegendView.swift; sourceTree = "<group>"; };
 		1829F017F7F67EB8A5EF0127 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		182FDA7EE605E46D2EB558DD /* RevenueCatConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = RevenueCatConfig.xcconfig; sourceTree = "<group>"; };
 		1B58C5A9E0C28385AA71CC74 /* ToggleHabitIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHabitIntent.swift; sourceTree = "<group>"; };
 		1B916EA1574974E4F4EC1AD4 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
 		1DE6C935AE5DD2FC2A453CFB /* NotificationSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsStorage.swift; sourceTree = "<group>"; };
@@ -237,10 +239,10 @@
 		63C19424C3577C4767A40E1B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		683E13F1CC04897B335466DC /* PerformanceFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceFlags.swift; sourceTree = "<group>"; };
 		6A229D9BDA227221112ADB2A /* SmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetView.swift; sourceTree = "<group>"; };
+		6B92C9A50398BB74DAF68F9E /* RevenueCatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueCatManager.swift; sourceTree = "<group>"; };
 		6D10B4E2949680282A000441 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FF06B8D1F19ACF965396751 /* HabitRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitRepository.swift; sourceTree = "<group>"; };
 		70BB430902B52C5B2427B3D1 /* ProFeatureGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProFeatureGate.swift; sourceTree = "<group>"; };
-		73BD53D7467754BF68D9C737 /* PolarRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarRepository.swift; sourceTree = "<group>"; };
 		75AFE7CA9F52B46A6DFB5BBE /* GridViewModePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewModePicker.swift; sourceTree = "<group>"; };
 		7810ECC2C1FD6774260B866E /* NotificationPreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreviewCard.swift; sourceTree = "<group>"; };
 		784959810015D0754B672A1B /* AppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcuts.swift; sourceTree = "<group>"; };
@@ -249,7 +251,6 @@
 		844E5BBBE83166639FFC3566 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		848B6AEC37198E912AB5FAB0 /* HabitEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEntityQuery.swift; sourceTree = "<group>"; };
 		8850111C84D1F6FB42162CA6 /* CloudKitAccountObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitAccountObserver.swift; sourceTree = "<group>"; };
-		88D73AF88EDD43AB6DFA10B0 /* PolarAPIRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarAPIRepository.swift; sourceTree = "<group>"; };
 		8A56258357FD53E439D1FE06 /* SettingsReviewButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsReviewButtonView.swift; sourceTree = "<group>"; };
 		8BCF2B5F99DB145EDEBD9982 /* HabitCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCardView.swift; sourceTree = "<group>"; };
 		8D322539667DE94A0EB35439 /* HabitWidgetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWidgetIntent.swift; sourceTree = "<group>"; };
@@ -283,8 +284,8 @@
 		C60ABEF63B770369939C6F06 /* MiniGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniGridView.swift; sourceTree = "<group>"; };
 		C67E1A792EA6173918E054EF /* ProViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProViewModel.swift; sourceTree = "<group>"; };
 		C7350D7F520CC84344A989A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		C762F4392CFCD5D1A94FD4E2 /* PolarCheckoutCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarCheckoutCoordinator.swift; sourceTree = "<group>"; };
 		CA56B2FA40094386CBEEB93E /* SyncStatusMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusMonitor.swift; sourceTree = "<group>"; };
+		CB134CA3A133C272D23DCBEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CC43DFCB21EF4F9AAC4A919B /* LicenseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseType.swift; sourceTree = "<group>"; };
 		CCC5D023D573E4FAF7D705DF /* ReviewSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSettingsStorage.swift; sourceTree = "<group>"; };
 		CFCF084B20AA2EFD905009FE /* ProLicense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProLicense.swift; sourceTree = "<group>"; };
@@ -311,6 +312,17 @@
 		FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsCalculator.swift; sourceTree = "<group>"; };
 		FDF041C99A0FE749C03D8C71 /* WeeklyGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyGridView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		216A0150FF64FF90AC6151CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4AF72F3ABD301E961D80CBBD /* RevenueCat in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		067F72D94CF708AAC933030B /* Review */ = {
@@ -405,8 +417,6 @@
 			children = (
 				F2BE35C5DF342C5E13535D34 /* KeychainLicenseRepository.swift */,
 				39DBEE1DDD470B1E33539CA7 /* LicenseRepository.swift */,
-				88D73AF88EDD43AB6DFA10B0 /* PolarAPIRepository.swift */,
-				73BD53D7467754BF68D9C737 /* PolarRepository.swift */,
 			);
 			path = Pro;
 			sourceTree = "<group>";
@@ -424,6 +434,8 @@
 				5D9128D0ECFB42A7714E2A40 /* Utils */,
 				BFA1C1024A9FB8AB0D486996 /* ViewModels */,
 				1C70C837C3AEDD4A1A0A244C /* Views */,
+				CB134CA3A133C272D23DCBEC /* Info.plist */,
+				182FDA7EE605E46D2EB558DD /* RevenueCatConfig.xcconfig */,
 			);
 			name = MonoGrid;
 			path = MonoGrid/MonoGrid;
@@ -507,6 +519,7 @@
 				4B6B6F10E4D90966A4D7CA87 /* KeychainHelper.swift */,
 				2CAA58A4537249583465D255 /* ProConstants.swift */,
 				70BB430902B52C5B2427B3D1 /* ProFeatureGate.swift */,
+				149D6BBBD2431BAD472ECF62 /* PromoCodeManager.swift */,
 			);
 			path = Pro;
 			sourceTree = "<group>";
@@ -528,7 +541,7 @@
 			children = (
 				9AF117762AC9075A956692E2 /* AnalyticsService.swift */,
 				C2B96606AAECC7B9E65B062B /* LicenseManager.swift */,
-				C762F4392CFCD5D1A94FD4E2 /* PolarCheckoutCoordinator.swift */,
+				6B92C9A50398BB74DAF68F9E /* RevenueCatManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -710,6 +723,7 @@
 			buildPhases = (
 				DCB3A7DFA6EB74850CCDF263 /* Sources */,
 				E30F660880FE878F1E859A79 /* Resources */,
+				216A0150FF64FF90AC6151CA /* Frameworks */,
 				849DAEE908481CD431EA9396 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -719,6 +733,7 @@
 			);
 			name = MonoGrid;
 			packageProductDependencies = (
+				CB26B9497FD5785ECA9781F1 /* RevenueCat */,
 			);
 			productName = MonoGrid;
 			productReference = 8F8CEB89044E4BCFA5A941BF /* MonoGrid.app */;
@@ -776,6 +791,9 @@
 			);
 			mainGroup = E9FD37BA8AA0AEC846B2E3AD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C95D86EAA63C3CF81D404F02 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
@@ -935,9 +953,6 @@
 				FC7AFD4063C9310010CE5555 /* PaywallViewModel.swift in Sources */,
 				8F33B8ACA6FD767DCB758C05 /* PerformanceFlags.swift in Sources */,
 				EC720EDC39D77C6E9CD47C0A /* PersistenceController.swift in Sources */,
-				1FBBC7C275C520AC0C1F38D9 /* PolarAPIRepository.swift in Sources */,
-				EE98218CE469DCF398EEC091 /* PolarCheckoutCoordinator.swift in Sources */,
-				A4E7BAB662AF8140F8ADCD9A /* PolarRepository.swift in Sources */,
 				6B2679EE898ED1439D834221 /* ProBadge.swift in Sources */,
 				D967B9A5918453568C3AC055 /* ProColors.swift in Sources */,
 				FC8FFA2E08CB5E556BAEE1A4 /* ProConstants.swift in Sources */,
@@ -948,9 +963,11 @@
 				D7E3EA313ED11E5B9A0AEB2E /* ProProduct.swift in Sources */,
 				D2DD67DB9A27253EEDC10B28 /* ProUpgradeBanner.swift in Sources */,
 				FBE16B50435BC25C7727D9F6 /* ProViewModel.swift in Sources */,
+				70C2138F24555B07E0365E92 /* PromoCodeManager.swift in Sources */,
 				4260241667D7E5DB487F5C16 /* PurchaseButton.swift in Sources */,
 				DC695A7651DD405E09447209 /* PurchaseSuccessView.swift in Sources */,
 				63D50DB75C691223665C0B4D /* PurchaseViewModel.swift in Sources */,
+				B3A7EEF01549FE8F789217ED /* RevenueCatManager.swift in Sources */,
 				6C997BEB9B15D1C8BEAB287B /* ReviewRequestDialogView.swift in Sources */,
 				C14F9DCD9B03A98C21328796 /* ReviewRequestViewModel.swift in Sources */,
 				8086C7DC2F0DD47F79319D72 /* ReviewSettingsStorage.swift in Sources */,
@@ -1205,6 +1222,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MonoGrid/MonoGrid/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MonoGrid;
 				INFOPLIST_KEY_CFBundleURLTypes = "$(inherited)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1232,6 +1250,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MonoGrid/MonoGrid/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MonoGrid;
 				INFOPLIST_KEY_CFBundleURLTypes = "$(inherited)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1291,6 +1310,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C95D86EAA63C3CF81D404F02 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CB26B9497FD5785ECA9781F1 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C95D86EAA63C3CF81D404F02 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B728F9EFC4EC35EFABA4E3B7 /* Project object */;
 }
