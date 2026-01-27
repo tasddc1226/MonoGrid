@@ -4,6 +4,7 @@
 //
 //  Pro Business Model - Main Paywall Modal View
 //  Created on 2026-01-25.
+//  Updated on 2026-01-26 for RevenueCat integration.
 //
 
 import SwiftUI
@@ -20,12 +21,10 @@ struct PaywallView: View {
     @State private var activeSheet: PaywallSheet?
 
     enum PaywallSheet: Identifiable {
-        case restore
         case success(ProLicense)
 
         var id: String {
             switch self {
-            case .restore: return "restore"
             case .success: return "success"
             }
         }
@@ -54,55 +53,24 @@ struct PaywallView: View {
         .onAppear {
             paywallViewModel.startFeatureAnimation()
         }
-            .alert("오류", isPresented: $purchaseViewModel.showError) {
-                Button("확인") {
-                    purchaseViewModel.dismissError()
-                }
-            } message: {
-                Text(purchaseViewModel.errorMessage ?? "알 수 없는 오류가 발생했습니다")
+        .alert("오류", isPresented: $purchaseViewModel.showError) {
+            Button("확인") {
+                purchaseViewModel.dismissError()
             }
-            .sheet(item: $activeSheet) { sheet in
-                switch sheet {
-                case .restore:
-                    RestoreInputSheet(
-                        email: $purchaseViewModel.restoreEmail,
-                        isLoading: purchaseViewModel.isRestoring,
-                        onSubmit: {
-                            Task {
-                                let success = try? await purchaseViewModel.submitRestore(
-                                    email: purchaseViewModel.restoreEmail,
-                                    proViewModel: proViewModel
-                                )
-                                if success == true {
-                                    activeSheet = nil
-                                }
-                            }
-                        },
-                        onCancel: {
-                            purchaseViewModel.cancelRestore()
-                            activeSheet = nil
-                        }
-                    )
-                    .presentationDetents([.height(250)])
-
-                case .success(let license):
-                    PurchaseSuccessView(license: license) {
-                        proViewModel.onPurchaseCompleted(license: license)
-                        purchaseViewModel.dismissSuccess()
-                        activeSheet = nil
-                        dismiss()
-                    }
+        } message: {
+            Text(purchaseViewModel.errorMessage ?? "알 수 없는 오류가 발생했습니다")
+        }
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .success(let license):
+                PurchaseSuccessView(license: license) {
+                    proViewModel.onPurchaseCompleted(license: license)
+                    purchaseViewModel.dismissSuccess()
+                    activeSheet = nil
+                    dismiss()
                 }
             }
-            .onChange(of: purchaseViewModel.showRestoreInput) { _, show in
-                if show && activeSheet == nil {
-                    activeSheet = .restore
-                } else if !show && activeSheet != nil {
-                    if case .restore = activeSheet {
-                        activeSheet = nil
-                    }
-                }
-            }
+        }
         .onChange(of: purchaseViewModel.showSuccess) { _, show in
             if show, let license = purchaseViewModel.purchasedLicense, activeSheet == nil {
                 activeSheet = .success(license)
@@ -185,74 +153,25 @@ struct PaywallView: View {
     private var restoreSection: some View {
         VStack(spacing: 8) {
             Button {
-                // Only show restore if no other sheet is active
-                guard activeSheet == nil else { return }
+                // RevenueCat restore is automatic - no email needed
                 purchaseViewModel.startRestore()
-                activeSheet = .restore
             } label: {
-                Text("이전 구매 복원")
-                    .font(.subheadline)
-                    .foregroundColor(.accentColor)
+                if purchaseViewModel.isRestoring {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    Text("이전 구매 복원")
+                        .font(.subheadline)
+                        .foregroundColor(.accentColor)
+                }
             }
+            .disabled(purchaseViewModel.isRestoring)
 
             Text("구매 관련 문의: support@monogrid.app")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
         .padding(.top, 8)
-    }
-}
-
-// MARK: - Restore Input Sheet
-
-struct RestoreInputSheet: View {
-    @Binding var email: String
-    let isLoading: Bool
-    let onSubmit: () -> Void
-    let onCancel: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                Text("구매에 사용한 이메일을 입력해주세요")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-
-                TextField("이메일 주소", text: $email)
-                    .textFieldStyle(.roundedBorder)
-                    .textContentType(.emailAddress)
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
-
-                Button {
-                    onSubmit()
-                } label: {
-                    if isLoading {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                    } else {
-                        Text("복원하기")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(email.isEmpty || isLoading)
-            }
-            .padding()
-            .navigationTitle("구매 복원")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") {
-                        onCancel()
-                    }
-                }
-            }
-        }
     }
 }
 

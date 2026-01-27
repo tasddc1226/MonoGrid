@@ -149,13 +149,10 @@ struct LicenseInfoRow: View {
 
 #Preview {
     PurchaseSuccessView(
-        license: ProLicense(
+        license: ProLicense.fromRevenueCat(
             type: .lifetime,
-            purchaseDate: Date(),
-            expirationDate: nil,
-            polarCustomerId: "cus_123",
-            polarSubscriptionId: nil,
-            lastVerifiedAt: Date()
+            userId: "preview_user",
+            expirationDate: nil
         ),
         onDismiss: {}
     )

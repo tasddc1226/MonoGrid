@@ -25,6 +25,12 @@ struct SettingsView: View {
     @State private var showOnboarding = false
     @State private var selectedTheme: ThemeMode = ThemeManager.shared.currentTheme
 
+    // Promo Code State
+    @State private var promoCode: String = ""
+    @State private var showPromoResult = false
+    @State private var promoResultMessage: String = ""
+    @State private var promoResultIsSuccess = false
+
     // MARK: - Body
 
     var body: some View {
@@ -32,6 +38,9 @@ struct SettingsView: View {
             List {
                 // Pro Section
                 proSection
+
+                // Promo Code Section (only for non-Pro users)
+                promoCodeSection
 
                 // Habit Management Section
                 Section(header: Text("습관 관리")) {
@@ -166,16 +175,28 @@ struct SettingsView: View {
                 OnboardingContainerView()
             }
             .confirmationDialog(
-                "모든 데이터를 삭제하시겠어요?",
+                "모든 데이터 초기화",
                 isPresented: $showResetConfirmation,
                 titleVisibility: .visible
             ) {
-                Button("삭제", role: .destructive) {
+                Button("초기화", role: .destructive) {
                     resetAllData()
                 }
                 Button("취소", role: .cancel) {}
             } message: {
-                Text("모든 습관과 기록이 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.")
+                Text(resetWarningMessage)
+            }
+            .alert(
+                promoResultIsSuccess ? "프로모션 코드 적용 완료" : "오류",
+                isPresented: $showPromoResult
+            ) {
+                Button("확인") {
+                    if promoResultIsSuccess {
+                        promoCode = ""
+                    }
+                }
+            } message: {
+                Text(promoResultMessage)
             }
         }
     }
@@ -183,6 +204,28 @@ struct SettingsView: View {
     // MARK: - Sync Monitor
 
     private var syncMonitor: SyncStatusMonitor { SyncStatusMonitor.shared }
+
+    // MARK: - Reset Warning Message
+
+    private var resetWarningMessage: String {
+        var messages: [String] = [
+            "• 모든 습관과 기록이 영구적으로 삭제됩니다."
+        ]
+
+        // Add Pro-specific warnings based on subscription state
+        switch proViewModel.subscriptionState {
+        case .proMonthly, .gracePeriod:
+            messages.append("• 구독이 해지됩니다. Polar에서 환불을 요청하실 수 있습니다.")
+        case .proLifetime:
+            messages.append("• Pro 권한이 해제됩니다.")
+        case .free, .expired:
+            break
+        }
+
+        messages.append("\n이 작업은 되돌릴 수 없습니다.")
+
+        return messages.joined(separator: "\n")
+    }
 
     // MARK: - Pro Section (Only shown for Pro users)
 
@@ -244,6 +287,68 @@ struct SettingsView: View {
             }
         }
         // Free users: Pro upgrade is shown on HomeView banner
+    }
+
+    // MARK: - Promo Code Section (Only for non-Pro users)
+
+    @ViewBuilder
+    private var promoCodeSection: some View {
+        if !proViewModel.hasProAccess {
+            Section(header: Text("프로모션 코드")) {
+                HStack(spacing: 12) {
+                    TextField("코드 입력", text: $promoCode)
+                        .textFieldStyle(.roundedBorder)
+                        .textInputAutocapitalization(.characters)
+                        .autocorrectionDisabled()
+
+                    Button {
+                        applyPromoCode()
+                    } label: {
+                        Text("적용")
+                            .fontWeight(.medium)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(promoCode.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+            }
+        }
+    }
+
+    // MARK: - Promo Code Action
+
+    private func applyPromoCode() {
+        let result = PromoCodeManager.shared.redeemCode(
+            promoCode,
+            licenseManager: LicenseManager.shared
+        )
+
+        switch result {
+        case .success:
+            promoResultIsSuccess = true
+            promoResultMessage = "MonoGrid Pro가 활성화되었습니다!\n모든 Pro 기능을 사용할 수 있습니다."
+            // Refresh pro status
+            Task {
+                await proViewModel.refreshProStatus()
+            }
+            HapticManager.shared.success()
+
+        case .invalid:
+            promoResultIsSuccess = false
+            promoResultMessage = "유효하지 않은 프로모션 코드입니다."
+            HapticManager.shared.error()
+
+        case .alreadyUsed:
+            promoResultIsSuccess = false
+            promoResultMessage = "이미 사용된 프로모션 코드입니다."
+            HapticManager.shared.error()
+
+        case .alreadyPro:
+            promoResultIsSuccess = false
+            promoResultMessage = "이미 Pro 사용자입니다."
+            HapticManager.shared.warning()
+        }
+
+        showPromoResult = true
     }
 
     // MARK: - iCloud Sync Section
@@ -360,9 +465,21 @@ struct SettingsView: View {
 
     private func resetAllData() {
         Task {
+            // 1. Delete all habits and their records
             for habit in viewModel.habits {
                 try? await viewModel.deleteHabit(habit)
             }
+
+            // 2. Clear Pro license from Keychain
+            LicenseManager.shared.clearLicense()
+
+            // 3. Clear promo code usage history
+            PromoCodeManager.shared.clearUsedCodes()
+
+            // 4. Refresh Pro status
+            await proViewModel.refreshProStatus()
+
+            // 5. Haptic feedback
             HapticManager.shared.warning()
         }
     }
