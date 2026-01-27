@@ -1,0 +1,16 @@
+//
+//  PromoConfig.xcconfig.example
+//  MonoGrid
+//
+//  Promo Code Configuration Template
+//  Copy this file to PromoConfig.xcconfig and add your actual promo codes.
+//  The actual PromoConfig.xcconfig file is gitignored for security.
+//
+
+// Comma-separated list of valid promo codes
+// Format: PROMO_CODES = CODE1,CODE2,CODE3
+PROMO_CODES = YOUR_PROMO_CODE_1,YOUR_PROMO_CODE_2
+
+// For production, you can use SHA256 hashed codes for extra security:
+// PROMO_CODES_HASH = sha256hash1,sha256hash2
+// Then enable hash validation in PromoCodeManager
