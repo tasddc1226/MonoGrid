@@ -17,6 +17,9 @@ struct StatisticsSummaryView: View {
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(ProViewModel.self) private var proViewModel
+
+    @State private var showPaywall = false
 
     // MARK: - Body
 
@@ -63,6 +66,21 @@ struct StatisticsSummaryView: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(cardBackgroundColor)
         )
+        .sheet(isPresented: $showPaywall) {
+            NavigationStack {
+                PaywallView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button {
+                                showPaywall = false
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -70,12 +88,23 @@ struct StatisticsSummaryView: View {
     @ViewBuilder
     private var additionalStatsRow: some View {
         HStack(spacing: 16) {
+            // Best Day of Week - Pro Feature
             if let bestDay = statistics.bestDayOfWeekName {
-                AdditionalStatItem(
-                    label: "가장 좋은 요일",
-                    value: bestDay,
-                    icon: "calendar"
-                )
+                if proViewModel.hasProAccess {
+                    AdditionalStatItem(
+                        label: "가장 좋은 요일",
+                        value: bestDay,
+                        icon: "calendar"
+                    )
+                } else {
+                    LockedStatItem(
+                        label: "가장 좋은 요일",
+                        icon: "calendar"
+                    ) {
+                        HapticManager.shared.lightImpact()
+                        showPaywall = true
+                    }
+                }
             }
 
             if viewMode == .yearly, let bestMonth = statistics.bestMonthName {
@@ -185,6 +214,54 @@ private struct AdditionalStatItem: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
         }
+    }
+}
+
+// MARK: - Locked Stat Item (Pro Feature)
+
+/// Locked state for Pro-only statistics
+private struct LockedStatItem: View {
+    let label: String
+    let icon: String
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Text(label)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                // Blurred placeholder value
+                Text("???")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary.opacity(0.5))
+                    .blur(radius: 2)
+
+                // Pro lock badge
+                HStack(spacing: 2) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 8, weight: .semibold))
+                    Text("Pro")
+                        .font(.system(size: 8, weight: .bold))
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .background(
+                    Capsule()
+                        .fill(Color.accentColor)
+                )
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(label), Pro 전용 기능")
+        .accessibilityHint("탭하여 Pro 구매 화면으로 이동")
     }
 }
 
