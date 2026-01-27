@@ -4,11 +4,13 @@
 //
 //  Pro Business Model - Purchase Flow State Manager
 //  Created on 2026-01-25.
+//  Updated on 2026-01-26 for RevenueCat integration.
 //
 
 import Foundation
 import Observation
 import SwiftUI
+import RevenueCat
 
 /// 구매 플로우 상태 관리
 @Observable
@@ -16,8 +18,7 @@ import SwiftUI
 final class PurchaseViewModel {
     // MARK: - Dependencies
 
-    private let polarRepository: PolarRepository
-    private let checkoutCoordinator: PolarCheckoutCoordinator
+    private let revenueCatManager: RevenueCatManager
     private let analyticsService: AnalyticsService
 
     // MARK: - State
@@ -32,18 +33,16 @@ final class PurchaseViewModel {
 
     // Restore
     var isRestoring: Bool = false
-    var restoreEmail: String = ""
+    var restoreEmail: String = ""  // Not used with RevenueCat, kept for UI compatibility
     var showRestoreInput: Bool = false
 
     // MARK: - Initialization
 
     init(
-        polarRepository: PolarRepository = PolarAPIRepository(),
-        checkoutCoordinator: PolarCheckoutCoordinator = PolarCheckoutCoordinator(),
+        revenueCatManager: RevenueCatManager = .shared,
         analyticsService: AnalyticsService = .shared
     ) {
-        self.polarRepository = polarRepository
-        self.checkoutCoordinator = checkoutCoordinator
+        self.revenueCatManager = revenueCatManager
         self.analyticsService = analyticsService
     }
 
@@ -64,38 +63,20 @@ final class PurchaseViewModel {
         ))
 
         do {
-            // 1. Create checkout session
-            let session = try await polarRepository.createCheckoutSession(
-                productId: product.polarProductId,
-                successUrl: ProConstants.checkoutSuccessURL,
-                cancelUrl: ProConstants.checkoutCancelURL
-            )
+            // Purchase through RevenueCat
+            let customerInfo = try await revenueCatManager.purchase(product: product)
 
-            isLoading = false
+            // Handle success
+            await handlePurchaseSuccess(product: product, customerInfo: customerInfo)
 
-            // 2. Start checkout flow
-            guard let checkoutURL = URL(string: session.url) else {
-                throw CheckoutError.invalidCallback
-            }
-
-            let result = try await checkoutCoordinator.startCheckout(checkoutURL: checkoutURL)
-
-            // 3. Handle result
-            switch result {
-            case .success(let customerId):
-                await handlePurchaseSuccess(product: product, customerId: customerId)
-
-            case .cancelled:
-                isPurchasing = false
-            }
-
+        } catch let error as RevenueCatError {
+            handlePurchaseError(product: product, error: error)
         } catch {
             handlePurchaseError(product: product, error: error)
         }
     }
 
     func cancelPurchase() {
-        checkoutCoordinator.cancelCheckout()
         isPurchasing = false
         isLoading = false
     }
@@ -103,38 +84,61 @@ final class PurchaseViewModel {
     // MARK: - Restore
 
     func startRestore() {
-        showRestoreInput = true
+        // RevenueCat doesn't need email, restore directly
+        Task {
+            await performRestore()
+        }
     }
 
-    func submitRestore(email: String, proViewModel: ProViewModel) async throws -> Bool {
-        guard !isRestoring else { return false }
-        guard isValidEmail(email) else {
-            errorMessage = "유효한 이메일 주소를 입력해주세요"
-            showError = true
-            return false
-        }
+    func performRestore() async {
+        guard !isRestoring else { return }
 
         isRestoring = true
+        isLoading = true
         errorMessage = nil
 
-        defer { isRestoring = false }
+        analyticsService.track(.restoreAttempted)
 
         do {
-            let restored = try await proViewModel.restorePurchase(email: email)
+            let customerInfo = try await revenueCatManager.restorePurchases()
 
-            if restored {
-                showRestoreInput = false
-                return true
+            if revenueCatManager.hasProAccess {
+                // Restore successful
+                let license = ProLicense.fromRevenueCat(
+                    type: revenueCatManager.hasLifetime ? .lifetime : .monthly,
+                    userId: revenueCatManager.currentUserId ?? "unknown",
+                    expirationDate: revenueCatManager.expirationDate
+                )
+
+                purchasedLicense = license
+                showSuccess = true
+
+                analyticsService.track(.restoreCompleted(
+                    productType: license.type.rawValue
+                ))
+
+                HapticManager.shared.success()
             } else {
-                errorMessage = "해당 이메일로 구매 내역을 찾을 수 없습니다"
+                // No purchases found
+                errorMessage = "구매 내역을 찾을 수 없습니다"
                 showError = true
-                return false
+                HapticManager.shared.warning()
             }
+
         } catch {
             errorMessage = error.localizedDescription
             showError = true
-            return false
+            HapticManager.shared.error()
         }
+
+        isRestoring = false
+        isLoading = false
+    }
+
+    func submitRestore(email: String, proViewModel: ProViewModel) async throws -> Bool {
+        // RevenueCat doesn't need email - restore is automatic
+        await performRestore()
+        return revenueCatManager.hasProAccess
     }
 
     func cancelRestore() {
@@ -158,20 +162,24 @@ final class PurchaseViewModel {
 
     // MARK: - Private
 
-    private func handlePurchaseSuccess(product: ProProduct, customerId: String?) async {
-        // Create license
-        let license = ProLicense(
+    private func handlePurchaseSuccess(product: ProProduct, customerInfo: CustomerInfo) async {
+        // Create license from RevenueCat info
+        let license = ProLicense.fromRevenueCat(
             type: product.licenseType,
-            purchaseDate: Date(),
-            expirationDate: product == .monthly ? Calendar.current.date(byAdding: .month, value: 1, to: Date()) : nil,
-            polarCustomerId: customerId ?? "unknown",
-            polarSubscriptionId: product == .monthly ? "pending" : nil,
-            lastVerifiedAt: Date()
+            userId: revenueCatManager.currentUserId ?? "unknown",
+            expirationDate: product == .monthly ? revenueCatManager.expirationDate : nil
         )
 
         purchasedLicense = license
         showSuccess = true
         isPurchasing = false
+        isLoading = false
+
+        analyticsService.track(.purchaseCompleted(
+            productType: product.title.lowercased(),
+            price: product.price,
+            isFirstPurchase: true
+        ))
 
         HapticManager.shared.success()
     }
@@ -181,12 +189,16 @@ final class PurchaseViewModel {
         isLoading = false
 
         let errorCode: String
-        if let polarError = error as? PolarError {
-            errorMessage = polarError.errorDescription
-            errorCode = String(describing: polarError)
-        } else if let checkoutError = error as? CheckoutError {
-            errorMessage = checkoutError.errorDescription
-            errorCode = String(describing: checkoutError)
+
+        if let rcError = error as? RevenueCatError {
+            switch rcError {
+            case .userCancelled:
+                // User cancelled - don't show error
+                return
+            default:
+                errorMessage = rcError.errorDescription
+                errorCode = String(describing: rcError)
+            }
         } else {
             errorMessage = error.localizedDescription
             errorCode = "unknown"
@@ -200,11 +212,5 @@ final class PurchaseViewModel {
         ))
 
         HapticManager.shared.warning()
-    }
-
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return emailPredicate.evaluate(with: email)
     }
 }

@@ -116,10 +116,11 @@ final class ProViewModel {
         HapticManager.shared.success()
     }
 
-    func restorePurchase(email: String) async throws -> Bool {
+    /// Restore purchases using RevenueCat
+    func restorePurchases() async throws -> Bool {
         analyticsService.track(.restoreAttempted)
 
-        let restored = try await licenseManager.restoreLicense(email: email)
+        let restored = try await licenseManager.restorePurchases()
 
         if restored {
             analyticsService.track(.restoreCompleted(
@@ -132,11 +133,22 @@ final class ProViewModel {
         return restored
     }
 
+    /// Legacy restore method for compatibility (not used with RevenueCat)
+    @available(*, deprecated, message: "Use restorePurchases() instead")
+    func restorePurchase(email: String) async throws -> Bool {
+        return try await restorePurchases()
+    }
+
     func verifyLicenseOnLaunch() async {
         await licenseManager.verifyOnLaunch()
     }
 
     func forceSync() async {
         await licenseManager.forceSync()
+    }
+
+    /// Refresh Pro status (used after promo code redemption)
+    func refreshProStatus() async {
+        await licenseManager.verifyOnLaunch()
     }
 }
