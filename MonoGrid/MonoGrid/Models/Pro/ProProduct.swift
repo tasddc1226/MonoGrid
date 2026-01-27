@@ -4,21 +4,24 @@
 //
 //  Pro Business Model - Product Definitions
 //  Created on 2026-01-25.
+//  Updated on 2026-01-26 for RevenueCat integration.
 //
 
 import Foundation
 
-/// Polar 상품 정의
+/// Pro 상품 정의
 enum ProProduct: String, CaseIterable, Identifiable {
     case lifetime = "monogrid_pro_lifetime"
     case monthly = "monogrid_pro_monthly"
 
     var id: String { rawValue }
 
-    var polarProductId: String {
+    /// RevenueCat Product ID
+    var productId: String {
         rawValue
     }
 
+    /// Default price (actual prices come from RevenueCat/App Store)
     var price: Decimal {
         switch self {
         case .lifetime: return 10.00
@@ -26,6 +29,7 @@ enum ProProduct: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Display price
     var displayPrice: String {
         switch self {
         case .lifetime: return "$10"

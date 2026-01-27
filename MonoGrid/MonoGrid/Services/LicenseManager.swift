@@ -4,13 +4,16 @@
 //
 //  Pro Business Model - License Verification and State Management
 //  Created on 2026-01-25.
+//  Updated on 2026-01-26 for RevenueCat integration.
 //
 
 import Foundation
 import Observation
 import Network
+import RevenueCat
 
 /// 라이선스 검증 및 상태 관리
+/// RevenueCat을 primary source로 사용, Keychain은 프로모 코드용 백업
 @Observable
 @MainActor
 final class LicenseManager {
@@ -23,7 +26,7 @@ final class LicenseManager {
     private(set) var isVerifying: Bool = false
 
     private let licenseRepository: LicenseRepository
-    private let polarRepository: PolarRepository
+    private let revenueCatManager: RevenueCatManager
     private let networkMonitor = NWPathMonitor()
     private var isOnline = true
 
@@ -34,13 +37,12 @@ final class LicenseManager {
 
     init(
         licenseRepository: LicenseRepository = KeychainLicenseRepository(),
-        polarRepository: PolarRepository = PolarAPIRepository()
+        revenueCatManager: RevenueCatManager = .shared
     ) {
         self.licenseRepository = licenseRepository
-        self.polarRepository = polarRepository
+        self.revenueCatManager = revenueCatManager
 
         setupNetworkMonitoring()
-        loadLocalLicense()
     }
 
     // MARK: - Public Methods
@@ -54,23 +56,29 @@ final class LicenseManager {
         }
 
         // 캐시 갱신
-        loadLocalLicense()
+        updateStateFromSources()
         cacheTimestamp = Date()
         return currentState.hasProAccess
     }
 
-    /// 앱 실행 시 호출 - 로컬 라이선스 검증
+    /// 앱 실행 시 호출 - 라이선스 검증
     func verifyOnLaunch() async {
-        // 1. 로컬 라이선스 로드
-        loadLocalLicense()
+        isVerifying = true
+        defer { isVerifying = false }
 
-        // 2. 온라인이면 백그라운드에서 서버 검증
+        // 1. RevenueCat에서 상태 확인
+        await revenueCatManager.refreshCustomerInfo()
+
+        // 2. 상태 업데이트
+        updateStateFromSources()
+
+        // 3. 온라인이면 동기화
         if isOnline {
-            await syncWithServer()
+            await syncWithRevenueCat()
         }
     }
 
-    /// 라이선스 저장 (구매 완료 후 호출)
+    /// 라이선스 저장 (프로모 코드용)
     func saveLicense(_ license: ProLicense) {
         do {
             try licenseRepository.save(license)
@@ -84,26 +92,18 @@ final class LicenseManager {
         }
     }
 
-    /// 라이선스 복원 (이메일 기반)
-    func restoreLicense(email: String) async throws -> Bool {
+    /// 구매 복원 (RevenueCat 사용)
+    func restorePurchases() async throws -> Bool {
         isVerifying = true
         defer { isVerifying = false }
 
-        guard let polarLicense = try await polarRepository.fetchLicense(email: email) else {
-            return false
+        do {
+            let customerInfo = try await revenueCatManager.restorePurchases()
+            updateStateFromRevenueCat(customerInfo: customerInfo)
+            return currentState.hasProAccess
+        } catch {
+            throw error
         }
-
-        let license = ProLicense(
-            type: polarLicense.subscriptionId == nil ? .lifetime : .monthly,
-            purchaseDate: polarLicense.purchasedAt,
-            expirationDate: polarLicense.currentPeriodEnd,
-            polarCustomerId: polarLicense.customerId,
-            polarSubscriptionId: polarLicense.subscriptionId,
-            lastVerifiedAt: Date()
-        )
-
-        saveLicense(license)
-        return true
     }
 
     /// 라이선스 삭제 (로그아웃/만료 시)
@@ -116,19 +116,75 @@ final class LicenseManager {
 
     /// 강제 동기화
     func forceSync() async {
-        await syncWithServer()
+        await syncWithRevenueCat()
     }
 
     // MARK: - Private Methods
 
-    private func loadLocalLicense() {
-        guard let license = licenseRepository.load() else {
+    private func updateStateFromSources() {
+        // Priority 1: RevenueCat (actual purchases)
+        if revenueCatManager.hasProAccess {
+            updateStateFromRevenueCat()
+            return
+        }
+
+        // Priority 2: Local license (promo codes)
+        if let license = licenseRepository.load(), license.isValid {
+            currentLicense = license
+            updateState(from: license)
+            return
+        }
+
+        // No valid license
+        currentState = .free
+        currentLicense = nil
+    }
+
+    private func updateStateFromRevenueCat(customerInfo: CustomerInfo? = nil) {
+        let info = customerInfo ?? revenueCatManager.customerInfo
+        guard let info = info else {
             currentState = .free
             return
         }
 
-        currentLicense = license
-        updateState(from: license)
+        // Check entitlements - RevenueCat's recommended approach
+        let hasLifetimeEntitlement = info.entitlements["pro_lifetime"]?.isActive == true
+        let hasMonthlyEntitlement = info.entitlements["pro_monthly"]?.isActive == true
+        let hasProEntitlement = info.entitlements["pro"]?.isActive == true
+
+        if hasLifetimeEntitlement || (hasProEntitlement && !hasMonthlyEntitlement) {
+            // Lifetime purchase
+            currentState = .proLifetime(since: info.originalPurchaseDate ?? Date())
+            currentLicense = .fromRevenueCat(
+                type: .lifetime,
+                userId: revenueCatManager.currentUserId ?? "unknown",
+                expirationDate: nil
+            )
+        } else if hasMonthlyEntitlement || hasProEntitlement {
+            // Monthly subscription
+            if let expiration = revenueCatManager.expirationDate {
+                if Date() > expiration {
+                    // In grace period
+                    let graceEnd = Calendar.current.date(byAdding: .day, value: 3, to: expiration)!
+                    if Date() < graceEnd {
+                        let days = Calendar.current.dateComponents([.day], from: Date(), to: graceEnd).day ?? 0
+                        currentState = .gracePeriod(expiresAt: expiration, daysRemaining: days)
+                    } else {
+                        currentState = .expired
+                    }
+                } else {
+                    currentState = .proMonthly(expiresAt: expiration, renewable: true)
+                }
+                currentLicense = .fromRevenueCat(
+                    type: .monthly,
+                    userId: revenueCatManager.currentUserId ?? "unknown",
+                    expirationDate: expiration
+                )
+            }
+        } else {
+            currentState = .free
+            currentLicense = nil
+        }
     }
 
     private func updateState(from license: ProLicense) {
@@ -156,38 +212,9 @@ final class LicenseManager {
         }
     }
 
-    private func syncWithServer() async {
-        guard let license = currentLicense else { return }
-
-        // Lifetime은 서버 검증 불필요
-        guard license.type == .monthly,
-              let subscriptionId = license.polarSubscriptionId else { return }
-
-        do {
-            let subscription = try await polarRepository.fetchSubscriptionStatus(subscriptionId: subscriptionId)
-
-            // 서버 상태와 로컬 상태 동기화
-            let updatedLicense = ProLicense(
-                type: license.type,
-                purchaseDate: license.purchaseDate,
-                expirationDate: subscription.currentPeriodEnd,
-                polarCustomerId: license.polarCustomerId,
-                polarSubscriptionId: subscriptionId,
-                lastVerifiedAt: Date()
-            )
-
-            saveLicense(updatedLicense)
-
-            // 구독이 만료/취소된 경우
-            if !subscription.isActive {
-                clearLicense()
-            }
-        } catch {
-            // 네트워크 에러는 무시 (로컬 라이선스 유지)
-            #if DEBUG
-            print("Server sync failed: \(error)")
-            #endif
-        }
+    private func syncWithRevenueCat() async {
+        await revenueCatManager.refreshCustomerInfo()
+        updateStateFromRevenueCat()
     }
 
     private func setupNetworkMonitoring() {
@@ -198,7 +225,7 @@ final class LicenseManager {
 
                 // 오프라인 → 온라인 전환 시 동기화
                 if wasOffline && self?.isOnline == true {
-                    await self?.syncWithServer()
+                    await self?.syncWithRevenueCat()
                 }
             }
         }

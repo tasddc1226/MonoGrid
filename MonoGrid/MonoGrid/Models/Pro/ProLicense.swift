@@ -4,19 +4,28 @@
 //
 //  Pro Business Model - License Data Model
 //  Created on 2026-01-25.
+//  Updated on 2026-01-26 for RevenueCat integration.
 //
 
 import Foundation
 
 /// 라이선스 정보를 담는 모델
-/// Keychain에 Codable로 직렬화하여 저장
+/// Keychain에 Codable로 직렬화하여 저장 (프로모 코드용)
+/// RevenueCat 구매는 RevenueCatManager가 직접 관리
 struct ProLicense: Codable, Equatable {
     let type: LicenseType
     let purchaseDate: Date
     let expirationDate: Date?      // nil for Lifetime
-    let polarCustomerId: String
-    let polarSubscriptionId: String?  // nil for Lifetime
+    let userId: String             // RevenueCat user ID or promo code ID
+    let subscriptionId: String?    // nil for Lifetime
     let lastVerifiedAt: Date
+    let source: LicenseSource      // Where the license came from
+
+    /// License source
+    enum LicenseSource: String, Codable {
+        case revenueCat = "revenuecat"
+        case promoCode = "promo_code"
+    }
 
     /// 라이선스 유효성 검증 (로컬)
     var isValid: Bool {
@@ -49,5 +58,37 @@ struct ProLicense: Codable, Equatable {
     var nextBillingDate: Date? {
         guard type == .monthly else { return nil }
         return expirationDate
+    }
+
+    // MARK: - Factory Methods
+
+    /// Create license from RevenueCat purchase
+    static func fromRevenueCat(
+        type: LicenseType,
+        userId: String,
+        expirationDate: Date?
+    ) -> ProLicense {
+        ProLicense(
+            type: type,
+            purchaseDate: Date(),
+            expirationDate: expirationDate,
+            userId: userId,
+            subscriptionId: type == .monthly ? "revenuecat_subscription" : nil,
+            lastVerifiedAt: Date(),
+            source: .revenueCat
+        )
+    }
+
+    /// Create license from promo code
+    static func fromPromoCode(promoId: String) -> ProLicense {
+        ProLicense(
+            type: .lifetime,
+            purchaseDate: Date(),
+            expirationDate: nil,
+            userId: promoId,
+            subscriptionId: nil,
+            lastVerifiedAt: Date(),
+            source: .promoCode
+        )
     }
 }
