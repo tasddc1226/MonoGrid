@@ -15,10 +15,13 @@ struct HabitDetailGridView: View {
     let repository: HabitRepository
 
     @State private var viewModel: GridViewModel?
+    @State private var showExportSheet = false
+    @State private var showPaywall = false
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(ProViewModel.self) private var proViewModel
 
     // MARK: - Body
 
@@ -38,6 +41,35 @@ struct HabitDetailGridView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 headerView
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                exportButton
+            }
+        }
+        .sheet(isPresented: $showExportSheet) {
+            if let viewModel = viewModel {
+                GridExportView(
+                    habit: habit,
+                    completionData: viewModel.completionData,
+                    viewMode: viewModel.viewMode,
+                    periodTitle: viewModel.periodTitle,
+                    currentYear: viewModel.currentYear
+                )
+            }
+        }
+        .sheet(isPresented: $showPaywall) {
+            NavigationStack {
+                PaywallView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button {
+                                showPaywall = false
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
             }
         }
     }
@@ -64,6 +96,29 @@ struct HabitDetailGridView: View {
                 .font(.headline)
                 .foregroundColor(.primary)
         }
+    }
+
+    /// Export button (Pro feature)
+    private var exportButton: some View {
+        Button {
+            if proViewModel.hasProAccess {
+                HapticManager.shared.lightImpact()
+                showExportSheet = true
+            } else {
+                HapticManager.shared.warning()
+                showPaywall = true
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "square.and.arrow.up")
+                if !proViewModel.hasProAccess {
+                    Image(systemName: "lock.fill")
+                        .font(.caption2)
+                }
+            }
+        }
+        .accessibilityLabel(proViewModel.hasProAccess ? "이미지 내보내기" : "이미지 내보내기 (Pro)")
+        .accessibilityHint(proViewModel.hasProAccess ? "그리드를 이미지로 내보냅니다" : "Pro 기능입니다. 탭하여 업그레이드하세요")
     }
 
     @ViewBuilder

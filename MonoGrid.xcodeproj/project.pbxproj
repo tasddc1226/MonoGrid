@@ -68,6 +68,7 @@
 		601BF7F151EDA0D99E3A84B5 /* WeeklyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EA78D3C5E855B9E0E62C6F /* WeeklyListView.swift */; };
 		607A5A5B193D4D0FFB3417CE /* ReviewSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC5D023D573E4FAF7D705DF /* ReviewSettingsStorage.swift */; };
 		63D50DB75C691223665C0B4D /* PurchaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A815E6576FD1A10F12E59E6F /* PurchaseViewModel.swift */; };
+		63E0FB8F925E3474C3D4C0DE /* GridExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E753B253AFCF7F76662145AB /* GridExportView.swift */; };
 		65DAA80B2964D2C45225688A /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E7C50FB3834462B5F13B0F /* SyncStatusView.swift */; };
 		6706B42910F8E1EDC01A11CD /* StatisticsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCAC586109D2D8D28BF091F /* StatisticsCalculator.swift */; };
 		67B50AC50D51C7AC2610729F /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B916EA1574974E4F4EC1AD4 /* HabitViewModel.swift */; };
@@ -307,6 +308,7 @@
 		DD1BF5C324A88C683CD19E5B /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E22D3815B75E424D89DD7AB7 /* GitHubGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubGridView.swift; sourceTree = "<group>"; };
 		E38DA5A88C4C8FB0CE4202C8 /* LockedFeatureOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedFeatureOverlay.swift; sourceTree = "<group>"; };
+		E753B253AFCF7F76662145AB /* GridExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridExportView.swift; sourceTree = "<group>"; };
 		E8E52368B05A7B98A312433A /* NotificationTimePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTimePickerSheet.swift; sourceTree = "<group>"; };
 		EA1944C04F3A8D8363A3BFBE /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		ED907A3D53AF3B9562FF7549 /* SharedFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedFormatters.swift; sourceTree = "<group>"; };
@@ -686,6 +688,7 @@
 			children = (
 				CD6DE54ABF779855CEBD594A /* AppIconPickerView.swift */,
 				EE77DCE43768CE076AB5C732 /* GracePeriodBanner.swift */,
+				E753B253AFCF7F76662145AB /* GridExportView.swift */,
 				56EBDFB93CE26F0580C4B90D /* GridStyleSettingsView.swift */,
 				E38DA5A88C4C8FB0CE4202C8 /* LockedFeatureOverlay.swift */,
 				4C14F2CE49C1DE156348ED97 /* PaywallFeatureList.swift */,
@@ -923,6 +926,7 @@
 				0ADC5EE7BB3AC427107CAFF5 /* GracePeriodBanner.swift in Sources */,
 				82DD3D46352BC141DECB2716 /* GridDataCache.swift in Sources */,
 				51E890339C19B4719EEE131E /* GridDataProvider.swift in Sources */,
+				63E0FB8F925E3474C3D4C0DE /* GridExportView.swift in Sources */,
 				F60E44A80A0E16A0E691FB31 /* GridLegendView.swift in Sources */,
 				7ECC4A31BE8B5DB8A8A97902 /* GridStatistics.swift in Sources */,
 				85D455F8C0F871649BC811C6 /* GridStyleManager.swift in Sources */,
