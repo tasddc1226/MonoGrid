@@ -39,6 +39,7 @@ MonoGrid Pro는 더 아름답고 개인화된 습관 추적 경험을 제공합�
 | **Weekday Analysis** | Day-of-week completion patterns |
 | **Streak Statistics** | Current, longest, and average streaks |
 | **HD Export** | 1080x1080 Instagram-ready exports |
+| **Promo Codes** | Redeem codes for instant Pro access |
 
 ### Pricing
 
@@ -63,7 +64,7 @@ All Pro features work 100% offline with local license verification via iOS Keych
 | **Architecture** | MVVM + Repository Pattern |
 | **Widgets** | WidgetKit |
 | **Shortcuts** | AppIntents |
-| **Payments** | Polar REST API |
+| **Payments** | RevenueCat SDK 5.0+ |
 | **License Storage** | iOS Keychain |
 | **Minimum iOS** | iOS 17.0 |
 
@@ -101,7 +102,13 @@ open MonoGrid.xcodeproj
    - Enable iCloud capability
    - Configure CloudKit container
 
-6. Build and run
+6. Configure RevenueCat (for Pro features)
+   - Create a RevenueCat account at [revenuecat.com](https://www.revenuecat.com)
+   - Create a new project and configure products
+   - Update API keys in `RevenueCatManager.swift`
+   - Set up entitlements: `pro`, `pro_lifetime`, `pro_monthly`
+
+7. Build and run
 ```bash
 # Or use Xcode's Run button (Cmd + R)
 xcodebuild -scheme MonoGrid -destination 'platform=iOS Simulator,name=iPhone 15'
@@ -142,15 +149,17 @@ MonoGrid/
 │   │   ├── SwiftDataHabitRepository.swift
 │   │   └── Pro/                 # Pro repositories
 │   │       ├── LicenseRepository.swift
-│   │       └── PolarRepository.swift
+│   │       └── KeychainLicenseRepository.swift
 │   ├── Services/                # Business services
+│   │   ├── RevenueCatManager.swift  # RevenueCat SDK integration
 │   │   ├── LicenseManager.swift
 │   │   └── AnalyticsService.swift
 │   ├── Extensions/              # Swift extensions
 │   └── Utils/                   # Utilities & constants
 │       └── Pro/                 # Pro utilities
 │           ├── KeychainHelper.swift
-│           └── ProFeatureGate.swift
+│           ├── ProFeatureGate.swift
+│           └── PromoCodeManager.swift
 ├── MonoGridWidget/              # Widget Extension
 │   ├── Views/                   # Widget views
 │   │   ├── SmallWidgetView.swift
@@ -230,8 +239,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [x] Korean/English localization
 
 ### Pro Business Model (v1.1.0) ✅
-- [x] Polar payment integration
+- [x] RevenueCat SDK integration
 - [x] Pro subscription (Lifetime $10 / Monthly $2.99)
+- [x] Promo code redemption system
 - [x] 12 signature color palettes
 - [x] Grid style customization
 - [x] Pro app icons
