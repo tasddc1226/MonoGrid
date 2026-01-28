@@ -27,7 +27,7 @@ enum StatisticsCalculator {
         let totalDays = datesInRange.count
         let completedDays = countCompletedDays(in: completionData, dates: datesInRange)
         let completionRate = calculateCompletionRate(completed: completedDays, total: totalDays)
-        let (currentStreak, longestStreak) = calculateStreaks(
+        let (currentStreak, longestStreak, averageStreak) = calculateStreaks(
             completionData: completionData,
             dates: datesInRange
         )
@@ -40,6 +40,7 @@ enum StatisticsCalculator {
             completionRate: completionRate,
             currentStreak: currentStreak,
             longestStreak: longestStreak,
+            averageStreak: averageStreak,
             period: "\(year)년",
             bestDayOfWeek: bestDayOfWeek,
             bestMonth: bestMonth
@@ -76,7 +77,7 @@ enum StatisticsCalculator {
         let totalDays = datesInRange.count
         let completedDays = countCompletedDays(in: completionData, dates: datesInRange)
         let completionRate = calculateCompletionRate(completed: completedDays, total: totalDays)
-        let (currentStreak, longestStreak) = calculateStreaks(
+        let (currentStreak, longestStreak, averageStreak) = calculateStreaks(
             completionData: completionData,
             dates: datesInRange
         )
@@ -88,6 +89,7 @@ enum StatisticsCalculator {
             completionRate: completionRate,
             currentStreak: currentStreak,
             longestStreak: longestStreak,
+            averageStreak: averageStreak,
             period: "\(year)년 \(month)월",
             bestDayOfWeek: bestDayOfWeek
         )
@@ -123,7 +125,7 @@ enum StatisticsCalculator {
         let totalDays = datesInRange.count
         let completedDays = countCompletedDays(in: completionData, dates: datesInRange)
         let completionRate = calculateCompletionRate(completed: completedDays, total: totalDays)
-        let (currentStreak, longestStreak) = calculateStreaks(
+        let (currentStreak, longestStreak, averageStreak) = calculateStreaks(
             completionData: completionData,
             dates: datesInRange
         )
@@ -138,6 +140,7 @@ enum StatisticsCalculator {
             completionRate: completionRate,
             currentStreak: currentStreak,
             longestStreak: longestStreak,
+            averageStreak: averageStreak,
             period: periodStr
         )
     }
@@ -157,25 +160,34 @@ enum StatisticsCalculator {
         return Double(completed) / Double(total) * 100
     }
 
-    /// Calculates current and longest streaks
+    /// Calculates current, longest, and average streaks
     private static func calculateStreaks(
         completionData: [Date: Bool],
         dates: [Date]
-    ) -> (current: Int, longest: Int) {
-        guard !dates.isEmpty else { return (0, 0) }
+    ) -> (current: Int, longest: Int, average: Double) {
+        guard !dates.isEmpty else { return (0, 0, 0) }
 
         let sortedDates = dates.sorted()
         var currentStreak = 0
         var longestStreak = 0
         var tempStreak = 0
+        var allStreaks: [Int] = []
 
         for date in sortedDates {
             if completionData[date] == true {
                 tempStreak += 1
                 longestStreak = max(longestStreak, tempStreak)
             } else {
+                if tempStreak > 0 {
+                    allStreaks.append(tempStreak)
+                }
                 tempStreak = 0
             }
+        }
+
+        // Don't forget the last streak if it ends at the last date
+        if tempStreak > 0 {
+            allStreaks.append(tempStreak)
         }
 
         // Calculate current streak from today backwards
@@ -193,7 +205,15 @@ enum StatisticsCalculator {
             }
         }
 
-        return (currentStreak, longestStreak)
+        // Calculate average streak
+        let averageStreak: Double
+        if allStreaks.isEmpty {
+            averageStreak = 0
+        } else {
+            averageStreak = Double(allStreaks.reduce(0, +)) / Double(allStreaks.count)
+        }
+
+        return (currentStreak, longestStreak, averageStreak)
     }
 
     /// Calculates the best day of week (most completions)

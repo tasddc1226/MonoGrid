@@ -26,6 +26,9 @@ struct GridStatistics: Equatable {
     /// Longest consecutive streak of completed days
     let longestStreak: Int
 
+    /// Average streak length (Pro feature)
+    let averageStreak: Double
+
     /// Period description (e.g., "2026년", "2026년 1월", "1/20 - 1/26")
     let period: String
 
@@ -50,6 +53,11 @@ struct GridStatistics: Equatable {
     /// Formatted longest streak string
     var formattedLongestStreak: String {
         "\(longestStreak)일"
+    }
+
+    /// Formatted average streak string
+    var formattedAverageStreak: String {
+        String(format: "%.1f일", averageStreak)
     }
 
     /// Formatted completed days string
@@ -79,6 +87,7 @@ struct GridStatistics: Equatable {
         completionRate: Double,
         currentStreak: Int,
         longestStreak: Int,
+        averageStreak: Double = 0,
         period: String,
         bestDayOfWeek: Int? = nil,
         bestMonth: Int? = nil
@@ -88,6 +97,7 @@ struct GridStatistics: Equatable {
         self.completionRate = completionRate
         self.currentStreak = currentStreak
         self.longestStreak = longestStreak
+        self.averageStreak = averageStreak
         self.period = period
         self.bestDayOfWeek = bestDayOfWeek
         self.bestMonth = bestMonth
@@ -103,6 +113,7 @@ struct GridStatistics: Equatable {
             completionRate: 0,
             currentStreak: 0,
             longestStreak: 0,
+            averageStreak: 0,
             period: ""
         )
     }

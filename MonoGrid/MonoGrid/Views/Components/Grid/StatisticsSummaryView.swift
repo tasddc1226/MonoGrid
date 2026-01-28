@@ -100,6 +100,23 @@ struct StatisticsSummaryView: View {
     @ViewBuilder
     private var additionalStatsRow: some View {
         HStack(spacing: 16) {
+            // Average Streak - Pro Feature
+            if proViewModel.hasProAccess {
+                AdditionalStatItem(
+                    label: "평균 연속",
+                    value: statistics.formattedAverageStreak,
+                    icon: "chart.bar.fill"
+                )
+            } else {
+                LockedStatItem(
+                    label: "평균 연속",
+                    icon: "chart.bar.fill"
+                ) {
+                    HapticManager.shared.lightImpact()
+                    showPaywall = true
+                }
+            }
+
             // Best Day of Week - Pro Feature
             if let bestDay = statistics.bestDayOfWeekName {
                 if proViewModel.hasProAccess {
@@ -429,6 +446,7 @@ private struct CompactStatItem: View {
                 completionRate: 73.3,
                 currentStreak: 5,
                 longestStreak: 12,
+                averageStreak: 4.5,
                 period: "2026년 1월",
                 bestDayOfWeek: 1,
                 bestMonth: nil
@@ -445,6 +463,7 @@ private struct CompactStatItem: View {
                 completionRate: 76.7,
                 currentStreak: 15,
                 longestStreak: 45,
+                averageStreak: 8.2,
                 period: "2026년",
                 bestDayOfWeek: 3,
                 bestMonth: 6
@@ -461,6 +480,7 @@ private struct CompactStatItem: View {
                 completionRate: 71.4,
                 currentStreak: 3,
                 longestStreak: 5,
+                averageStreak: 2.5,
                 period: "1/20 - 1/26"
             ),
             habitColorHex: "#6BCB77"
