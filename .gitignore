@@ -18,3 +18,11 @@ Pods/
 # Swift Package Manager
 .build/
 Package.resolved
+
+# Promo Codes (contains sensitive data)
+PromoConfig.xcconfig
+
+# RevenueCat API Key (contains sensitive data)
+RevenueCatConfig.xcconfig
+RevenueCatConfig-Debug.xcconfig
+RevenueCatConfig-Release.xcconfig

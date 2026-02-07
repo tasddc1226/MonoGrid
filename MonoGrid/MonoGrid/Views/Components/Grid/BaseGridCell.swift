@@ -15,9 +15,34 @@ struct BaseGridCell: View {
     let habitColorHex: String
     let size: CGFloat
     let isToday: Bool
-    let cornerRadius: CGFloat
+    private let explicitCornerRadius: CGFloat?
 
     @Environment(\.colorScheme) private var colorScheme
+
+    // MARK: - Grid Style Settings (Pro Feature)
+
+    /// Get the current grid style settings
+    /// For non-Pro users, returns default settings
+    private var gridStyle: GridStyleSettings {
+        if LicenseManager.shared.hasProAccess {
+            return GridStyleManager.shared.settings
+        }
+        return .default
+    }
+
+    /// Computed corner radius from settings, scaled for cell size
+    private var cornerRadius: CGFloat {
+        if let explicit = explicitCornerRadius {
+            return explicit
+        }
+        // Scale corner radius relative to cell size
+        return min(gridStyle.cornerRadius * (size / 10), size / 2)
+    }
+
+    /// Computed border width from settings
+    private var borderWidth: CGFloat {
+        gridStyle.borderWidth
+    }
 
     // MARK: - Initialization
 
@@ -32,7 +57,7 @@ struct BaseGridCell: View {
         self.habitColorHex = habitColorHex
         self.size = size
         self.isToday = isToday
-        self.cornerRadius = cornerRadius ?? max(2, size * 0.2)
+        self.explicitCornerRadius = cornerRadius
     }
 
     // MARK: - Body
@@ -41,6 +66,16 @@ struct BaseGridCell: View {
         RoundedRectangle(cornerRadius: cornerRadius)
             .fill(fillColor)
             .frame(width: size, height: size)
+            .overlay {
+                // Border overlay (Pro feature)
+                if borderWidth > 0 {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .strokeBorder(
+                            Color.primary.opacity(0.2),
+                            lineWidth: borderWidth
+                        )
+                }
+            }
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .strokeBorder(todayBorderColor, lineWidth: isToday ? 1.5 : 0)

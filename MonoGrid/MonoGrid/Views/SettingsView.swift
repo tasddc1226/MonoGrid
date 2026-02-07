@@ -14,6 +14,7 @@ struct SettingsView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(HabitViewModel.self) private var viewModel
+    @Environment(ProViewModel.self) private var proViewModel
     @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - State
@@ -23,12 +24,26 @@ struct SettingsView: View {
     @State private var showAbout = false
     @State private var showOnboarding = false
     @State private var selectedTheme: ThemeMode = ThemeManager.shared.currentTheme
+    @State private var showGridStyleSettings = false
+    @State private var showAppIconPicker = false
+
+    // Promo Code State
+    @State private var promoCode: String = ""
+    @State private var showPromoResult = false
+    @State private var promoResultMessage: String = ""
+    @State private var promoResultIsSuccess = false
 
     // MARK: - Body
 
     var body: some View {
         NavigationStack {
             List {
+                // Pro Section
+                proSection
+
+                // Promo Code Section (only for non-Pro users)
+                promoCodeSection
+
                 // Habit Management Section
                 Section(header: Text("습관 관리")) {
                     if viewModel.habits.isEmpty {
@@ -57,6 +72,19 @@ struct SettingsView: View {
                         ThemeManager.shared.currentTheme = newValue
                         // Refresh widgets to apply new theme
                         WidgetCenter.shared.reloadAllTimelines()
+                    }
+
+                    // App Icon Selection
+                    Button {
+                        showAppIconPicker = true
+                    } label: {
+                        HStack {
+                            Label("앱 아이콘", systemImage: "app.fill")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
 
@@ -118,9 +146,23 @@ struct SettingsView: View {
                 } footer: {
                     HStack {
                         Spacer()
-                        Text("MonoGrid v1.0")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
+                        VStack(spacing: 4) {
+                            if proViewModel.hasProAccess {
+                                HStack(spacing: 4) {
+                                    Text("MonoGrid")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                    ProBadge(style: .compact)
+                                    Text("v1.1")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                }
+                            } else {
+                                Text("MonoGrid v1.1")
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                         Spacer()
                     }
                 }
@@ -144,20 +186,38 @@ struct SettingsView: View {
             .sheet(isPresented: $showAbout) {
                 AboutView()
             }
+            .sheet(isPresented: $showGridStyleSettings) {
+                GridStyleSettingsView()
+            }
+            .sheet(isPresented: $showAppIconPicker) {
+                AppIconPickerView()
+            }
             .fullScreenCover(isPresented: $showOnboarding) {
                 OnboardingContainerView()
             }
             .confirmationDialog(
-                "모든 데이터를 삭제하시겠어요?",
+                "모든 데이터 초기화",
                 isPresented: $showResetConfirmation,
                 titleVisibility: .visible
             ) {
-                Button("삭제", role: .destructive) {
+                Button("초기화", role: .destructive) {
                     resetAllData()
                 }
                 Button("취소", role: .cancel) {}
             } message: {
-                Text("모든 습관과 기록이 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.")
+                Text(resetWarningMessage)
+            }
+            .alert(
+                promoResultIsSuccess ? "프로모션 코드 적용 완료" : "오류",
+                isPresented: $showPromoResult
+            ) {
+                Button("확인") {
+                    if promoResultIsSuccess {
+                        promoCode = ""
+                    }
+                }
+            } message: {
+                Text(promoResultMessage)
             }
         }
     }
@@ -165,6 +225,165 @@ struct SettingsView: View {
     // MARK: - Sync Monitor
 
     private var syncMonitor: SyncStatusMonitor { SyncStatusMonitor.shared }
+
+    // MARK: - Reset Warning Message
+
+    private var resetWarningMessage: String {
+        var messages: [String] = [
+            "• 모든 습관과 기록이 영구적으로 삭제됩니다."
+        ]
+
+        // Add Pro-specific warnings based on subscription state
+        switch proViewModel.subscriptionState {
+        case .proMonthly, .gracePeriod:
+            messages.append("• 구독이 해지됩니다. Polar에서 환불을 요청하실 수 있습니다.")
+        case .proLifetime:
+            messages.append("• Pro 권한이 해제됩니다.")
+        case .free, .expired:
+            break
+        }
+
+        messages.append("\n이 작업은 되돌릴 수 없습니다.")
+
+        return messages.joined(separator: "\n")
+    }
+
+    // MARK: - Pro Section (Only shown for Pro users)
+
+    @ViewBuilder
+    private var proSection: some View {
+        // Only show Pro section for users who have Pro access
+        if proViewModel.hasProAccess {
+            Section(header: Text("MonoGrid Pro")) {
+                // Pro User Status
+                HStack {
+                    Image(systemName: proViewModel.subscriptionState.iconName)
+                        .font(.title2)
+                        .foregroundStyle(ProColors.proBadgeGradient)
+                        .frame(width: 32)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: 6) {
+                            Text("Pro")
+                                .font(.headline)
+                            ProBadge(style: .compact)
+                        }
+                        Text(proViewModel.subscriptionState.statusText)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                // Subscription Management (Monthly only)
+                if proViewModel.subscriptionState.canManageSubscription {
+                    Link(destination: URL(string: "https://polar.sh/settings/subscriptions")!) {
+                        Label("구독 관리", systemImage: "creditcard")
+                    }
+                }
+
+                // Upgrade to Lifetime (Monthly only)
+                if proViewModel.subscriptionState.canUpgradeToLifetime {
+                    Button {
+                        proViewModel.showPaywall = true
+                    } label: {
+                        HStack {
+                            Label("Lifetime으로 업그레이드", systemImage: "crown.fill")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+
+                // Grid Style Customization (Pro feature)
+                Button {
+                    showGridStyleSettings = true
+                } label: {
+                    HStack {
+                        Label("그리드 스타일", systemImage: "square.grid.3x3")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                // Grace Period Banner
+                if proViewModel.showGraceBanner {
+                    GracePeriodBanner(daysRemaining: proViewModel.gracePeriodDaysRemaining) {
+                        if let url = URL(string: "https://polar.sh/settings/payment") {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                }
+            }
+        }
+        // Free users: Pro upgrade is shown on HomeView banner
+    }
+
+    // MARK: - Promo Code Section (Only for non-Pro users)
+
+    @ViewBuilder
+    private var promoCodeSection: some View {
+        if !proViewModel.hasProAccess {
+            Section(header: Text("프로모션 코드")) {
+                HStack(spacing: 12) {
+                    TextField("코드 입력", text: $promoCode)
+                        .textFieldStyle(.roundedBorder)
+                        .textInputAutocapitalization(.characters)
+                        .autocorrectionDisabled()
+
+                    Button {
+                        applyPromoCode()
+                    } label: {
+                        Text("적용")
+                            .fontWeight(.medium)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(promoCode.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+            }
+        }
+    }
+
+    // MARK: - Promo Code Action
+
+    private func applyPromoCode() {
+        let result = PromoCodeManager.shared.redeemCode(
+            promoCode,
+            licenseManager: LicenseManager.shared
+        )
+
+        switch result {
+        case .success:
+            promoResultIsSuccess = true
+            promoResultMessage = "MonoGrid Pro가 활성화되었습니다!\n모든 Pro 기능을 사용할 수 있습니다."
+            // Refresh pro status
+            Task {
+                await proViewModel.refreshProStatus()
+            }
+            HapticManager.shared.success()
+
+        case .invalid:
+            promoResultIsSuccess = false
+            promoResultMessage = "유효하지 않은 프로모션 코드입니다."
+            HapticManager.shared.error()
+
+        case .alreadyUsed:
+            promoResultIsSuccess = false
+            promoResultMessage = "이미 사용된 프로모션 코드입니다."
+            HapticManager.shared.error()
+
+        case .alreadyPro:
+            promoResultIsSuccess = false
+            promoResultMessage = "이미 Pro 사용자입니다."
+            HapticManager.shared.warning()
+        }
+
+        showPromoResult = true
+    }
 
     // MARK: - iCloud Sync Section
 
@@ -280,9 +499,21 @@ struct SettingsView: View {
 
     private func resetAllData() {
         Task {
+            // 1. Delete all habits and their records
             for habit in viewModel.habits {
                 try? await viewModel.deleteHabit(habit)
             }
+
+            // 2. Clear Pro license from Keychain
+            LicenseManager.shared.clearLicense()
+
+            // 3. Clear promo code usage history
+            PromoCodeManager.shared.clearUsedCodes()
+
+            // 4. Refresh Pro status
+            await proViewModel.refreshProStatus()
+
+            // 5. Haptic feedback
             HapticManager.shared.warning()
         }
     }

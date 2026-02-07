@@ -17,6 +17,9 @@ struct StatisticsSummaryView: View {
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(ProViewModel.self) private var proViewModel
+
+    @State private var showPaywall = false
 
     // MARK: - Body
 
@@ -45,12 +48,24 @@ struct StatisticsSummaryView: View {
                     color: streakColor
                 )
 
-                StatCard(
-                    title: "최장",
-                    value: statistics.formattedLongestStreak,
-                    icon: "trophy.fill",
-                    color: .orange
-                )
+                // Longest Streak - Pro Feature
+                if proViewModel.hasProAccess {
+                    StatCard(
+                        title: "최장",
+                        value: statistics.formattedLongestStreak,
+                        icon: "trophy.fill",
+                        color: .orange
+                    )
+                } else {
+                    LockedStatCard(
+                        title: "최장",
+                        icon: "trophy.fill",
+                        color: .orange
+                    ) {
+                        HapticManager.shared.lightImpact()
+                        showPaywall = true
+                    }
+                }
             }
 
             // Additional info row (for yearly/monthly views)
@@ -63,6 +78,21 @@ struct StatisticsSummaryView: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(cardBackgroundColor)
         )
+        .sheet(isPresented: $showPaywall) {
+            NavigationStack {
+                PaywallView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button {
+                                showPaywall = false
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -70,12 +100,40 @@ struct StatisticsSummaryView: View {
     @ViewBuilder
     private var additionalStatsRow: some View {
         HStack(spacing: 16) {
-            if let bestDay = statistics.bestDayOfWeekName {
+            // Average Streak - Pro Feature
+            if proViewModel.hasProAccess {
                 AdditionalStatItem(
-                    label: "가장 좋은 요일",
-                    value: bestDay,
-                    icon: "calendar"
+                    label: "평균 연속",
+                    value: statistics.formattedAverageStreak,
+                    icon: "chart.bar.fill"
                 )
+            } else {
+                LockedStatItem(
+                    label: "평균 연속",
+                    icon: "chart.bar.fill"
+                ) {
+                    HapticManager.shared.lightImpact()
+                    showPaywall = true
+                }
+            }
+
+            // Best Day of Week - Pro Feature
+            if let bestDay = statistics.bestDayOfWeekName {
+                if proViewModel.hasProAccess {
+                    AdditionalStatItem(
+                        label: "가장 좋은 요일",
+                        value: bestDay,
+                        icon: "calendar"
+                    )
+                } else {
+                    LockedStatItem(
+                        label: "가장 좋은 요일",
+                        icon: "calendar"
+                    ) {
+                        HapticManager.shared.lightImpact()
+                        showPaywall = true
+                    }
+                }
             }
 
             if viewMode == .yearly, let bestMonth = statistics.bestMonthName {
@@ -188,6 +246,120 @@ private struct AdditionalStatItem: View {
     }
 }
 
+// MARK: - Locked Stat Item (Pro Feature)
+
+/// Locked state for Pro-only statistics
+private struct LockedStatItem: View {
+    let label: String
+    let icon: String
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Text(label)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                // Blurred placeholder value
+                Text("???")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary.opacity(0.5))
+                    .blur(radius: 2)
+
+                // Pro lock badge
+                HStack(spacing: 2) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 8, weight: .semibold))
+                    Text("Pro")
+                        .font(.system(size: 8, weight: .bold))
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .background(
+                    Capsule()
+                        .fill(Color.accentColor)
+                )
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(label), Pro 전용 기능")
+        .accessibilityHint("탭하여 Pro 구매 화면으로 이동")
+    }
+}
+
+// MARK: - Locked Stat Card (Pro Feature)
+
+/// Locked version of StatCard for Pro-only statistics
+private struct LockedStatCard: View {
+    let title: String
+    let icon: String
+    let color: Color
+    let onTap: () -> Void
+
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(spacing: 8) {
+                // Icon with lock overlay
+                ZStack {
+                    Image(systemName: icon)
+                        .font(.system(size: 16))
+                        .foregroundColor(color.opacity(0.5))
+
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(4)
+                        .background(Circle().fill(Color.accentColor))
+                        .offset(x: 8, y: -8)
+                }
+
+                // Blurred placeholder value
+                Text("??")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.secondary.opacity(0.5))
+                    .blur(radius: 3)
+
+                // Title with Pro badge
+                HStack(spacing: 4) {
+                    Text(title)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Text("Pro")
+                        .font(.system(size: 7, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1)
+                        .background(Capsule().fill(Color.accentColor))
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(backgroundColor)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(title), Pro 전용 기능")
+        .accessibilityHint("탭하여 Pro 구매 화면으로 이동")
+    }
+
+    private var backgroundColor: Color {
+        colorScheme == .dark ? Color(hex: "#3A3A3C") : Color(hex: "#F2F2F7")
+    }
+}
+
 // MARK: - Compact Statistics View
 
 /// A more compact version for smaller displays
@@ -274,6 +446,7 @@ private struct CompactStatItem: View {
                 completionRate: 73.3,
                 currentStreak: 5,
                 longestStreak: 12,
+                averageStreak: 4.5,
                 period: "2026년 1월",
                 bestDayOfWeek: 1,
                 bestMonth: nil
@@ -290,6 +463,7 @@ private struct CompactStatItem: View {
                 completionRate: 76.7,
                 currentStreak: 15,
                 longestStreak: 45,
+                averageStreak: 8.2,
                 period: "2026년",
                 bestDayOfWeek: 3,
                 bestMonth: 6
@@ -306,6 +480,7 @@ private struct CompactStatItem: View {
                 completionRate: 71.4,
                 currentStreak: 3,
                 longestStreak: 5,
+                averageStreak: 2.5,
                 period: "1/20 - 1/26"
             ),
             habitColorHex: "#6BCB77"
