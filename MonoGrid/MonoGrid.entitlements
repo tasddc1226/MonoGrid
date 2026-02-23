@@ -16,5 +16,9 @@
 	<array>
 		<string>group.com.suyoung.monogrid</string>
 	</array>
+	<key>com.apple.developer.in-app-payments</key>
+	<array>
+		<string>merchant.com.suyoung.monogrid</string>
+	</array>
 </dict>
 </plist>
