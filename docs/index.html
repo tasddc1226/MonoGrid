@@ -3,161 +3,512 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonoGrid - Minimalist Habit Tracker</title>
+    <title>MonoGrid - 미니멀 습관 트래커 | GitHub 스타일 습관 기록 iOS 앱</title>
+
+    <!-- SEO -->
+    <meta name="description" content="3개의 핵심 습관만 추적하는 미니멀 iOS 앱. GitHub 잔디 스타일 365일 그리드, 위젯·시리·제어센터로 앱 실행 없이 기록. 무료 다운로드.">
+    <meta name="keywords" content="습관 트래커, habit tracker, 미니멀, MonoGrid, iOS, 위젯, 루틴, 습관 앱, GitHub 그리드">
+    <meta name="author" content="MonoGrid">
+    <link rel="canonical" href="https://tasddc1226.github.io/MonoGrid/">
+
+    <!-- Open Graph (Facebook, Discord, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MonoGrid - 미니멀 습관 트래커">
+    <meta property="og:description" content="3개의 핵심 습관만. GitHub 잔디처럼 365일 기록이 쌓인다. 위젯 탭 한 번으로 기록 완료.">
+    <meta property="og:url" content="https://tasddc1226.github.io/MonoGrid/">
+    <meta property="og:image" content="https://tasddc1226.github.io/MonoGrid/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:site_name" content="MonoGrid">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MonoGrid - 미니멀 습관 트래커">
+    <meta name="twitter:description" content="3개의 핵심 습관만. GitHub 잔디처럼 365일 기록이 쌓인다.">
+    <meta name="twitter:image" content="https://tasddc1226.github.io/MonoGrid/og-image.png">
+
+    <!-- Apple Smart Banner -->
+    <meta name="apple-itunes-app" content="app-id=6758255486">
+
     <style>
+        :root {
+            --primary: #4A7BF7;
+            --primary-dark: #3A63D8;
+            --bg: #0a0e1a;
+            --card: #141824;
+            --card-border: #1e2436;
+            --text: #e8eaf0;
+            --text-muted: #8b93a8;
+            --green-1: #0e4429;
+            --green-2: #006d32;
+            --green-3: #26a641;
+            --green-4: #39d353;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            background: var(--bg);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 60px 20px;
+
+        /* Hero */
+        .hero {
             text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
         }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center top, rgba(74, 123, 247, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
         .app-icon {
-            width: 120px;
-            height: 120px;
-            border-radius: 27px;
-            background: #4A90D9;
-            margin: 0 auto 30px;
+            width: 100px;
+            height: 100px;
+            border-radius: 22px;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 32px rgba(74, 123, 247, 0.3);
+            overflow: hidden;
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-icon-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
-        .app-icon svg {
-            width: 70px;
-            height: 70px;
+
+        .app-icon-placeholder svg {
+            width: 60px;
+            height: 60px;
             fill: white;
         }
+
         h1 {
-            color: white;
             font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
+
         .tagline {
-            color: rgba(255,255,255,0.9);
             font-size: 1.3em;
-            margin-bottom: 40px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
         }
-        .features {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            text-align: left;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+
+        .subtitle {
+            font-size: 1.05em;
+            color: var(--text-muted);
+            max-width: 480px;
+            margin: 0 auto 32px;
         }
-        .features h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .feature-item {
+
+        /* CTA */
+        .cta-group {
             display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
         }
-        .feature-icon {
-            font-size: 1.5em;
-            margin-right: 15px;
-            min-width: 30px;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .link-btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: white;
-            color: #667eea;
-            text-decoration: none;
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
             border-radius: 12px;
+            text-decoration: none;
             font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1em;
+            transition: all 0.2s;
         }
-        .link-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-        .link-btn.secondary {
-            background: rgba(255,255,255,0.2);
+
+        .cta-btn.primary {
+            background: var(--primary);
             color: white;
         }
-        footer {
-            margin-top: 40px;
-            color: rgba(255,255,255,0.7);
+
+        .cta-btn.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(74, 123, 247, 0.4);
+        }
+
+        .cta-btn.secondary {
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+            border: 1px solid var(--card-border);
+        }
+
+        .cta-btn.secondary:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        .rating {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        /* Grid Animation */
+        .grid-demo {
+            max-width: 520px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            gap: 3px;
+            padding: 0 20px;
+            opacity: 0.7;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            background: var(--green-1);
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .grid-cell.l2 { background: var(--green-2); }
+        .grid-cell.l3 { background: var(--green-3); }
+        .grid-cell.l4 { background: var(--green-4); }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Features */
+        .features {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 560px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.2em; }
+        }
+
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .feature-emoji {
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
             font-size: 0.9em;
         }
-        footer a { color: rgba(255,255,255,0.9); }
+
+        /* Philosophy */
+        .philosophy {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+            text-align: center;
+        }
+
+        .philosophy blockquote {
+            font-size: 1.4em;
+            font-style: italic;
+            color: var(--text-muted);
+            border-left: 3px solid var(--primary);
+            padding-left: 20px;
+            margin: 24px auto;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        .philosophy p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* How it works */
+        .how-it-works {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 160px;
+            max-width: 200px;
+        }
+
+        .step-num {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2em;
+            margin: 0 auto 12px;
+        }
+
+        .step h4 {
+            margin-bottom: 4px;
+        }
+
+        .step p {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, transparent, rgba(74, 123, 247, 0.05));
+        }
+
+        .footer-cta h2 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .footer-cta p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            border-top: 1px solid var(--card-border);
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--text);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
         <div class="app-icon">
-            <svg viewBox="0 0 100 100">
-                <rect x="15" y="15" width="70" height="70" rx="8" fill="none" stroke="white" stroke-width="4"/>
-                <line x1="15" y1="38" x2="85" y2="38" stroke="white" stroke-width="3"/>
-                <line x1="15" y1="61" x2="85" y2="61" stroke="white" stroke-width="3"/>
-                <line x1="38" y1="15" x2="38" y2="85" stroke="white" stroke-width="3"/>
-                <line x1="61" y1="15" x2="61" y2="85" stroke="white" stroke-width="3"/>
-                <polyline points="30,52 42,64 70,36" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <div class="app-icon-placeholder">
+                <svg viewBox="0 0 100 100">
+                    <rect x="15" y="15" width="70" height="70" rx="8" fill="none" stroke="white" stroke-width="4"/>
+                    <line x1="15" y1="38" x2="85" y2="38" stroke="white" stroke-width="3"/>
+                    <line x1="15" y1="61" x2="85" y2="61" stroke="white" stroke-width="3"/>
+                    <line x1="38" y1="15" x2="38" y2="85" stroke="white" stroke-width="3"/>
+                    <line x1="61" y1="15" x2="61" y2="85" stroke="white" stroke-width="3"/>
+                    <polyline points="30,52 42,64 70,36" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
         </div>
 
         <h1>MonoGrid</h1>
         <p class="tagline">미니멀 습관 트래커</p>
+        <p class="subtitle">3개의 핵심 습관만. GitHub 잔디처럼 365일 기록이 쌓인다.</p>
 
-        <div class="features">
-            <h2>주요 기능</h2>
-            <div class="feature-item">
-                <span class="feature-icon">📊</span>
-                <div>
-                    <strong>GitHub 스타일 그리드</strong><br>
-                    365일 기여 그래프로 습관을 시각화
-                </div>
+        <div class="cta-group">
+            <a href="https://apps.apple.com/app/id6758255486" class="cta-btn primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 16.97 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+                App Store에서 다운로드
+            </a>
+            <a href="https://github.com/tasddc1226/MonoGrid" class="cta-btn secondary">
+                GitHub
+            </a>
+        </div>
+        <p class="rating">⭐⭐⭐⭐⭐ 5.0 · 무료</p>
+
+        <!-- Grid Demo -->
+        <div class="grid-demo" id="gridDemo"></div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2 class="section-title">왜 MonoGrid인가?</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-emoji">🎯</div>
+                <h3>3개만 집중</h3>
+                <p>연구에 따르면 3개 이하의 습관에 집중할 때 성공률이 가장 높습니다. 의도적 제한.</p>
             </div>
-            <div class="feature-item">
-                <span class="feature-icon">🎯</span>
-                <div>
-                    <strong>3개 습관 집중</strong><br>
-                    핵심 습관에만 집중하여 실천력 향상
-                </div>
+            <div class="feature-card">
+                <div class="feature-emoji">🟩</div>
+                <h3>GitHub 스타일 그리드</h3>
+                <p>365일 기여 그래프로 매일의 노력을 한눈에. 초록색이 채워지는 쾌감.</p>
             </div>
-            <div class="feature-item">
-                <span class="feature-icon">📱</span>
-                <div>
-                    <strong>위젯 & 단축어</strong><br>
-                    앱 실행 없이 빠르게 기록
-                </div>
+            <div class="feature-card">
+                <div class="feature-emoji">⚡</div>
+                <h3>Invisible Tracking</h3>
+                <p>위젯 탭, "시리야 운동 완료", 제어센터 토글. 앱을 열 필요 없습니다.</p>
             </div>
-            <div class="feature-item">
-                <span class="feature-icon">☁️</span>
-                <div>
-                    <strong>iCloud 동기화</strong><br>
-                    모든 기기에서 자동 동기화
-                </div>
+            <div class="feature-card">
+                <div class="feature-emoji">☁️</div>
+                <h3>iCloud 동기화</h3>
+                <p>모든 기기에서 자동으로 동기화. 설정할 것 없습니다.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-emoji">🌙</div>
+                <h3>다크 모드</h3>
+                <p>밝은 테마와 어두운 테마 모두 지원. 어디서든 편안하게.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-emoji">🔒</div>
+                <h3>프라이버시</h3>
+                <p>계정 없음. 서버 없음. 모든 데이터는 기기와 iCloud에만.</p>
             </div>
         </div>
+    </section>
 
-        <div class="links">
-            <a href="https://apps.apple.com/app/monogrid" class="link-btn">App Store에서 다운로드</a>
-            <a href="privacy-policy.html" class="link-btn secondary">개인정보 처리방침</a>
-            <a href="support.html" class="link-btn secondary">지원 및 문의</a>
+    <!-- Philosophy -->
+    <section class="philosophy">
+        <h2 class="section-title">철학</h2>
+        <blockquote>
+            "습관 앱의 문제는 너무 많은 것을 추적하게 한다는 것이다."
+        </blockquote>
+        <p>MonoGrid는 의도적으로 3개만 허용합니다. 덜어내는 것이 더하는 것보다 어렵지만, 그래서 효과적입니다.</p>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-it-works">
+        <h2 class="section-title">이렇게 씁니다</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h4>습관 3개 설정</h4>
+                <p>운동, 독서, 명상 — 당신의 핵심만</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h4>위젯으로 기록</h4>
+                <p>탭 한 번이면 오늘의 기록 완료</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h4>그리드를 채워가기</h4>
+                <p>365일 초록 잔디가 당신의 노력을 증명</p>
+            </div>
         </div>
+    </section>
 
-        <footer>
-            <p>&copy; 2025 MonoGrid. All rights reserved.</p>
-            <p><a href="https://github.com/tasddc1226/MonoGrid">GitHub</a></p>
-        </footer>
-    </div>
+    <!-- Footer CTA -->
+    <section class="footer-cta">
+        <h2>작은 습관, 큰 변화</h2>
+        <p>오늘부터 3개의 습관을 시작하세요.</p>
+        <a href="https://apps.apple.com/app/id6758255486" class="cta-btn primary">
+            무료 다운로드
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="privacy-policy.html">개인정보 처리방침</a>
+            <a href="support.html">지원 및 문의</a>
+            <a href="https://github.com/tasddc1226/MonoGrid">GitHub</a>
+        </div>
+        <p>&copy; 2026 MonoGrid. All rights reserved.</p>
+    </footer>
+
+    <!-- Grid Animation Script -->
+    <script>
+        (function() {
+            const grid = document.getElementById('gridDemo');
+            const levels = ['', 'l2', 'l3', 'l4'];
+            const cells = 100;
+
+            for (let i = 0; i < cells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+
+                // Weighted random: more empty, fewer full
+                const r = Math.random();
+                if (r > 0.3) {
+                    const lvl = levels[Math.floor(Math.random() * levels.length)];
+                    if (lvl) cell.classList.add(lvl);
+                }
+
+                cell.style.animationDelay = (i * 20) + 'ms';
+                grid.appendChild(cell);
+            }
+        })();
+    </script>
+
 </body>
 </html>
