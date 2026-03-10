@@ -26,3 +26,7 @@ PromoConfig.xcconfig
 RevenueCatConfig.xcconfig
 RevenueCatConfig-Debug.xcconfig
 RevenueCatConfig-Release.xcconfig
+
+# App Store Connect API Key
+config/AuthKey*.p8
+config/.env
