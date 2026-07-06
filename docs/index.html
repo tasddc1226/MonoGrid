@@ -403,6 +403,13 @@
             color: var(--accent-strong);
         }
 
+        .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
         .featured .card-link {
             color: #8be0be;
         }
@@ -584,7 +591,7 @@
                     <span class="status-pill">building daily</span>
                 </div>
                 <div class="launch-list">
-                    <a class="launch-item" href="https://apps.apple.com/app/id6758255486" target="_blank" rel="noopener">
+                    <a class="launch-item" href="products/monogrid.html">
                         <span class="product-icon">MG</span>
                         <span>
                             <h2>MonoGrid</h2>
@@ -635,7 +642,7 @@
                 </p>
             </div>
 
-            <div class="product-grid">
+            <div class="product-grid" id="product-grid" data-products-src="products.json">
                 <article class="product-card featured">
                     <div>
                         <span class="product-icon">MG</span>
@@ -649,10 +656,12 @@
                             <span>iOS</span>
                             <span>Habit Tracker</span>
                             <span>출시됨</span>
+                            <span>무료</span>
                         </div>
-                        <p style="margin-top: 18px;">
-                            <a class="card-link" href="https://apps.apple.com/app/id6758255486" target="_blank" rel="noopener">App Store에서 보기</a>
-                        </p>
+                        <div class="card-actions">
+                            <a class="card-link" href="products/monogrid.html">자세히 보기</a>
+                            <a class="card-link" href="https://apps.apple.com/app/id6758255486" target="_blank" rel="noopener">App Store</a>
+                        </div>
                     </div>
                 </article>
 
@@ -743,5 +752,79 @@
             </div>
         </div>
     </footer>
+    <script>
+        const productGrid = document.querySelector("[data-products-src]");
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function productIconClass(product) {
+            const tone = product.accent || "green";
+            return tone === "amber" || tone === "blue" ? `product-icon ${tone}` : "product-icon";
+        }
+
+        function metaItems(product) {
+            return [
+                ...(product.platforms || []),
+                product.category,
+                product.status,
+                product.price
+            ].filter(Boolean);
+        }
+
+        function actionLinks(product) {
+            const links = [];
+            if (product.detailUrl) {
+                links.push(`<a class="card-link" href="${escapeHtml(product.detailUrl)}">자세히 보기</a>`);
+            }
+            if (product.primaryUrl) {
+                const external = /^https?:\/\//.test(product.primaryUrl);
+                links.push(`<a class="card-link" href="${escapeHtml(product.primaryUrl)}"${external ? ' target="_blank" rel="noopener"' : ""}>${escapeHtml(product.primaryLabel || "열기")}</a>`);
+            }
+            return links.join("");
+        }
+
+        function renderProduct(product) {
+            const featured = product.featured ? " featured" : "";
+            const meta = metaItems(product).map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+            const actions = actionLinks(product);
+
+            return `
+                <article class="product-card${featured}">
+                    <div>
+                        <span class="${productIconClass(product)}">${escapeHtml(product.shortName || product.name.slice(0, 2))}</span>
+                        <h3>${escapeHtml(product.name)}</h3>
+                        <p>${escapeHtml(product.description)}</p>
+                    </div>
+                    <div>
+                        <div class="card-meta">${meta}</div>
+                        ${actions ? `<div class="card-actions">${actions}</div>` : ""}
+                    </div>
+                </article>
+            `;
+        }
+
+        async function loadProducts() {
+            if (!productGrid) return;
+
+            try {
+                const response = await fetch(productGrid.dataset.productsSrc, { cache: "no-store" });
+                if (!response.ok) return;
+                const data = await response.json();
+                if (!Array.isArray(data.products) || data.products.length === 0) return;
+                productGrid.innerHTML = data.products.map(renderProduct).join("");
+            } catch {
+                // Keep the static fallback cards when opened from file:// or when JSON is unavailable.
+            }
+        }
+
+        loadProducts();
+    </script>
 </body>
 </html>

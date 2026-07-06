@@ -1,0 +1,72 @@
+{
+  "products": [
+    {
+      "slug": "monogrid",
+      "name": "MonoGrid",
+      "shortName": "MG",
+      "tagline": "3개의 핵심 습관만 기록하는 미니멀 iOS 앱",
+      "description": "GitHub 잔디처럼 습관 기록을 쌓는 미니멀 트래커입니다. 습관을 3개로 제한하고, 위젯과 Siri로 빠르게 기록합니다.",
+      "status": "출시됨",
+      "platforms": ["iOS"],
+      "category": "Habit Tracker",
+      "releaseDate": "2026-03",
+      "price": "무료",
+      "featured": true,
+      "accent": "green",
+      "detailUrl": "products/monogrid.html",
+      "primaryUrl": "https://apps.apple.com/app/id6758255486",
+      "primaryLabel": "App Store"
+    },
+    {
+      "slug": "web-utilities",
+      "name": "Web Utilities",
+      "shortName": "W",
+      "tagline": "설치 없이 바로 쓰는 작은 웹 도구",
+      "description": "반복 업무를 줄이는 브라우저 기반 유틸리티들을 준비하고 있습니다.",
+      "status": "준비 중",
+      "platforms": ["Web"],
+      "category": "Utility",
+      "releaseDate": null,
+      "price": "미정",
+      "featured": false,
+      "accent": "amber",
+      "detailUrl": null,
+      "primaryUrl": null,
+      "primaryLabel": null
+    },
+    {
+      "slug": "micro-apps",
+      "name": "Micro Apps",
+      "shortName": "A",
+      "tagline": "하루 한 번 쓰는 생활 밀착 앱",
+      "description": "반복되는 생활 문제를 해결하는 작은 모바일 앱을 실험합니다.",
+      "status": "아이디어 검증",
+      "platforms": ["iOS", "Android"],
+      "category": "Micro App",
+      "releaseDate": null,
+      "price": "미정",
+      "featured": false,
+      "accent": "blue",
+      "detailUrl": null,
+      "primaryUrl": null,
+      "primaryLabel": null
+    },
+    {
+      "slug": "launch-notes",
+      "name": "Launch Notes",
+      "shortName": "L",
+      "tagline": "출시 기록과 실험 회고",
+      "description": "출시한 제품, 배운 점, 중단한 실험을 투명하게 기록할 예정입니다.",
+      "status": "준비 중",
+      "platforms": ["Web"],
+      "category": "Log",
+      "releaseDate": null,
+      "price": "무료",
+      "featured": false,
+      "accent": "green",
+      "detailUrl": null,
+      "primaryUrl": null,
+      "primaryLabel": null
+    }
+  ]
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonoGrid | 모노랩스</title>
+    <meta name="description" content="MonoGrid는 3개의 핵심 습관만 기록하는 미니멀 iOS 습관 트래커입니다. GitHub 잔디처럼 365일 기록을 쌓고 위젯과 Siri로 빠르게 기록합니다.">
+    <link rel="canonical" href="https://tasddc1226.github.io/MonoGrid/products/monogrid.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MonoGrid | 3개의 핵심 습관만 기록하는 미니멀 iOS 앱">
+    <meta property="og:description" content="습관을 3개로 제한하고, GitHub 잔디처럼 기록을 쌓는 모노랩스의 첫 iOS 제품입니다.">
+    <meta property="og:url" content="https://tasddc1226.github.io/MonoGrid/products/monogrid.html">
+    <meta property="og:site_name" content="모노랩스">
+    <meta property="og:locale" content="ko_KR">
+
+    <meta name="apple-itunes-app" content="app-id=6758255486">
+
+    <style>
+        :root {
+            --bg: #f7f7f2;
+            --surface: #ffffff;
+            --surface-soft: #eeeee4;
+            --ink: #171714;
+            --muted: #626257;
+            --line: #d9d8ca;
+            --accent: #246b54;
+            --accent-strong: #154a39;
+            --shadow: 0 18px 50px rgba(23, 23, 20, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-header {
+            border-bottom: 1px solid rgba(217, 216, 202, 0.8);
+            background: rgba(247, 247, 242, 0.9);
+            backdrop-filter: blur(16px);
+        }
+
+        .nav {
+            width: min(1040px, calc(100% - 40px));
+            min-height: 64px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: grid;
+            place-items: center;
+            background: var(--ink);
+            color: white;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        .hero {
+            width: min(1040px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 72px 0 56px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+            gap: 48px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            width: fit-content;
+            padding: 8px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--accent-strong);
+            background: rgba(255, 255, 255, 0.65);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: clamp(50px, 8vw, 92px);
+            line-height: 0.94;
+            letter-spacing: 0;
+        }
+
+        .lead {
+            max-width: 620px;
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: clamp(18px, 2vw, 22px);
+        }
+
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 34px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 10px;
+            border: 1px solid var(--ink);
+            font-weight: 900;
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(23, 23, 20, 0.12);
+        }
+
+        .button.primary {
+            background: var(--ink);
+            color: white;
+        }
+
+        .button.secondary {
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .app-panel {
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .app-icon {
+            width: 86px;
+            height: 86px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            background: var(--accent);
+            color: white;
+            font-size: 26px;
+            font-weight: 950;
+        }
+
+        .panel-title {
+            margin-top: 22px;
+            font-size: 28px;
+            line-height: 1.1;
+        }
+
+        .panel-copy {
+            margin-top: 10px;
+            color: var(--muted);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .meta {
+            padding: 14px;
+            border-radius: 8px;
+            background: var(--surface-soft);
+        }
+
+        .meta span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .meta strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 16px;
+        }
+
+        .section {
+            width: min(1040px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 56px 0;
+        }
+
+        .section-header {
+            max-width: 720px;
+            margin-bottom: 28px;
+        }
+
+        .section-kicker {
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin-top: 8px;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.08;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .card {
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .card p,
+        .card li {
+            color: var(--muted);
+        }
+
+        .card ul {
+            margin-left: 20px;
+        }
+
+        .card li {
+            margin-top: 8px;
+        }
+
+        .privacy-box {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: center;
+            padding: 28px;
+            border-radius: 8px;
+            background: #111815;
+            color: white;
+        }
+
+        .privacy-box p {
+            margin-top: 8px;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .privacy-box .button {
+            border-color: white;
+            color: white;
+        }
+
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 34px 0;
+            margin-top: 30px;
+        }
+
+        .footer-inner {
+            width: min(1040px, calc(100% - 40px));
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-links a:hover {
+            color: var(--ink);
+        }
+
+        @media (max-width: 860px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 48px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .privacy-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .nav,
+            .hero,
+            .section,
+            .footer-inner {
+                width: min(100% - 28px, 1040px);
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .cta-row,
+            .footer-inner,
+            .footer-links {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .feature-grid,
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav" aria-label="주요 메뉴">
+            <a class="brand" href="../index.html" aria-label="모노랩스 홈">
+                <span class="brand-mark">ML</span>
+                <span>모노랩스</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html#products">제품</a>
+                <a href="../support.html">지원</a>
+                <a href="../privacy-policy.html">개인정보</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <span class="eyebrow">모노랩스 첫 번째 제품</span>
+                <h1>MonoGrid</h1>
+                <p class="lead">
+                    3개의 핵심 습관만 기록하는 미니멀 iOS 습관 트래커입니다. GitHub 잔디처럼 매일의 기록을 쌓고, 앱을 열지 않아도 빠르게 체크합니다.
+                </p>
+                <div class="cta-row">
+                    <a class="button primary" href="https://apps.apple.com/app/id6758255486" target="_blank" rel="noopener">App Store에서 보기</a>
+                    <a class="button secondary" href="../support.html">지원 받기</a>
+                </div>
+            </div>
+
+            <aside class="app-panel" aria-label="MonoGrid 제품 정보">
+                <div class="app-icon">MG</div>
+                <h2 class="panel-title">습관을 더 많이 추가하지 않고, 더 오래 유지하게 돕습니다.</h2>
+                <p class="panel-copy">
+                    MonoGrid는 기록할 습관을 의도적으로 3개로 제한합니다. 중요한 습관만 남기고, 한 해의 진행 상황을 한눈에 확인합니다.
+                </p>
+                <div class="meta-grid">
+                    <div class="meta">
+                        <span>플랫폼</span>
+                        <strong>iOS</strong>
+                    </div>
+                    <div class="meta">
+                        <span>가격</span>
+                        <strong>무료</strong>
+                    </div>
+                    <div class="meta">
+                        <span>상태</span>
+                        <strong>출시됨</strong>
+                    </div>
+                    <div class="meta">
+                        <span>카테고리</span>
+                        <strong>Habit Tracker</strong>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <span class="section-kicker">Features</span>
+                <h2>기록을 방해하지 않는 기능만 남겼습니다.</h2>
+            </div>
+            <div class="feature-grid">
+                <article class="card">
+                    <h3>3개 습관 제한</h3>
+                    <p>너무 많은 목표를 만들지 않도록 핵심 습관 3개에만 집중합니다.</p>
+                </article>
+                <article class="card">
+                    <h3>365일 그리드</h3>
+                    <p>GitHub 잔디처럼 하루하루의 기록이 시각적으로 쌓입니다.</p>
+                </article>
+                <article class="card">
+                    <h3>빠른 기록</h3>
+                    <p>위젯, Siri, 제어센터를 통해 앱을 열지 않고도 기록할 수 있습니다.</p>
+                </article>
+                <article class="card">
+                    <h3>iCloud 동기화</h3>
+                    <p>사용자의 개인 iCloud 계정을 통해 기기 간 데이터를 동기화합니다.</p>
+                </article>
+                <article class="card">
+                    <h3>미니멀 통계</h3>
+                    <p>연속 기록, 달성률, 기간별 기록을 과하지 않게 보여줍니다.</p>
+                </article>
+                <article class="card">
+                    <h3>모노랩스 원칙</h3>
+                    <p>회원가입 없이, 복잡한 소셜 기능 없이, 습관 기록에만 집중합니다.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="privacy-box">
+                <div>
+                    <span class="section-kicker">Privacy</span>
+                    <h2>습관 데이터는 모노랩스 서버에 저장하지 않습니다.</h2>
+                    <p>
+                        MonoGrid의 습관 이름, 완료 기록, 설정 정보는 사용자의 기기와 개인 iCloud 계정에 저장됩니다.
+                    </p>
+                </div>
+                <a class="button secondary" href="../privacy-policy.html">개인정보 처리방침</a>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <span class="section-kicker">Support</span>
+                <h2>문제가 있거나 제안하고 싶은 점이 있다면 알려주세요.</h2>
+            </div>
+            <div class="feature-grid">
+                <article class="card">
+                    <h3>동기화가 안 될 때</h3>
+                    <ul>
+                        <li>동일한 Apple ID로 로그인되어 있는지 확인</li>
+                        <li>iCloud에서 MonoGrid 사용이 활성화되어 있는지 확인</li>
+                        <li>네트워크 연결 후 앱을 다시 실행</li>
+                    </ul>
+                </article>
+                <article class="card">
+                    <h3>위젯이 늦게 바뀔 때</h3>
+                    <p>iOS는 배터리 절약을 위해 위젯 업데이트 빈도를 제한할 수 있습니다. 위젯을 탭하거나 앱을 열면 최신 상태를 확인할 수 있습니다.</p>
+                </article>
+                <article class="card">
+                    <h3>문의</h3>
+                    <p>문제가 계속되면 사용 기기, iOS 버전, 상황을 함께 보내주세요.</p>
+                    <p><a href="mailto:tasddc@naver.com">tasddc@naver.com</a></p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <p>© 2026 모노랩스. MonoGrid is a Monolabs product.</p>
+            <div class="footer-links">
+                <a href="../index.html">모노랩스</a>
+                <a href="../privacy-policy.html">개인정보 처리방침</a>
+                <a href="../support.html">지원</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
