@@ -82,39 +82,32 @@ final class FirstSyncHandler {
     func performMerge(strategy: MergeStrategy) async {
         SyncStatusMonitor.shared.markSyncStarted()
 
-        do {
-            switch strategy {
-            case .keepLocal:
-                // Push all local changes to cloud
-                await uploadLocalData()
+        switch strategy {
+        case .keepLocal:
+            // Push all local changes to cloud
+            await uploadLocalData()
 
-            case .keepCloud:
-                // This would download cloud data and replace local
-                // SwiftData + CloudKit handles this automatically
-                break
+        case .keepCloud:
+            // This would download cloud data and replace local
+            // SwiftData + CloudKit handles this automatically
+            break
 
-            case .downloadFromCloud:
-                // Wait for CloudKit to push data
-                // SwiftData + CloudKit handles this automatically
-                break
+        case .downloadFromCloud:
+            // Wait for CloudKit to push data
+            // SwiftData + CloudKit handles this automatically
+            break
 
-            case .mergeAll:
-                // Use conflict resolver for each entity
-                // This is handled by CloudKitConflictResolver
-                await uploadLocalData()
-            }
-
-            // Mark first sync as complete
-            hasCompletedFirstSync = true
-            firstSyncTimestamp = Date()
-
-            SyncStatusMonitor.shared.markSyncCompleted()
-
-        } catch {
-            SyncStatusMonitor.shared.markSyncError(
-                String(localized: "첫 동기화 실패: \(error.localizedDescription)")
-            )
+        case .mergeAll:
+            // Use conflict resolver for each entity
+            // This is handled by CloudKitConflictResolver
+            await uploadLocalData()
         }
+
+        // Mark first sync as complete
+        hasCompletedFirstSync = true
+        firstSyncTimestamp = Date()
+
+        SyncStatusMonitor.shared.markSyncCompleted()
     }
 
     /// Reset first sync state (for testing or account switch)

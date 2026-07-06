@@ -300,10 +300,12 @@ struct WeeklyGridView: View {
                 habitId: UUID(),
                 habitColorHex: "#6BCB77",
                 currentWeekStart: $weekStart,
-                completionData: sampleData
-            ) { date in
-                print("Tapped: \(date)")
-            }
+                completionData: sampleData,
+                onDayTap: { date in
+                    print("Tapped: \(date)")
+                },
+                onWeekChange: nil
+            )
             .padding()
         }
     }

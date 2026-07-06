@@ -64,13 +64,14 @@ final class NotificationSettingsViewModel {
     // MARK: - Initialization
 
     init(
-        notificationManager: NotificationManager = .shared,
-        storage: NotificationSettingsStorage = .shared
+        notificationManager: NotificationManager? = nil,
+        storage: NotificationSettingsStorage? = nil
     ) {
-        self.notificationManager = notificationManager
-        self.storage = storage
-        self.isEnabled = storage.isEnabled
-        self.scheduledTime = storage.scheduledTime
+        let resolvedStorage = storage ?? .shared
+        self.notificationManager = notificationManager ?? .shared
+        self.storage = resolvedStorage
+        self.isEnabled = resolvedStorage.isEnabled
+        self.scheduledTime = resolvedStorage.scheduledTime
     }
 
     /// Configures the view model with a habit repository for streak data

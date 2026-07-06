@@ -31,26 +31,26 @@ struct HabitEntityQuery: EntityQuery {
     // MARK: - Private Methods
 
     private func fetchAllHabits() async throws -> [HabitEntity] {
-        // Use SharedModelContainer for consistent CloudKit-enabled configuration
-        guard let context = await MainActor.run(body: {
-            SharedModelContainer.getSharedContext()
-        }) else {
-            return []
-        }
+        try await MainActor.run {
+            // Use SharedModelContainer for consistent CloudKit-enabled configuration
+            guard let context = SharedModelContainer.getSharedContext() else {
+                return []
+            }
 
-        let descriptor = FetchDescriptor<Habit>(
-            sortBy: [SortDescriptor(\.orderIndex)]
-        )
-
-        let habits = try context.fetch(descriptor)
-
-        return habits.map { habit in
-            HabitEntity(
-                id: habit.id.uuidString,
-                title: habit.title,
-                iconSymbol: habit.iconSymbol,
-                colorHex: habit.colorHex
+            let descriptor = FetchDescriptor<Habit>(
+                sortBy: [SortDescriptor(\.orderIndex)]
             )
+
+            let habits = try context.fetch(descriptor)
+
+            return habits.map { habit in
+                HabitEntity(
+                    id: habit.id.uuidString,
+                    title: habit.title,
+                    iconSymbol: habit.iconSymbol,
+                    colorHex: habit.colorHex
+                )
+            }
         }
     }
 }

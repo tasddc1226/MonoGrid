@@ -52,11 +52,11 @@ final class ProViewModel {
     // MARK: - Initialization
 
     init(
-        licenseManager: LicenseManager = .shared,
-        analyticsService: AnalyticsService = .shared
+        licenseManager: LicenseManager? = nil,
+        analyticsService: AnalyticsService? = nil
     ) {
-        self.licenseManager = licenseManager
-        self.analyticsService = analyticsService
+        self.licenseManager = licenseManager ?? .shared
+        self.analyticsService = analyticsService ?? .shared
     }
 
     // MARK: - Feature Gating

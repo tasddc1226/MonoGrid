@@ -98,7 +98,7 @@ struct HabitTimelineProvider: AppIntentTimelineProvider {
         // 3. 메모리 내에서 습관별로 그룹화
         var logsByHabitId: [UUID: [HabitLog]] = [:]
         for log in allLogs {
-            guard let habitId = log.habit?.id else { continue }
+            guard let habitId = log.habitId else { continue }
             logsByHabitId[habitId, default: []].append(log)
         }
 

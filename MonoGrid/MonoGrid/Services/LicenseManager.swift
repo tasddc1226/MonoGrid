@@ -37,10 +37,10 @@ final class LicenseManager {
 
     init(
         licenseRepository: LicenseRepository = KeychainLicenseRepository(),
-        revenueCatManager: RevenueCatManager = .shared
+        revenueCatManager: RevenueCatManager? = nil
     ) {
         self.licenseRepository = licenseRepository
-        self.revenueCatManager = revenueCatManager
+        self.revenueCatManager = revenueCatManager ?? .shared
 
         setupNetworkMonitoring()
     }

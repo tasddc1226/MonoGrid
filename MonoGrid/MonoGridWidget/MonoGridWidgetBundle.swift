@@ -20,5 +20,6 @@ struct MonoGridWidgetBundle: WidgetBundle {
         // Lock Screen Widgets
         CircularLockWidget()
         InlineLockWidget()
+
     }
 }

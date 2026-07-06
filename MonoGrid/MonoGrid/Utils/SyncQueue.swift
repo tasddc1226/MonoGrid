@@ -45,12 +45,12 @@ actor SyncQueue {
     private let maxRetryCount = 5
 
     /// UserDefaults storage key
-    private let storageKey = "com.monogrid.syncqueue.pending"
+    private static let storageKey = "com.monogrid.syncqueue.pending"
 
     // MARK: - Initialization
 
     private init() {
-        loadFromStorage()
+        pendingChanges = Self.loadFromStorage()
     }
 
     // MARK: - Retry Interval
@@ -139,15 +139,16 @@ actor SyncQueue {
 
     private func saveToStorage() {
         if let data = try? JSONEncoder().encode(pendingChanges) {
-            UserDefaults.standard.set(data, forKey: storageKey)
+            UserDefaults.standard.set(data, forKey: Self.storageKey)
         }
     }
 
-    private func loadFromStorage() {
-        if let data = UserDefaults.standard.data(forKey: storageKey),
-           let changes = try? JSONDecoder().decode([PendingChange].self, from: data) {
-            pendingChanges = changes
+    private static func loadFromStorage() -> [PendingChange] {
+        guard let data = UserDefaults.standard.data(forKey: Self.storageKey),
+              let changes = try? JSONDecoder().decode([PendingChange].self, from: data) else {
+            return []
         }
+        return changes
     }
 
     /// Clear all pending changes (for testing/reset)

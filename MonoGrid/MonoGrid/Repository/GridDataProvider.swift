@@ -9,6 +9,7 @@ import Foundation
 
 /// Protocol for fetching habit completion data at different time scales
 /// Returns [Date: Bool] dictionary for O(1) lookup of completion status
+@MainActor
 protocol GridDataProvider {
     /// Fetches completion data for an entire year
     /// - Parameters:

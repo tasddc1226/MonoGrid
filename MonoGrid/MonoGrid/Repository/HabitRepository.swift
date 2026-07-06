@@ -8,6 +8,7 @@
 import Foundation
 
 /// Protocol defining the interface for habit data operations
+@MainActor
 protocol HabitRepository {
     // MARK: - Habit Operations
 

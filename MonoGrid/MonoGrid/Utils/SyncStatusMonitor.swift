@@ -203,11 +203,9 @@ final class SyncStatusMonitor {
     // MARK: - Private Methods
 
     private func checkPendingChanges() {
-        Task.detached { [weak self] in
+        Task { [weak self] in
             let count = await SyncQueue.shared.pendingCount
-            await MainActor.run {
-                self?.hasPendingChanges = count > 0
-            }
+            self?.hasPendingChanges = count > 0
         }
     }
 }

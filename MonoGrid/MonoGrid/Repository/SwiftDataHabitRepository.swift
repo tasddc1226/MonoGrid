@@ -112,7 +112,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
 
         let descriptor = FetchDescriptor<HabitLog>(
             predicate: #Predicate { log in
-                log.habit?.id == habitId &&
+                log.habitId == habitId &&
                 log.date >= start &&
                 log.date <= end
             },
@@ -126,7 +126,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
 
         let descriptor = FetchDescriptor<HabitLog>(
             predicate: #Predicate { log in
-                log.habit?.id == habitId && log.date == targetDate
+                log.habitId == habitId && log.date == targetDate
             }
         )
         return try modelContext.fetch(descriptor).first
@@ -135,7 +135,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
     func fetchAllLogs(for habitId: UUID) async throws -> [HabitLog] {
         let descriptor = FetchDescriptor<HabitLog>(
             predicate: #Predicate { log in
-                log.habit?.id == habitId
+                log.habitId == habitId
             },
             sortBy: [SortDescriptor(\.date, order: .reverse)]
         )
@@ -181,7 +181,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
         // 3. 습관별로 로그 그룹화 (메모리 내 처리)
         var logsByHabit: [UUID: [Date: Bool]] = [:]
         for log in allLogs {
-            guard let habitId = log.habit?.id else { continue }
+            guard let habitId = log.habitId else { continue }
             let logDate = calendar.startOfDay(for: log.date)
             logsByHabit[habitId, default: [:]][logDate] = log.isCompleted
         }
@@ -215,7 +215,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
         let habitIdSet = Set(habitIds)
 
         for log in allLogs {
-            guard let habitId = log.habit?.id,
+            guard let habitId = log.habitId,
                   habitIdSet.contains(habitId) else { continue }
             let logDate = calendar.startOfDay(for: log.date)
             result[habitId, default: [:]][logDate] = log.isCompleted
@@ -329,7 +329,7 @@ final class SwiftDataHabitRepository: HabitRepository, GridDataProvider {
         // Fetch logs for the range
         let descriptor = FetchDescriptor<HabitLog>(
             predicate: #Predicate { log in
-                log.habit?.id == habitId &&
+                log.habitId == habitId &&
                 log.date >= start &&
                 log.date <= end
             }

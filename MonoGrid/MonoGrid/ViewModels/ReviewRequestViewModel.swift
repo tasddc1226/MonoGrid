@@ -35,8 +35,8 @@ final class ReviewRequestViewModel {
 
     // MARK: - Initialization
 
-    init(reviewManager: AppReviewManager = .shared) {
-        self.reviewManager = reviewManager
+    init(reviewManager: AppReviewManager? = nil) {
+        self.reviewManager = reviewManager ?? .shared
     }
 
     // MARK: - Milestone Messages

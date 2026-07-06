@@ -50,65 +50,78 @@ struct ToggleHabitIntent: AppIntent {
             throw IntentError.habitNotSpecified
         }
 
-        // Use SharedModelContainer for consistent CloudKit-enabled configuration
-        guard let context = await MainActor.run(body: {
-            SharedModelContainer.getSharedContext()
-        }) else {
-            throw IntentError.containerNotFound
-        }
-
-        do {
-
-            // Find the habit
-            guard let habitUUID = UUID(uuidString: targetId) else {
-                throw IntentError.invalidHabitId
-            }
-
-            let habitDescriptor = FetchDescriptor<Habit>(
-                predicate: #Predicate { $0.id == habitUUID }
-            )
-
-            guard let habitModel = try context.fetch(habitDescriptor).first else {
-                throw IntentError.habitNotFound
-            }
-
-            // Toggle today's log
-            let today = Calendar.current.startOfDay(for: Date())
-
-            let logDescriptor = FetchDescriptor<HabitLog>(
-                predicate: #Predicate { log in
-                    log.habit?.id == habitUUID && log.date == today
-                }
-            )
-
-            let existingLog = try context.fetch(logDescriptor).first
-
+        struct ToggleResult {
+            let title: String
             let newState: Bool
             let logId: UUID
             let isUpdate: Bool
+        }
 
-            if let log = existingLog {
-                log.isCompleted.toggle()
-                log.updatedAt = Date()
-                newState = log.isCompleted
-                logId = log.id
-                isUpdate = true
-            } else {
-                let newLog = HabitLog(date: today, isCompleted: true, habit: habitModel)
-                context.insert(newLog)
-                newState = true
-                logId = newLog.id
-                isUpdate = false
+        do {
+            let result = try await MainActor.run { () throws -> ToggleResult in
+                // Use SharedModelContainer for consistent CloudKit-enabled configuration
+                guard let context = SharedModelContainer.getSharedContext() else {
+                    throw IntentError.containerNotFound
+                }
+
+                // Find the habit
+                guard let habitUUID = UUID(uuidString: targetId) else {
+                    throw IntentError.invalidHabitId
+                }
+
+                let habitDescriptor = FetchDescriptor<Habit>(
+                    predicate: #Predicate { $0.id == habitUUID }
+                )
+
+                guard let habitModel = try context.fetch(habitDescriptor).first else {
+                    throw IntentError.habitNotFound
+                }
+
+                // Toggle today's log
+                let today = Calendar.current.startOfDay(for: Date())
+
+                let logDescriptor = FetchDescriptor<HabitLog>(
+                    predicate: #Predicate { log in
+                        log.habitId == habitUUID && log.date == today
+                    }
+                )
+
+                let existingLog = try context.fetch(logDescriptor).first
+
+                let newState: Bool
+                let logId: UUID
+                let isUpdate: Bool
+
+                if let log = existingLog {
+                    log.isCompleted.toggle()
+                    log.updatedAt = Date()
+                    newState = log.isCompleted
+                    logId = log.id
+                    isUpdate = true
+                } else {
+                    let newLog = HabitLog(date: today, isCompleted: true, habit: habitModel)
+                    context.insert(newLog)
+                    newState = true
+                    logId = newLog.id
+                    isUpdate = false
+                }
+
+                try context.save()
+
+                return ToggleResult(
+                    title: habitModel.title,
+                    newState: newState,
+                    logId: logId,
+                    isUpdate: isUpdate
+                )
             }
-
-            try context.save()
 
             // Enqueue sync change for CloudKit
             let pendingChange = SyncQueue.PendingChange(
                 id: UUID(),
                 entityType: .habitLog,
-                entityId: logId,
-                changeType: isUpdate ? .update : .insert,
+                entityId: result.logId,
+                changeType: result.isUpdate ? .update : .insert,
                 timestamp: Date(),
                 retryCount: 0
             )
@@ -118,12 +131,11 @@ struct ToggleHabitIntent: AppIntent {
             WidgetCenter.shared.reloadAllTimelines()
 
             // Return result
-            let message = newState
-                ? String(localized: "\(habitModel.title) 완료!")
-                : String(localized: "\(habitModel.title) 미완료로 변경")
+            let message = result.newState
+                ? String(localized: "\(result.title) 완료!")
+                : String(localized: "\(result.title) 미완료로 변경")
 
             return .result(dialog: IntentDialog(stringLiteral: message))
-
         } catch let error as IntentError {
             throw error
         } catch {

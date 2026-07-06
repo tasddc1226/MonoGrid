@@ -39,11 +39,11 @@ final class PurchaseViewModel {
     // MARK: - Initialization
 
     init(
-        revenueCatManager: RevenueCatManager = .shared,
-        analyticsService: AnalyticsService = .shared
+        revenueCatManager: RevenueCatManager? = nil,
+        analyticsService: AnalyticsService? = nil
     ) {
-        self.revenueCatManager = revenueCatManager
-        self.analyticsService = analyticsService
+        self.revenueCatManager = revenueCatManager ?? .shared
+        self.analyticsService = analyticsService ?? .shared
     }
 
     // MARK: - Purchase

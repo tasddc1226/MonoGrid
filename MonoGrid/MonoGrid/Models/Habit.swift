@@ -69,7 +69,7 @@ final class Habit {
     /// Checks if the habit is completed for a specific date
     func isCompleted(on date: Date) -> Bool {
         let targetDate = Calendar.current.startOfDay(for: date)
-        return logs?.first { $0.date == targetDate }?.isCompleted ?? false
+        return logs?.first { $0.habitId == id && $0.date == targetDate }?.isCompleted ?? false
     }
 }
 
