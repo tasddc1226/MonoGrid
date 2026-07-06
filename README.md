@@ -4,6 +4,7 @@
 
 - [허브 랜딩페이지](https://tasddc1226.github.io/MonoGrid/)
 - [MonoGrid 제품 상세 페이지](https://tasddc1226.github.io/MonoGrid/products/monogrid.html)
+- [MonoText 웹앱](https://tasddc1226.github.io/MonoGrid/products/monotext.html)
 - [개인정보처리방침](https://tasddc1226.github.io/MonoGrid/privacy-policy.html)
 - [지원](https://tasddc1226.github.io/MonoGrid/support.html)
 

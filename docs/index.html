@@ -599,14 +599,14 @@
                         </span>
                         <span class="tag">출시됨</span>
                     </a>
-                    <div class="launch-item">
-                        <span class="product-icon amber">01</span>
+                    <a class="launch-item" href="products/monotext.html">
+                        <span class="product-icon amber">MT</span>
                         <span>
-                            <h2>작은 웹 도구</h2>
-                            <p>반복 업무를 줄이는 브라우저 기반 유틸리티</p>
+                            <h2>MonoText</h2>
+                            <p>글자수와 바이트를 바로 계산하는 무료 웹앱</p>
                         </span>
-                        <span class="tag">준비 중</span>
-                    </div>
+                        <span class="tag">오늘 출시</span>
+                    </a>
                     <div class="launch-item">
                         <span class="product-icon blue">02</span>
                         <span>
@@ -618,7 +618,7 @@
                 </div>
                 <div class="metrics" aria-label="운영 지표">
                     <div class="metric">
-                        <strong>1</strong>
+                        <strong>2</strong>
                         <span>출시 제품</span>
                     </div>
                     <div class="metric">
@@ -780,7 +780,7 @@
 
         function actionLinks(product) {
             const links = [];
-            if (product.detailUrl) {
+            if (product.detailUrl && product.detailUrl !== product.primaryUrl) {
                 links.push(`<a class="card-link" href="${escapeHtml(product.detailUrl)}">자세히 보기</a>`);
             }
             if (product.primaryUrl) {
