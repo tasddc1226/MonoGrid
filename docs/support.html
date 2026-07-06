@@ -3,93 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonoGrid - Support</title>
+    <title>모노랩스 지원</title>
+    <meta name="description" content="모노랩스 제품 지원 및 문의 페이지입니다.">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.7;
+            color: #20201c;
+            background: #f7f7f2;
             padding: 40px 20px;
-            background: #fafafa;
         }
-        h1 { color: #1a1a1a; margin-bottom: 10px; font-size: 2em; }
-        h2 { color: #333; margin: 30px 0 15px; font-size: 1.4em; border-bottom: 2px solid #007AFF; padding-bottom: 5px; }
-        h3 { color: #444; margin: 20px 0 10px; font-size: 1.1em; }
-        p { margin-bottom: 15px; }
-        ul { margin: 15px 0 15px 25px; }
+        main {
+            width: min(920px, 100%);
+            margin: 0 auto;
+        }
+        a { color: #246b54; font-weight: 800; }
+        .back-link { display: inline-block; margin-bottom: 24px; }
+        .hero {
+            padding: 34px;
+            border: 1px solid #d9d8ca;
+            border-radius: 8px;
+            background: #fff;
+        }
+        h1 { font-size: 40px; line-height: 1.1; margin-bottom: 10px; }
+        h2 { font-size: 24px; margin-top: 34px; margin-bottom: 14px; }
+        h3 { font-size: 18px; margin-bottom: 8px; }
+        p { color: #55554c; margin-bottom: 12px; }
+        ul { margin: 10px 0 0 22px; color: #55554c; }
         li { margin-bottom: 8px; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .faq-item { background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .faq-item h3 { margin-top: 0; color: #007AFF; }
-        .contact-box { background: #007AFF; color: white; padding: 30px; border-radius: 15px; text-align: center; margin-top: 40px; }
-        .contact-box h2 { color: white; border-bottom: none; margin-top: 0; }
-        .contact-box a { color: white; font-size: 1.2em; }
-        a { color: #007AFF; }
-        .back-link { display: inline-block; margin-bottom: 20px; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 18px;
+        }
+        .card {
+            padding: 22px;
+            border: 1px solid #d9d8ca;
+            border-radius: 8px;
+            background: #fff;
+        }
+        .contact {
+            margin-top: 24px;
+            padding: 26px;
+            border-radius: 8px;
+            background: #20201c;
+            color: white;
+        }
+        .contact p { color: rgba(255, 255, 255, 0.72); }
+        .contact a { color: #8be0be; }
+        @media (max-width: 720px) {
+            body { padding: 18px 14px; }
+            .hero { padding: 24px; }
+            h1 { font-size: 32px; }
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-link">← 홈으로</a>
+    <main>
+        <a class="back-link" href="index.html">홈으로 돌아가기</a>
+        <section class="hero">
+            <h1>모노랩스 지원</h1>
+            <p>
+                모노랩스 제품을 사용하다가 문제가 생겼거나, 새로운 제품 아이디어를 제안하고 싶다면 아래 안내를 확인해주세요.
+            </p>
+        </section>
 
-    <div class="header">
-        <h1>MonoGrid 지원</h1>
-        <p>Support & FAQ</p>
-    </div>
+        <h2>제품별 지원</h2>
+        <div class="grid">
+            <article class="card">
+                <h3>MonoGrid</h3>
+                <p>3개의 핵심 습관만 기록하는 미니멀 iOS 앱입니다.</p>
+                <ul>
+                    <li>iCloud 동기화는 동일한 Apple ID와 iCloud 활성화 상태를 확인해주세요.</li>
+                    <li>위젯은 iOS 정책에 따라 업데이트 주기가 제한될 수 있습니다.</li>
+                    <li>과거 날짜 기록은 앱 안의 그리드에서 수정할 수 있습니다.</li>
+                </ul>
+            </article>
+            <article class="card">
+                <h3>앞으로 출시될 제품</h3>
+                <p>웹 도구와 작은 앱이 추가되면 이 페이지에 지원 문서를 함께 정리합니다.</p>
+            </article>
+        </div>
 
-    <h2>자주 묻는 질문 (FAQ)</h2>
+        <h2>문의 전에 확인해주세요</h2>
+        <div class="grid">
+            <article class="card">
+                <h3>앱 문제</h3>
+                <ul>
+                    <li>최신 버전으로 업데이트</li>
+                    <li>앱 재실행</li>
+                    <li>기기 재시작</li>
+                    <li>네트워크와 iCloud 상태 확인</li>
+                </ul>
+            </article>
+            <article class="card">
+                <h3>제안/피드백</h3>
+                <p>반복해서 겪는 불편함, 하루 한 번 쓰고 싶은 작은 도구, 기존 제품의 개선점을 보내주세요.</p>
+            </article>
+        </div>
 
-    <div class="faq-item">
-        <h3>Q: 습관을 3개 이상 추가할 수 없나요?</h3>
-        <p>MonoGrid는 "집중"을 핵심 가치로 설계되었습니다. 연구에 따르면 한 번에 3개 이하의 습관에 집중할 때 성공률이 가장 높습니다. 핵심 습관만 관리하여 지속 가능한 변화를 만들어보세요.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>Q: 데이터가 다른 기기와 동기화되지 않아요</h3>
-        <p>다음을 확인해주세요:</p>
-        <ul>
-            <li>설정 > Apple ID > iCloud에서 앱이 활성화되어 있는지 확인</li>
-            <li>두 기기 모두 동일한 Apple ID로 로그인되어 있는지 확인</li>
-            <li>인터넷 연결 상태 확인</li>
-            <li>앱을 완전히 종료 후 다시 실행</li>
-        </ul>
-    </div>
-
-    <div class="faq-item">
-        <h3>Q: 위젯이 업데이트되지 않아요</h3>
-        <p>iOS는 배터리 절약을 위해 위젯 업데이트 빈도를 제한합니다. 위젯을 탭하여 앱을 실행하면 즉시 업데이트됩니다. 또한 앱 설정에서 "위젯 새로고침" 옵션을 확인해주세요.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>Q: 과거 날짜의 기록을 수정할 수 있나요?</h3>
-        <p>네, 그리드에서 원하는 날짜를 탭하면 해당 날짜의 완료 상태를 변경할 수 있습니다.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>Q: 데이터를 백업하려면 어떻게 하나요?</h3>
-        <p>MonoGrid는 iCloud를 통해 자동으로 백업됩니다. 별도의 백업 작업은 필요하지 않습니다. iCloud가 활성화되어 있는지 확인해주세요.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>Q: 앱을 삭제하면 데이터가 사라지나요?</h3>
-        <p>iCloud 동기화가 활성화되어 있다면 데이터는 iCloud에 보관됩니다. 앱을 다시 설치하면 데이터가 복원됩니다. 완전히 삭제하려면 설정 > Apple ID > iCloud > 저장 공간 관리에서 앱 데이터를 삭제해주세요.</p>
-    </div>
-
-    <h2>문제 해결 안내</h2>
-    <p>위의 FAQ에서 해결되지 않는 문제가 있다면:</p>
-    <ul>
-        <li>앱을 최신 버전으로 업데이트해주세요</li>
-        <li>기기를 재시작해보세요</li>
-        <li>앱을 삭제 후 다시 설치해보세요 (iCloud 동기화 시 데이터 유지)</li>
-    </ul>
-
-    <div class="contact-box">
-        <h2>추가 지원이 필요하신가요?</h2>
-        <p>아래 이메일로 문의해주세요. 24시간 내에 답변드리겠습니다.</p>
-        <p><a href="mailto:tasddc@naver.com">tasddc@naver.com</a></p>
-    </div>
-
+        <section class="contact">
+            <h2 style="margin-top: 0;">연락하기</h2>
+            <p>제품명, 사용 기기, iOS/브라우저 버전, 문제 상황을 함께 보내주시면 더 빠르게 확인할 수 있습니다.</p>
+            <p><a href="mailto:tasddc@naver.com">tasddc@naver.com</a></p>
+        </section>
+    </main>
 </body>
 </html>
