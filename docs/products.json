@@ -39,6 +39,25 @@
       "primaryLabel": "바로 쓰기"
     },
     {
+      "slug": "monocalc",
+      "name": "MonoCalc",
+      "shortName": "MC",
+      "tagline": "퍼센트·할인율·부가세를 바로 계산하는 무료 웹앱",
+      "description": "전체의 몇 퍼센트, 백분율, 증감률, 할인가, 부가세 10%를 숫자를 넣는 즉시 계산합니다. 가입과 설치 없이 브라우저에서 바로 씁니다.",
+      "status": "출시됨",
+      "platforms": [
+        "Web"
+      ],
+      "category": "Calculator",
+      "releaseDate": "2026-07",
+      "price": "무료",
+      "featured": false,
+      "accent": "blue",
+      "detailUrl": "products/monocalc.html",
+      "primaryUrl": "products/monocalc.html",
+      "primaryLabel": "바로 쓰기"
+    },
+    {
       "slug": "micro-apps",
       "name": "Micro Apps",
       "shortName": "A",

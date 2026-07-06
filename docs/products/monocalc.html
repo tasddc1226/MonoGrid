@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonoCalc | 퍼센트 계산기 — 할인율·증감률·부가세 | 모노랩스</title>
+    <meta name="description" content="퍼센트 계산기 MonoCalc. 전체의 몇 퍼센트, 백분율, 증감률, 할인가, 부가세 10%를 입력하는 즉시 계산하는 무료 웹앱입니다. 설치와 가입 없이 브라우저에서 바로 씁니다.">
+    <link rel="canonical" href="https://tasddc1226.github.io/MonoGrid/products/monocalc.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MonoCalc | 퍼센트 계산기">
+    <meta property="og:description" content="전체의 몇 %, 백분율, 증감률, 할인가, 부가세를 입력하는 즉시 계산합니다. 모든 계산은 브라우저 안에서만 처리됩니다.">
+    <meta property="og:url" content="https://tasddc1226.github.io/MonoGrid/products/monocalc.html">
+    <meta property="og:site_name" content="모노랩스">
+    <meta property="og:locale" content="ko_KR">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "MonoCalc",
+        "url": "https://tasddc1226.github.io/MonoGrid/products/monocalc.html",
+        "description": "퍼센트, 백분율, 증감률, 할인가, 부가세를 즉시 계산하는 무료 웹앱",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "ko",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "KRW"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "모노랩스"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg: #f7f7f2;
+            --surface: #ffffff;
+            --surface-soft: #eeeee4;
+            --ink: #171714;
+            --muted: #626257;
+            --line: #d9d8ca;
+            --accent: #3563a8;
+            --accent-strong: #24457a;
+            --accent-soft: #e3ecf8;
+            --green: #246b54;
+            --red: #b7472a;
+            --shadow: 0 18px 50px rgba(23, 23, 20, 0.08);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #161613;
+                --surface: #1f1f1b;
+                --surface-soft: #2a2a24;
+                --ink: #f0efe8;
+                --muted: #a3a294;
+                --line: #3a3a32;
+                --accent: #7ba3dd;
+                --accent-strong: #a8c4ea;
+                --accent-soft: #23334c;
+                --green: #5fae91;
+                --red: #d97757;
+                --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+            line-height: 1.55;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid var(--line);
+            background: color-mix(in srgb, var(--bg) 90%, transparent);
+            backdrop-filter: blur(16px);
+        }
+
+        .nav {
+            width: min(1180px, calc(100% - 40px));
+            min-height: 64px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 850;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: grid;
+            place-items: center;
+            background: var(--ink);
+            color: var(--bg);
+            font-size: 13px;
+            font-weight: 950;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 750;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        main {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 38px 0 72px;
+        }
+
+        .tool-header {
+            max-width: 720px;
+            margin-bottom: 26px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            width: fit-content;
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        h1 {
+            font-size: clamp(30px, 5vw, 50px);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .tool-header p {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .calc-card,
+        .info-panel {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .calc-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .calc-card h2 {
+            font-size: 18px;
+        }
+
+        .calc-tag {
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--surface-soft);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .calc-desc {
+            margin-bottom: 14px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 96px 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .field-row label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 850;
+        }
+
+        .field-row input {
+            width: 100%;
+            min-height: 42px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .field-row input:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: -1px;
+        }
+
+        .mode-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .mode-button {
+            flex: 1;
+            min-height: 38px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--ink);
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .mode-button:hover,
+        .mode-button.active {
+            border-color: var(--ink);
+            background: var(--ink);
+            color: var(--bg);
+        }
+
+        .result-box {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 8px;
+            background: var(--surface-soft);
+        }
+
+        .result-line {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .result-line + .result-line {
+            margin-top: 8px;
+        }
+
+        .result-line span {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 850;
+        }
+
+        .result-line strong {
+            font-size: clamp(20px, 3vw, 26px);
+            line-height: 1.1;
+            cursor: pointer;
+        }
+
+        .result-line strong.positive {
+            color: var(--green);
+        }
+
+        .result-line strong.negative {
+            color: var(--red);
+        }
+
+        .result-hint {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .calc-card.wide {
+            grid-column: span 2;
+        }
+
+        .calc-card.wide .calc-body {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 18px;
+            align-items: start;
+        }
+
+        .calc-card.wide .result-box {
+            margin-top: 8px;
+        }
+
+        .info-section {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .info-panel h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .info-panel p,
+        .info-panel li {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .info-panel ul {
+            margin-left: 18px;
+        }
+
+        .info-panel li {
+            margin-top: 7px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            z-index: 20;
+            transform: translateX(-50%) translateY(20px);
+            padding: 11px 14px;
+            border-radius: 999px;
+            background: var(--ink);
+            color: var(--bg);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        footer {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 24px 0 34px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-links a:hover {
+            color: var(--ink);
+        }
+
+        @media (max-width: 920px) {
+            .calc-grid,
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+
+            .calc-card.wide {
+                grid-column: auto;
+            }
+
+            .calc-card.wide .calc-body {
+                grid-template-columns: 1fr;
+            }
+
+            .calc-card.wide .result-box {
+                margin-top: 14px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav,
+            main,
+            footer {
+                width: min(100% - 28px, 1180px);
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .field-row {
+                grid-template-columns: 84px 1fr;
+            }
+
+            footer,
+            .footer-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav" aria-label="주요 메뉴">
+            <a class="brand" href="../index.html" aria-label="모노랩스 홈">
+                <span class="brand-mark">ML</span>
+                <span>모노랩스</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html#products">제품</a>
+                <a href="../support.html">지원</a>
+                <a href="../privacy-policy.html">개인정보</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <header class="tool-header">
+            <span class="eyebrow">퍼센트 계산기</span>
+            <h1>MonoCalc</h1>
+            <p>전체의 몇 퍼센트, 백분율, 증감률, 할인가, 부가세까지 — 숫자를 넣는 순간 바로 계산합니다. 가입도 설치도 없습니다.</p>
+        </header>
+
+        <section class="calc-grid" aria-label="퍼센트 계산기 5종">
+            <section class="calc-card">
+                <div class="calc-head">
+                    <h2>전체의 몇 퍼센트</h2>
+                    <span class="calc-tag">A × B%</span>
+                </div>
+                <p class="calc-desc">1,500,000원의 15%는 얼마?</p>
+                <div class="field-row">
+                    <label for="pvBase">기준값</label>
+                    <input id="pvBase" type="number" inputmode="decimal" placeholder="1500000">
+                </div>
+                <div class="field-row">
+                    <label for="pvPercent">퍼센트 (%)</label>
+                    <input id="pvPercent" type="number" inputmode="decimal" placeholder="15">
+                </div>
+                <div class="result-box">
+                    <div class="result-line">
+                        <span>결과</span>
+                        <strong id="pvResult" data-copy>—</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="calc-card">
+                <div class="calc-head">
+                    <h2>몇 퍼센트인지</h2>
+                    <span class="calc-tag">A ÷ B × 100</span>
+                </div>
+                <p class="calc-desc">30은 240의 몇 %?</p>
+                <div class="field-row">
+                    <label for="prPart">부분값</label>
+                    <input id="prPart" type="number" inputmode="decimal" placeholder="30">
+                </div>
+                <div class="field-row">
+                    <label for="prWhole">전체값</label>
+                    <input id="prWhole" type="number" inputmode="decimal" placeholder="240">
+                </div>
+                <div class="result-box">
+                    <div class="result-line">
+                        <span>결과</span>
+                        <strong id="prResult" data-copy>—</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="calc-card">
+                <div class="calc-head">
+                    <h2>증감률</h2>
+                    <span class="calc-tag">변화율 %</span>
+                </div>
+                <p class="calc-desc">85,000원이 102,000원이 되면 몇 % 변한 걸까?</p>
+                <div class="field-row">
+                    <label for="chBefore">이전값</label>
+                    <input id="chBefore" type="number" inputmode="decimal" placeholder="85000">
+                </div>
+                <div class="field-row">
+                    <label for="chAfter">이후값</label>
+                    <input id="chAfter" type="number" inputmode="decimal" placeholder="102000">
+                </div>
+                <div class="result-box">
+                    <div class="result-line">
+                        <span>변화율</span>
+                        <strong id="chResult" data-copy>—</strong>
+                    </div>
+                    <div class="result-line">
+                        <span>차이</span>
+                        <strong id="chDiff" data-copy>—</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="calc-card">
+                <div class="calc-head">
+                    <h2>할인가</h2>
+                    <span class="calc-tag">세일 계산</span>
+                </div>
+                <p class="calc-desc">89,000원에서 23% 할인하면?</p>
+                <div class="field-row">
+                    <label for="dcPrice">정가</label>
+                    <input id="dcPrice" type="number" inputmode="decimal" placeholder="89000">
+                </div>
+                <div class="field-row">
+                    <label for="dcRate">할인율 (%)</label>
+                    <input id="dcRate" type="number" inputmode="decimal" placeholder="23">
+                </div>
+                <div class="result-box">
+                    <div class="result-line">
+                        <span>할인가</span>
+                        <strong id="dcResult" data-copy>—</strong>
+                    </div>
+                    <div class="result-line">
+                        <span>절약 금액</span>
+                        <strong id="dcSaved" data-copy>—</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="calc-card wide">
+                <div class="calc-head">
+                    <h2>부가세 (10%)</h2>
+                    <span class="calc-tag">VAT</span>
+                </div>
+                <p class="calc-desc">공급가액에 부가세를 붙이거나, 합계에서 거꾸로 뗍니다.</p>
+                <div class="calc-body">
+                    <div>
+                        <div class="mode-row" role="tablist" aria-label="부가세 계산 방향">
+                            <button class="mode-button active" type="button" data-vat-mode="add">공급가액 → 합계</button>
+                            <button class="mode-button" type="button" data-vat-mode="extract">합계 → 공급가액</button>
+                        </div>
+                        <div class="field-row">
+                            <label for="vatAmount" id="vatAmountLabel">공급가액</label>
+                            <input id="vatAmount" type="number" inputmode="decimal" placeholder="1000000">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="result-box">
+                            <div class="result-line">
+                                <span id="vatOutLabel">합계 금액</span>
+                                <strong id="vatResult" data-copy>—</strong>
+                            </div>
+                            <div class="result-line">
+                                <span>부가세</span>
+                                <strong id="vatTax" data-copy>—</strong>
+                            </div>
+                        </div>
+                        <p class="result-hint">원 단위 반올림 기준입니다. 세금계산서 발행 시에는 회계 기준을 확인하세요.</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- ad-slot: results-bottom (애드핏/애드센스 승인 후 활성화) -->
+
+        <section class="info-section">
+            <section class="info-panel">
+                <h2>언제 쓰나요?</h2>
+                <ul>
+                    <li>세일 가격, 쿠폰 할인율이 맞는지 바로 확인할 때</li>
+                    <li>매출·조회수 증감률을 보고서에 쓸 때</li>
+                    <li>견적서의 부가세 포함/제외 금액을 계산할 때</li>
+                    <li>시험 점수, 목표 달성률 등 백분율이 필요할 때</li>
+                </ul>
+            </section>
+
+            <section class="info-panel">
+                <h2>개인정보</h2>
+                <p>입력한 숫자는 서버로 전송되지 않습니다. 이 페이지의 모든 계산은 현재 브라우저에서만 실행됩니다. 결과 숫자를 누르면 복사됩니다.</p>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 모노랩스. MonoCalc is a Monolabs product.</p>
+        <div class="footer-links">
+            <a href="../index.html">모노랩스</a>
+            <a href="../privacy-policy.html">개인정보 처리방침</a>
+            <a href="../support.html">지원</a>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">복사했습니다</div>
+
+    <script>
+        const numberFormatter = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 2 });
+        const percentFormatter = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 2 });
+        const toast = document.getElementById("toast");
+
+        function readNumber(id) {
+            const raw = document.getElementById(id).value.trim();
+            if (raw === "") return null;
+            const value = Number(raw);
+            return Number.isFinite(value) ? value : null;
+        }
+
+        function setResult(id, text, tone) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.classList.remove("positive", "negative");
+            if (tone) el.classList.add(tone);
+        }
+
+        function updatePercentValue() {
+            const base = readNumber("pvBase");
+            const percent = readNumber("pvPercent");
+            if (base === null || percent === null) {
+                setResult("pvResult", "—");
+                return;
+            }
+            setResult("pvResult", numberFormatter.format(base * percent / 100));
+        }
+
+        function updatePercentRatio() {
+            const part = readNumber("prPart");
+            const whole = readNumber("prWhole");
+            if (part === null || whole === null || whole === 0) {
+                setResult("prResult", whole === 0 ? "전체값은 0이 될 수 없어요" : "—");
+                return;
+            }
+            setResult("prResult", `${percentFormatter.format(part / whole * 100)}%`);
+        }
+
+        function updateChange() {
+            const before = readNumber("chBefore");
+            const after = readNumber("chAfter");
+            if (before === null || after === null || before === 0) {
+                setResult("chResult", before === 0 ? "이전값은 0이 될 수 없어요" : "—");
+                setResult("chDiff", "—");
+                return;
+            }
+            const rate = (after - before) / Math.abs(before) * 100;
+            const sign = rate > 0 ? "+" : "";
+            const tone = rate > 0 ? "positive" : rate < 0 ? "negative" : undefined;
+            setResult("chResult", `${sign}${percentFormatter.format(rate)}%`, tone);
+            setResult("chDiff", numberFormatter.format(after - before), tone);
+        }
+
+        function updateDiscount() {
+            const price = readNumber("dcPrice");
+            const rate = readNumber("dcRate");
+            if (price === null || rate === null) {
+                setResult("dcResult", "—");
+                setResult("dcSaved", "—");
+                return;
+            }
+            const saved = price * rate / 100;
+            setResult("dcResult", numberFormatter.format(price - saved));
+            setResult("dcSaved", numberFormatter.format(saved));
+        }
+
+        let vatMode = "add";
+
+        function updateVat() {
+            const amount = readNumber("vatAmount");
+            if (amount === null) {
+                setResult("vatResult", "—");
+                setResult("vatTax", "—");
+                return;
+            }
+            if (vatMode === "add") {
+                const tax = Math.round(amount * 0.1);
+                setResult("vatResult", numberFormatter.format(amount + tax));
+                setResult("vatTax", numberFormatter.format(tax));
+            } else {
+                const supply = Math.round(amount / 1.1);
+                setResult("vatResult", numberFormatter.format(supply));
+                setResult("vatTax", numberFormatter.format(amount - supply));
+            }
+        }
+
+        document.querySelectorAll("[data-vat-mode]").forEach((button) => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll("[data-vat-mode]").forEach((item) => item.classList.remove("active"));
+                button.classList.add("active");
+                vatMode = button.dataset.vatMode;
+                const adding = vatMode === "add";
+                document.getElementById("vatAmountLabel").textContent = adding ? "공급가액" : "합계 금액";
+                document.getElementById("vatOutLabel").textContent = adding ? "합계 금액" : "공급가액";
+                updateVat();
+            });
+        });
+
+        const updates = {
+            pvBase: updatePercentValue,
+            pvPercent: updatePercentValue,
+            prPart: updatePercentRatio,
+            prWhole: updatePercentRatio,
+            chBefore: updateChange,
+            chAfter: updateChange,
+            dcPrice: updateDiscount,
+            dcRate: updateDiscount,
+            vatAmount: updateVat
+        };
+
+        Object.entries(updates).forEach(([id, handler]) => {
+            document.getElementById(id).addEventListener("input", handler);
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("show");
+            window.setTimeout(() => toast.classList.remove("show"), 1400);
+        }
+
+        document.querySelectorAll("[data-copy]").forEach((el) => {
+            el.addEventListener("click", async () => {
+                const text = el.textContent;
+                if (text === "—" || !text) return;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    showToast("복사했습니다");
+                } catch {
+                    showToast("복사에 실패했습니다");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
